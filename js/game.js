@@ -10,6 +10,8 @@ class GameManager {
         this.episodeData = null;
         this.allWords = [];
         this.currentQuestionIndex = 0;
+        this.progressOffset = 0;
+        this.progressTotal = 0;
         this.currentQuestion = null;
         this.score = 0;
         this.correctCount = 0;
@@ -66,7 +68,52 @@ class GameManager {
             this.prepareUnlearnedWords(); // Continuar do progresso
         }
 
+        if (!this.isReviewMode && !this.isNewAttempt) {
+            const progress = storage.getEpisodeProgress(profile, episodeId);
+            const progressStats = this.getCompletedProgressStats(progress);
+            this.progressOffset = progressStats.completed;
+            this.progressTotal = progressStats.total;
+        } else {
+            this.progressOffset = 0;
+            this.progressTotal = this.allWords.length;
+        }
+
         return this.allWords.length;
+    }
+
+    getCompletedProgressStats(progress) {
+        let total = 0;
+        let completed = 0;
+
+        const isCompleted = itemProgress => typeof itemProgress?.lastCorrect === 'boolean'
+            ? itemProgress.lastCorrect
+            : Boolean(itemProgress?.correct);
+
+        this.getCategoriesForFilter().forEach(category => {
+            (this.episodeData[category] || []).forEach(item => {
+                total++;
+                if (isCompleted(progress.words?.[item.palavra])) {
+                    completed++;
+                }
+
+                [
+                    item.exemplo_diferente,
+                    item.exemplo_episodio,
+                    item.exemplo_adicional
+                ].filter(sentence => sentence && sentence.trim()).forEach(sentence => {
+                    total++;
+                    const sentenceKey = this.getSentenceProgressKey(item.palavra, sentence);
+                    const sentenceProgress = progress.sentences?.[sentenceKey] ||
+                        progress.sentences?.[`${item.palavra}_${sentence}`];
+
+                    if (isCompleted(sentenceProgress)) {
+                        completed++;
+                    }
+                });
+            });
+        });
+
+        return { completed, total };
     }
 
     /**
@@ -507,10 +554,13 @@ class GameManager {
      * Obtém o progresso atual
      */
     getCurrentProgress() {
+        const current = this.progressOffset + this.currentQuestionIndex;
+        const total = this.progressTotal || this.allWords.length;
+
         return {
-            current: this.currentQuestionIndex,
-            total: this.allWords.length,
-            percentage: (this.currentQuestionIndex / this.allWords.length * 100).toFixed(1)
+            current,
+            total,
+            percentage: (current / total * 100).toFixed(1)
         };
     }
 }

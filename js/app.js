@@ -648,7 +648,7 @@ class App {
 
             // Atualizar UI
             document.getElementById('game-episode').textContent = episodeId.toUpperCase();
-            document.getElementById('total-questions').textContent = totalQuestions;
+            document.getElementById('total-questions').textContent = game.getCurrentProgress().total;
             
             this.resetGameUI();
             this.hideLoading(loading);
