@@ -31,14 +31,13 @@ class GameManager {
     /**
      * Inicia um novo jogo
      */
-    startGame(profile, episodeId, episodeData, options = {}) {
+    async startGame(profile, episodeId, episodeData, options = {}) {
         this.currentProfile = profile;
         this.currentEpisode = episodeId;
         this.episodeData = episodeData;
         this.isReviewMode = options.reviewMode || false;
         this.categoryFilter = options.categoryFilter || 'all';
         this.isNewAttempt = options.isNewAttempt || false;
-        // includeSentences sempre true (removido da opção)
         
         // Reset das estatísticas
         this.currentQuestionIndex = 0;
@@ -54,6 +53,10 @@ class GameManager {
             expressoes: { correct: 0, wrong: 0 }
         };
 
+        // ✅ CRÍTICO: Sincronizar perfil do Firebase ANTES de preparar palavras
+        await storage.syncProfileFromFirebase(profile);
+        console.log('✅ Perfil sincronizado, preparando palavras...');
+
         // Preparar palavras
         if (this.isReviewMode) {
             this.prepareReviewWords();
@@ -62,9 +65,6 @@ class GameManager {
         } else {
             this.prepareUnlearnedWords(); // Continuar do progresso
         }
-
-        // NÃO embaralhar aqui - já embaralhamos palavras e frases separadamente
-        // this.shuffleArray(this.allWords); // REMOVIDO
 
         return this.allWords.length;
     }

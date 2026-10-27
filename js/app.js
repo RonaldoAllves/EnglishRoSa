@@ -545,7 +545,7 @@ class App {
     /**
      * Inicia o jogo
      */
-    startGame(episodeId, options = {}) {
+    async startGame(episodeId, options = {}) {
         this.currentEpisodeId = episodeId;
         
         // Encontrar dados do episódio
@@ -556,21 +556,32 @@ class App {
             return;
         }
 
-        // Iniciar o jogo
-        const totalQuestions = game.startGame(this.currentProfile, episodeId, episodeData, options);
-        
-        if (totalQuestions === 0) {
-            alert('Nenhuma palavra disponível para este modo!');
-            return;
-        }
+        // Mostrar loading
+        const loading = this.showLoading('Preparando exercícios...');
 
-        // Atualizar UI
-        document.getElementById('game-episode').textContent = episodeId.toUpperCase();
-        document.getElementById('total-questions').textContent = totalQuestions;
-        
-        this.resetGameUI();
-        this.showScreen('game-screen');
-        this.loadNextQuestion();
+        try {
+            // ✅ Iniciar o jogo (agora é async e sincroniza Firebase)
+            const totalQuestions = await game.startGame(this.currentProfile, episodeId, episodeData, options);
+            
+            if (totalQuestions === 0) {
+                this.hideLoading(loading);
+                alert('Nenhuma palavra disponível para este modo!');
+                return;
+            }
+
+            // Atualizar UI
+            document.getElementById('game-episode').textContent = episodeId.toUpperCase();
+            document.getElementById('total-questions').textContent = totalQuestions;
+            
+            this.resetGameUI();
+            this.hideLoading(loading);
+            this.showScreen('game-screen');
+            this.loadNextQuestion();
+        } catch (error) {
+            this.hideLoading(loading);
+            console.error('Erro ao iniciar jogo:', error);
+            alert('Erro ao carregar o jogo. Tente novamente.');
+        }
     }
 
     /**

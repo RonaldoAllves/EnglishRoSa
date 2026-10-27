@@ -136,11 +136,11 @@ class FirebaseStorageManager {
     }
 
     /**
-     * Obtém o progresso de um episódio específico
+     * Obtém o progresso de um episódio específico (síncrono, usa cache)
+     * IMPORTANTE: Deve chamar syncProfileFromFirebase() antes para garantir dados atualizados
      */
     getEpisodeProgress(profileName, episodeId) {
-        // Nota: Esta função precisa ser síncrona para compatibilidade
-        // Vamos usar cache local e sincronizar em background
+        // Usar cache local (deve estar sincronizado com Firebase)
         const profileData = JSON.parse(localStorage.getItem(profileName) || '{}');
         
         if (!profileData.episodes) {
@@ -173,6 +173,31 @@ class FirebaseStorageManager {
         }
 
         return profileData.episodes[episodeId];
+    }
+
+    /**
+     * Sincroniza perfil do Firebase para localStorage (async)
+     * DEVE ser chamado antes de getEpisodeProgress()
+     */
+    async syncProfileFromFirebase(profileName) {
+        if (!this.database) {
+            console.warn('⚠️ Firebase não disponível, usando dados locais');
+            return;
+        }
+
+        try {
+            console.log(`📥 Sincronizando perfil ${profileName} do Firebase...`);
+            const profile = await this.getProfile(profileName);
+            
+            // Atualizar localStorage com dados do Firebase
+            localStorage.setItem(profileName, JSON.stringify(profile));
+            console.log(`✅ Perfil ${profileName} sincronizado do Firebase`);
+            
+            return profile;
+        } catch (error) {
+            console.error(`❌ Erro ao sincronizar perfil ${profileName}:`, error);
+            // Manter dados locais se houver erro
+        }
     }
 
     /**
