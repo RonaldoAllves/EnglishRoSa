@@ -638,3 +638,171 @@ body {
         padding-top: calc(env(safe-area-inset-top) + 1rem);
     }
 }
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.95);
+    z-index: 2000;
+    padding: 1rem;
+    overflow-y: auto;
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-content {
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    max-width: 500px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.modal-content h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--primary);
+}
+
+.modal-content h4 {
+    margin: 1rem 0 0.5rem;
+    font-size: 1rem;
+    color: var(--text-secondary);
+}
+
+.modal-buttons {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+/* Attempt History */
+.attempt-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background: var(--bg-main);
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.attempt-item span:first-child {
+    color: var(--text-secondary);
+}
+
+.attempt-item span:last-child {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* Filter Section */
+.filter-section {
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: var(--bg-main);
+    border-radius: 0.75rem;
+}
+
+.radio-label,
+.checkbox-label {
+    display: block;
+    padding: 0.75rem;
+    margin: 0.5rem 0;
+    background: var(--bg-card);
+    border: 2px solid var(--border);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.radio-label:hover,
+.checkbox-label:hover {
+    border-color: var(--primary);
+}
+
+.radio-label input,
+.checkbox-label input {
+    margin-right: 0.75rem;
+    cursor: pointer;
+}
+
+.radio-label input:checked,
+.checkbox-label input:checked {
+    accent-color: var(--primary);
+}
+
+/* Button Variants */
+.btn-info {
+    background: #3b82f6;
+    color: white;
+}
+
+.btn-info:hover {
+    background: #2563eb;
+}
+
+.btn-danger {
+    background: var(--error);
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+/* Episode Attempts */
+.episode-attempts {
+    font-size: 0.75rem;
+    color: var(--warning);
+    margin-top: 0.25rem;
+}
+
+/* Sentence Question Styles */
+.sentence-question {
+    text-align: center;
+}
+
+.sentence-label {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+}
+
+.sentence-text {
+    font-size: 1.3rem;
+    color: var(--primary);
+    font-weight: 600;
+    line-height: 1.6;
+    padding: 1rem;
+    background: var(--bg-main);
+    border-radius: 0.75rem;
+}
+
+/* Responsive Modal */
+@media (max-width: 480px) {
+    .modal-content {
+        padding: 1.5rem;
+    }
+    
+    .modal-content h3 {
+        font-size: 1.2rem;
+    }
+    
+    .filter-section {
+        padding: 0.75rem;
+    }
+}

@@ -23,16 +23,22 @@ class GameManager {
             expressoes: { correct: 0, wrong: 0 }
         };
         this.isReviewMode = false;
+        this.categoryFilter = 'all'; // 'all', 'adjetivos', 'substantivos', 'verbos', 'expressoes'
+        this.includeSentences = true; // Se deve incluir exercícios de frases
+        this.isNewAttempt = false; // Se é uma nova tentativa (reiniciar progresso)
     }
 
     /**
      * Inicia um novo jogo
      */
-    startGame(profile, episodeId, episodeData, reviewMode = false) {
+    startGame(profile, episodeId, episodeData, options = {}) {
         this.currentProfile = profile;
         this.currentEpisode = episodeId;
         this.episodeData = episodeData;
-        this.isReviewMode = reviewMode;
+        this.isReviewMode = options.reviewMode || false;
+        this.categoryFilter = options.categoryFilter || 'all';
+        this.includeSentences = options.includeSentences !== false;
+        this.isNewAttempt = options.isNewAttempt || false;
         
         // Reset das estatísticas
         this.currentQuestionIndex = 0;
@@ -49,10 +55,12 @@ class GameManager {
         };
 
         // Preparar palavras
-        if (reviewMode) {
+        if (this.isReviewMode) {
             this.prepareReviewWords();
+        } else if (this.isNewAttempt) {
+            this.prepareAllWords(); // Nova tentativa = todas as palavras
         } else {
-            this.prepareAllWords();
+            this.prepareUnlearnedWords(); // Continuar do progresso
         }
 
         // Embaralhar
@@ -67,22 +75,117 @@ class GameManager {
     prepareAllWords() {
         this.allWords = [];
 
-        const categories = ['adjetivos', 'substantivos', 'verbos', 'expressoes'];
+        const categories = this.getCategoriesForFilter();
         
         categories.forEach(category => {
             if (this.episodeData[category] && Array.isArray(this.episodeData[category])) {
                 this.episodeData[category].forEach(item => {
+                    // Adicionar exercício de palavra
                     this.allWords.push({
                         word: item.palavra,
                         translation: item.traducao,
                         exampleDiff: item.exemplo_diferente,
                         exampleEpisode: item.exemplo_episodio,
                         exampleAdditional: item.exemplo_adicional,
-                        category: category
+                        category: category,
+                        isSentence: false
                     });
+
+                    // Adicionar exercícios de frases (se habilitado)
+                    if (this.includeSentences) {
+                        const sentences = [
+                            item.exemplo_diferente,
+                            item.exemplo_episodio,
+                            item.exemplo_adicional
+                        ].filter(s => s && s.trim());
+
+                        sentences.forEach(sentence => {
+                            this.allWords.push({
+                                word: item.palavra,
+                                sentence: sentence,
+                                translation: item.traducao,
+                                category: category,
+                                isSentence: true
+                            });
+                        });
+                    }
                 });
             }
         });
+    }
+
+    /**
+     * Prepara apenas palavras não aprendidas (continuar progresso)
+     */
+    prepareUnlearnedWords() {
+        this.allWords = [];
+
+        const wordsToSkip = storage.getWordsForPractice(this.currentProfile, this.currentEpisode);
+        const sentencesToSkip = storage.getSentencesForPractice(this.currentProfile, this.currentEpisode);
+        
+        const categories = this.getCategoriesForFilter();
+        
+        categories.forEach(category => {
+            if (this.episodeData[category] && Array.isArray(this.episodeData[category])) {
+                this.episodeData[category].forEach(item => {
+                    // Verificar se a palavra precisa de prática
+                    const needsPractice = wordsToSkip.length === 0 || wordsToSkip.includes(item.palavra);
+                    
+                    if (needsPractice) {
+                        // Adicionar exercício de palavra
+                        this.allWords.push({
+                            word: item.palavra,
+                            translation: item.traducao,
+                            exampleDiff: item.exemplo_diferente,
+                            exampleEpisode: item.exemplo_episodio,
+                            exampleAdditional: item.exemplo_adicional,
+                            category: category,
+                            isSentence: false
+                        });
+
+                        // Adicionar exercícios de frases (se habilitado)
+                        if (this.includeSentences) {
+                            const sentences = [
+                                item.exemplo_diferente,
+                                item.exemplo_episodio,
+                                item.exemplo_adicional
+                            ].filter(s => s && s.trim());
+
+                            sentences.forEach(sentence => {
+                                const sentenceKey = `${item.palavra}_${sentence}`;
+                                const needsSentencePractice = sentencesToSkip.length === 0 || 
+                                                             sentencesToSkip.includes(sentenceKey);
+                                
+                                if (needsSentencePractice) {
+                                    this.allWords.push({
+                                        word: item.palavra,
+                                        sentence: sentence,
+                                        translation: item.traducao,
+                                        category: category,
+                                        isSentence: true
+                                    });
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+        });
+
+        // Se não houver palavras para praticar, usar todas
+        if (this.allWords.length === 0) {
+            this.prepareAllWords();
+        }
+    }
+
+    /**
+     * Retorna as categorias baseado no filtro
+     */
+    getCategoriesForFilter() {
+        if (this.categoryFilter === 'all') {
+            return ['adjetivos', 'substantivos', 'verbos', 'expressoes'];
+        }
+        return [this.categoryFilter];
     }
 
     /**
@@ -128,7 +231,19 @@ class GameManager {
 
         const wordData = this.allWords[this.currentQuestionIndex];
         
-        // Gerar opções de resposta
+        // Se é uma frase, criar questão de frase
+        if (wordData.isSentence) {
+            return this.createSentenceQuestion(wordData);
+        }
+        
+        // Senão, criar questão de palavra
+        return this.createWordQuestion(wordData);
+    }
+
+    /**
+     * Cria questão de tradução de palavra
+     */
+    createWordQuestion(wordData) {
         const options = this.generateOptions(wordData);
 
         this.currentQuestion = {
@@ -138,10 +253,102 @@ class GameManager {
             options: options,
             exampleDiff: wordData.exampleDiff,
             exampleEpisode: wordData.exampleEpisode,
-            exampleAdditional: wordData.exampleAdditional
+            exampleAdditional: wordData.exampleAdditional,
+            isSentence: false
         };
 
         return this.currentQuestion;
+    }
+
+    /**
+     * Cria questão de tradução de frase
+     */
+    createSentenceQuestion(wordData) {
+        // Extrair a frase em inglês e português
+        const sentence = wordData.sentence;
+        const parts = sentence.match(/^(.*?)\s*\((.*?)\)\s*$/);
+        
+        let englishSentence = sentence;
+        let portugueseSentence = wordData.translation;
+        
+        if (parts) {
+            englishSentence = parts[1].trim();
+            portugueseSentence = parts[2].trim();
+        }
+
+        // Gerar opções de tradução de frases
+        const options = this.generateSentenceOptions(portugueseSentence, wordData.category);
+
+        this.currentQuestion = {
+            word: wordData.word, // palavra relacionada
+            sentence: englishSentence,
+            correctTranslation: portugueseSentence,
+            category: wordData.category,
+            options: options,
+            isSentence: true
+        };
+
+        return this.currentQuestion;
+    }
+
+    /**
+     * Gera opções de resposta para frases
+     */
+    generateSentenceOptions(correctSentence, category) {
+        const options = [correctSentence];
+        
+        // Coletar traduções de frases do episódio
+        const allSentences = [];
+        const categories = ['adjetivos', 'substantivos', 'verbos', 'expressoes'];
+        
+        categories.forEach(cat => {
+            if (this.episodeData[cat]) {
+                this.episodeData[cat].forEach(item => {
+                    const sentences = [
+                        item.exemplo_diferente,
+                        item.exemplo_episodio,
+                        item.exemplo_adicional
+                    ].filter(s => s && s.trim());
+
+                    sentences.forEach(sent => {
+                        const parts = sent.match(/^(.*?)\s*\((.*?)\)\s*$/);
+                        if (parts) {
+                            const translation = parts[2].trim();
+                            if (translation !== correctSentence) {
+                                allSentences.push(translation);
+                            }
+                        }
+                    });
+                });
+            }
+        });
+
+        // Embaralhar e pegar 3 incorretas
+        this.shuffleArray(allSentences);
+        for (let i = 0; i < 3 && i < allSentences.length; i++) {
+            options.push(allSentences[i]);
+        }
+
+        // Completar com frases genéricas se necessário
+        const genericSentences = [
+            'Eu vou ao mercado',
+            'Ele gosta de café',
+            'Nós estamos cansados',
+            'Eles foram embora',
+            'Ela é muito legal'
+        ];
+
+        while (options.length < 4) {
+            const random = genericSentences[Math.floor(Math.random() * genericSentences.length)];
+            if (!options.includes(random)) {
+                options.push(random);
+            }
+        }
+
+        // Embaralhar opções
+        this.shuffleArray(options);
+
+        return options;
     }
 
     /**
@@ -216,12 +423,18 @@ class GameManager {
 
         this.score += points;
 
+        // Preparar dados para salvar
+        const wordKey = this.currentQuestion.isSentence 
+            ? `${this.currentQuestion.word}_${this.currentQuestion.sentence}` 
+            : this.currentQuestion.word;
+
         // Salvar progresso imediatamente
         storage.saveQuestionProgress(this.currentProfile, this.currentEpisode, {
-            word: this.currentQuestion.word,
+            word: wordKey,
             category: this.currentQuestion.category,
             correct: isCorrect,
-            points: points
+            points: points,
+            isSentence: this.currentQuestion.isSentence || false
         });
 
         this.currentQuestionIndex++;

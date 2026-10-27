@@ -122,11 +122,11 @@ npx http-server</pre>
 
         // Botões de resultado
         document.getElementById('btn-play-again').addEventListener('click', () => {
-            this.startGame(this.currentEpisodeId, false);
+            this.showEpisodeOptions(this.currentEpisodeId, storage.getEpisodeProgress(this.currentProfile, this.currentEpisodeId));
         });
 
         document.getElementById('btn-review').addEventListener('click', () => {
-            this.startGame(this.currentEpisodeId, true);
+            this.startGame(this.currentEpisodeId, { reviewMode: true });
         });
     }
 
@@ -140,6 +140,18 @@ npx http-server</pre>
         // Atualizar UI
         document.getElementById('current-profile-name').textContent = 
             profileName.charAt(0).toUpperCase() + profileName.slice(1);
+        
+        // Configurar botão de reset de perfil
+        const btnResetProfile = document.getElementById('btn-reset-profile');
+        if (btnResetProfile) {
+            btnResetProfile.onclick = () => {
+                if (confirm(`⚠️ ATENÇÃO!\n\nIsso irá APAGAR TODO O PROGRESSO de ${profileName}!\n\nTodas as palavras aprendidas, pontos e estatísticas serão perdidos.\n\nTem certeza absoluta?`)) {
+                    storage.resetProfile(profileName);
+                    this.updateEpisodeScreen();
+                    alert('✅ Perfil resetado com sucesso!');
+                }
+            };
+        }
         
         this.updateEpisodeScreen();
         this.showScreen('episode-screen');
@@ -189,13 +201,21 @@ npx http-server</pre>
 
         const card = document.createElement('div');
         card.className = 'episode-card';
+        
+        let statusIcon = '';
+        if (progress.completed) {
+            statusIcon = '✅';
+        } else if (wordsLearned > 0) {
+            statusIcon = '🔄';
+        }
+
         card.innerHTML = `
             <div class="episode-info">
-                <h4>${episodeId.toUpperCase()}</h4>
+                <h4>${episodeId.toUpperCase()} ${statusIcon}</h4>
                 <div class="episode-progress-text">
                     ${wordsLearned}/${totalWords} palavras
-                    ${progress.completed ? '✅' : ''}
                 </div>
+                ${progress.attempts > 0 ? `<div class="episode-attempts">Tentativas: ${progress.attempts}</div>` : ''}
             </div>
             <div class="episode-stats">
                 <div class="episode-completion">${completion}%</div>
@@ -204,16 +224,107 @@ npx http-server</pre>
         `;
 
         card.addEventListener('click', () => {
-            this.startGame(episodeId, false);
+            this.showEpisodeOptions(episodeId, progress);
         });
 
         return card;
     }
 
     /**
+     * Mostra opções de jogo para o episódio
+     */
+    showEpisodeOptions(episodeId, progress) {
+        const modal = document.getElementById('game-options-modal');
+        const title = document.getElementById('options-episode-title');
+        const btnContinue = document.getElementById('btn-continue-episode');
+        const btnNewAttempt = document.getElementById('btn-new-attempt');
+        const btnReview = document.getElementById('btn-review-episode');
+        const btnResetEpisode = document.getElementById('btn-reset-episode');
+        const optionsAttemptHistory = document.getElementById('options-attempt-history');
+
+        title.textContent = episodeId.toUpperCase();
+
+        // Mostrar histórico de tentativas
+        if (progress.attemptHistory && progress.attemptHistory.length > 0) {
+            optionsAttemptHistory.innerHTML = '<h4>📊 Melhores Tentativas</h4>';
+            progress.attemptHistory.forEach((attempt, index) => {
+                const date = new Date(attempt.date).toLocaleDateString('pt-BR');
+                const div = document.createElement('div');
+                div.className = 'attempt-item';
+                div.innerHTML = `
+                    <span>${index + 1}º - ${date}</span>
+                    <span>${attempt.accuracy.toFixed(1)}% (${attempt.points} pts)</span>
+                `;
+                optionsAttemptHistory.appendChild(div);
+            });
+            optionsAttemptHistory.style.display = 'block';
+        } else {
+            optionsAttemptHistory.style.display = 'none';
+        }
+
+        // Configurar botões
+        btnContinue.onclick = () => {
+            modal.classList.remove('active');
+            this.startGameWithOptions(episodeId, { isNewAttempt: false });
+        };
+
+        btnNewAttempt.onclick = () => {
+            modal.classList.remove('active');
+            this.startGameWithOptions(episodeId, { isNewAttempt: true });
+        };
+
+        btnReview.onclick = () => {
+            modal.classList.remove('active');
+            this.startGameWithOptions(episodeId, { reviewMode: true });
+        };
+        btnReview.style.display = progress.canReview ? 'block' : 'none';
+
+        btnResetEpisode.onclick = () => {
+            if (confirm('Tem certeza que deseja zerar o progresso deste episódio?')) {
+                storage.resetEpisode(this.currentProfile, episodeId);
+                modal.classList.remove('active');
+                this.updateEpisodeScreen();
+            }
+        };
+
+        modal.classList.add('active');
+    }
+
+    /**
+     * Inicia o jogo com opções de filtro
+     */
+    startGameWithOptions(episodeId, initialOptions = {}) {
+        const modal = document.getElementById('filter-options-modal');
+        const title = document.getElementById('filter-episode-title');
+        const btnStartGame = document.getElementById('btn-start-game');
+        const btnCancelFilter = document.getElementById('btn-cancel-filter');
+
+        title.textContent = episodeId.toUpperCase();
+
+        btnStartGame.onclick = () => {
+            const categoryFilter = document.querySelector('input[name="category-filter"]:checked').value;
+            const includeSentences = document.getElementById('include-sentences').checked;
+
+            modal.classList.remove('active');
+            
+            this.startGame(episodeId, {
+                ...initialOptions,
+                categoryFilter,
+                includeSentences
+            });
+        };
+
+        btnCancelFilter.onclick = () => {
+            modal.classList.remove('active');
+        };
+
+        modal.classList.add('active');
+    }
+
+    /**
      * Inicia o jogo
      */
-    startGame(episodeId, reviewMode = false) {
+    startGame(episodeId, options = {}) {
         this.currentEpisodeId = episodeId;
         
         // Encontrar dados do episódio
@@ -225,7 +336,7 @@ npx http-server</pre>
         }
 
         // Iniciar o jogo
-        const totalQuestions = game.startGame(this.currentProfile, episodeId, episodeData, reviewMode);
+        const totalQuestions = game.startGame(this.currentProfile, episodeId, episodeData, options);
         
         if (totalQuestions === 0) {
             alert('Nenhuma palavra disponível para este modo!');
@@ -277,8 +388,16 @@ npx http-server</pre>
         };
         document.getElementById('category-badge').textContent = categoryMap[question.category];
 
-        // Mostrar palavra
-        document.getElementById('word-text').textContent = question.word;
+        // Mostrar palavra ou frase
+        const wordDisplay = document.getElementById('word-text');
+        if (question.isSentence) {
+            wordDisplay.innerHTML = `<div class="sentence-question">
+                <div class="sentence-label">Traduza a frase:</div>
+                <div class="sentence-text">${question.sentence}</div>
+            </div>`;
+        } else {
+            wordDisplay.textContent = question.word;
+        }
 
         // Criar opções
         const optionsContainer = document.getElementById('translation-options');

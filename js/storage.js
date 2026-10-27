@@ -70,6 +70,7 @@ class StorageManager {
                 points: 0,
                 bestStreak: 0,
                 attempts: 0,
+                attemptHistory: [], // Histórico das 5 melhores tentativas
                 categories: {
                     adjetivos: { correct: 0, wrong: 0, total: 0 },
                     substantivos: { correct: 0, wrong: 0, total: 0 },
@@ -77,7 +78,9 @@ class StorageManager {
                     expressoes: { correct: 0, wrong: 0, total: 0 }
                 },
                 words: {}, // Armazena histórico de cada palavra
-                lastPlayed: null
+                sentences: {}, // Armazena histórico de frases
+                lastPlayed: null,
+                canReview: false // Flag para saber se pode revisar
             };
             this.saveProfile(profileName, profile);
         }
@@ -86,13 +89,13 @@ class StorageManager {
     }
 
     /**
-     * Salva o progresso de uma questão
+     * Salva o progresso de uma questão (palavra ou frase)
      */
     saveQuestionProgress(profileName, episodeId, questionData) {
         const profile = this.getProfile(profileName);
         const episode = this.getEpisodeProgress(profileName, episodeId);
 
-        const { word, category, correct, points } = questionData;
+        const { word, category, correct, points, isSentence } = questionData;
 
         // Atualizar estatísticas do episódio
         episode.totalQuestions++;
@@ -107,26 +110,29 @@ class StorageManager {
         episode.points += points;
         episode.lastPlayed = new Date().toISOString();
 
-        // Atualizar histórico da palavra
-        if (!episode.words[word]) {
-            episode.words[word] = {
+        // Escolher o armazenamento correto (palavra ou frase)
+        const storage = isSentence ? episode.sentences : episode.words;
+        
+        if (!storage[word]) {
+            storage[word] = {
                 word: word,
                 category: category,
                 attempts: 0,
                 correct: 0,
                 wrong: 0,
-                lastAttempt: null
+                lastAttempt: null,
+                isSentence: isSentence || false
             };
         }
         
-        const wordData = episode.words[word];
-        wordData.attempts++;
+        const itemData = storage[word];
+        itemData.attempts++;
         if (correct) {
-            wordData.correct++;
+            itemData.correct++;
         } else {
-            wordData.wrong++;
+            itemData.wrong++;
         }
-        wordData.lastAttempt = new Date().toISOString();
+        itemData.lastAttempt = new Date().toISOString();
 
         // Atualizar estatísticas globais do perfil
         profile.totalWords++;
@@ -164,12 +170,52 @@ class StorageManager {
         const accuracy = (result.correct / result.total) * 100;
         if (accuracy >= 70) {
             episode.completed = true;
+            episode.canReview = true; // Permitir revisão
         }
+
+        // Salvar no histórico de tentativas (mantém as 5 melhores)
+        const attemptData = {
+            date: new Date().toISOString(),
+            accuracy: accuracy,
+            points: result.points,
+            correct: result.correct,
+            wrong: result.wrong,
+            total: result.total,
+            bestStreak: result.bestStreak,
+            categoryStats: result.categoryStats
+        };
+
+        if (!episode.attemptHistory) {
+            episode.attemptHistory = [];
+        }
+
+        episode.attemptHistory.push(attemptData);
+
+        // Ordenar por pontos (decrescente) e manter apenas as 5 melhores
+        episode.attemptHistory.sort((a, b) => b.points - a.points);
+        episode.attemptHistory = episode.attemptHistory.slice(0, 5);
 
         profile.episodes[episodeId] = episode;
         this.saveProfile(profileName, profile);
 
         return profile;
+    }
+
+    /**
+     * Obtém palavras que ainda não foram aprendidas ou com mais erros
+     */
+    getWordsForPractice(profileName, episodeId) {
+        const episode = this.getEpisodeProgress(profileName, episodeId);
+        const wordsList = Object.values(episode.words);
+        
+        // Palavras não praticadas ou com taxa de erro > 30%
+        const needsPractice = wordsList.filter(word => {
+            if (word.attempts === 0) return true;
+            const errorRate = word.wrong / word.attempts;
+            return errorRate > 0.3;
+        });
+
+        return needsPractice.map(w => w.word);
     }
 
     /**
@@ -188,6 +234,28 @@ class StorageManager {
         });
 
         return wordsList.slice(0, limit);
+    }
+
+    /**
+     * Obtém frases que ainda não foram praticadas ou com mais erros
+     */
+    getSentencesForPractice(profileName, episodeId) {
+        const episode = this.getEpisodeProgress(profileName, episodeId);
+        
+        if (!episode.sentences) {
+            episode.sentences = {};
+        }
+        
+        const sentencesList = Object.values(episode.sentences);
+        
+        // Frases não praticadas ou com taxa de erro > 30%
+        const needsPractice = sentencesList.filter(sentence => {
+            if (sentence.attempts === 0) return true;
+            const errorRate = sentence.wrong / sentence.attempts;
+            return errorRate > 0.3;
+        });
+
+        return needsPractice.map(s => s.word);
     }
 
     /**

@@ -90,6 +90,10 @@
                 </div>
             </div>
 
+            <button class="btn btn-danger" id="btn-reset-profile" style="width: 100%; margin-bottom: 1rem;">
+                🗑️ Zerar Todo o Progresso do Perfil
+            </button>
+
             <h3 class="section-title">Escolha o episódio</h3>
             <div id="episodes-list" class="episodes-list">
                 <!-- Episódios serão inseridos dinamicamente -->
@@ -216,6 +220,80 @@
         <div class="feedback-content">
             <span class="feedback-icon"></span>
             <span class="feedback-text"></span>
+        </div>
+    </div>
+
+    <!-- Modal de Opções de Episódio -->
+    <div id="game-options-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="options-episode-title">S01E01</h3>
+            
+            <div id="options-attempt-history" style="margin: 1rem 0; display: none;">
+                <!-- Histórico será inserido aqui -->
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="btn-continue-episode">
+                    ▶️ Continuar Progresso
+                </button>
+                <button class="btn btn-secondary" id="btn-new-attempt">
+                    🔄 Nova Tentativa
+                </button>
+                <button class="btn btn-info" id="btn-review-episode">
+                    📖 Revisar Erros
+                </button>
+                <button class="btn btn-danger" id="btn-reset-episode">
+                    🗑️ Zerar Este Episódio
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Filtros de Jogo -->
+    <div id="filter-options-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="filter-episode-title">Opções de Jogo</h3>
+            
+            <div class="filter-section">
+                <h4>Tipo de Exercícios</h4>
+                <label class="radio-label">
+                    <input type="radio" name="category-filter" value="all" checked>
+                    Todos (Aleatório)
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="category-filter" value="verbos">
+                    🎯 Apenas Verbos
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="category-filter" value="adjetivos">
+                    🎨 Apenas Adjetivos
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="category-filter" value="substantivos">
+                    📦 Apenas Substantivos
+                </label>
+                <label class="radio-label">
+                    <input type="radio" name="category-filter" value="expressoes">
+                    💬 Apenas Expressões
+                </label>
+            </div>
+
+            <div class="filter-section">
+                <h4>Exercícios de Frases</h4>
+                <label class="checkbox-label">
+                    <input type="checkbox" id="include-sentences" checked>
+                    Incluir exercícios com frases de exemplo
+                </label>
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn btn-primary" id="btn-start-game">
+                    ▶️ Iniciar Jogo
+                </button>
+                <button class="btn btn-secondary" id="btn-cancel-filter">
+                    ❌ Cancelar
+                </button>
+            </div>
         </div>
     </div>
 
