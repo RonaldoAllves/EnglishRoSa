@@ -7,7 +7,7 @@ class FirebaseStorageManager {
     constructor() {
         this.database = window.firebaseDatabase;
         this.isOnline = false;
-        this.syncQueue = []; // Fila para operações offline
+        this.syncQueue = new Map();
         
         // Verificar se Firebase foi inicializado
         if (!this.database) {
@@ -17,7 +17,7 @@ class FirebaseStorageManager {
             console.log('✅ Firebase Storage inicializado');
         }
 
-        this.initializeProfiles();
+        this.ready = this.initializeProfiles();
         this.setupConnectionMonitoring();
     }
 
@@ -33,7 +33,7 @@ class FirebaseStorageManager {
             console.log(this.isOnline ? '🟢 Firebase Online' : '🔴 Firebase Offline');
             
             // Processar fila quando voltar online
-            if (this.isOnline && this.syncQueue.length > 0) {
+            if (this.isOnline && this.syncQueue.size > 0) {
                 this.processSyncQueue();
             }
         });
@@ -43,18 +43,27 @@ class FirebaseStorageManager {
      * Processa operações pendentes quando voltar online
      */
     async processSyncQueue() {
-        console.log(`📤 Sincronizando ${this.syncQueue.length} operações pendentes...`);
-        
-        while (this.syncQueue.length > 0) {
-            const operation = this.syncQueue.shift();
+        console.log(`📤 Sincronizando ${this.syncQueue.size} perfis pendentes...`);
+
+        const pendingProfiles = Array.from(this.syncQueue.entries());
+        this.syncQueue.clear();
+        for (const [profileName, profileData] of pendingProfiles) {
             try {
-                await operation();
+                const profileRef = firebase.database().ref(`profiles/${profileName}`);
+                await profileRef.set(profileData);
             } catch (error) {
                 console.error('Erro ao sincronizar:', error);
+                if (!this.syncQueue.has(profileName)) {
+                    this.syncQueue.set(profileName, profileData);
+                }
             }
         }
         
-        console.log('✅ Sincronização completa!');
+        if (this.syncQueue.size === 0) {
+            console.log('✅ Sincronização completa!');
+        } else {
+            console.warn(`⚠️ ${this.syncQueue.size} perfis continuam pendentes`);
+        }
     }
 
     /**
@@ -123,14 +132,15 @@ class FirebaseStorageManager {
             throw new Error('Firebase não está disponível');
         }
 
+        this.syncQueue.delete(profileName);
+
         try {
             const profileRef = firebase.database().ref(`profiles/${profileName}`);
             await profileRef.set(profileData);
             console.log(`💾 Perfil ${profileName} salvo no Firebase`);
         } catch (error) {
             console.error('Erro ao salvar perfil no Firebase:', error);
-            // Ainda adiciona à fila para tentar depois
-            this.syncQueue.push(() => this.saveProfile(profileName, profileData));
+            this.syncQueue.set(profileName, profileData);
             throw error;
         }
     }
@@ -203,7 +213,7 @@ class FirebaseStorageManager {
     /**
      * Salva o progresso de uma questão (palavra ou frase)
      */
-    saveQuestionProgress(profileName, episodeId, questionData) {
+    async saveQuestionProgress(profileName, episodeId, questionData) {
         // Obter profile do cache local
         const profileStr = localStorage.getItem(profileName);
         const profile = profileStr ? JSON.parse(profileStr) : this.createDefaultProfile(profileName);
@@ -240,6 +250,7 @@ class FirebaseStorageManager {
                 correct: 0,
                 wrong: 0,
                 lastAttempt: null,
+                lastCorrect: null,
                 isSentence: isSentence || false
             };
         }
@@ -252,6 +263,7 @@ class FirebaseStorageManager {
             itemData.wrong++;
         }
         itemData.lastAttempt = new Date().toISOString();
+        itemData.lastCorrect = correct;
 
         // Atualizar estatísticas globais do perfil
         // totalWords só incrementa para palavras, não para frases
@@ -268,7 +280,7 @@ class FirebaseStorageManager {
 
         // Salvar
         profile.episodes[episodeId] = episode;
-        this.saveProfile(profileName, profile);
+        await this.saveProfile(profileName, profile);
 
         return profile;
     }
@@ -276,7 +288,7 @@ class FirebaseStorageManager {
     /**
      * Salva o resultado final de uma sessão de jogo
      */
-    saveGameResult(profileName, episodeId, result) {
+    async saveGameResult(profileName, episodeId, result) {
         const profileStr = localStorage.getItem(profileName);
         const profile = profileStr ? JSON.parse(profileStr) : this.createDefaultProfile(profileName);
         const episode = this.getEpisodeProgress(profileName, episodeId);
@@ -317,7 +329,7 @@ class FirebaseStorageManager {
         episode.attemptHistory = episode.attemptHistory.slice(0, 5);
 
         profile.episodes[episodeId] = episode;
-        this.saveProfile(profileName, profile);
+        await this.saveProfile(profileName, profile);
 
         return profile;
     }
@@ -439,38 +451,60 @@ class FirebaseStorageManager {
     /**
      * Reseta o progresso de um episódio
      */
-    resetEpisode(profileName, episodeId) {
+    async resetEpisode(profileName, episodeId) {
         const profileStr = localStorage.getItem(profileName);
         const profile = profileStr ? JSON.parse(profileStr) : this.createDefaultProfile(profileName);
         
         if (profile.episodes && profile.episodes[episodeId]) {
             delete profile.episodes[episodeId];
-            this.saveProfile(profileName, profile);
+            await this.saveProfile(profileName, profile);
         }
     }
 
     /**
      * Reseta todo o perfil
      */
-    resetProfile(profileName) {
+    async resetProfile(profileName) {
         const newProfile = this.createDefaultProfile(profileName);
-        this.saveProfile(profileName, newProfile);
+        await this.saveProfile(profileName, newProfile);
     }
 
     /**
      * Sincroniza dados do localStorage com Firebase (migração)
      */
     async syncLocalToFirebase(profileName) {
+        await this.ready;
+
         const localData = localStorage.getItem(profileName);
         if (!localData) {
             console.log(`Nenhum dado local encontrado para ${profileName}`);
             return;
         }
 
-        const profile = JSON.parse(localData);
+        const localProfile = JSON.parse(localData);
+        const remoteProfile = await this.getProfile(profileName);
+        const remoteEpisodes = Object.values(remoteProfile.episodes || {});
+        const remoteHasProgress = (remoteProfile.totalCorrect || 0) > 0 ||
+            (remoteProfile.totalWrong || 0) > 0 ||
+            remoteEpisodes.some(episode =>
+                (episode.totalQuestions || 0) > 0 ||
+                Object.keys(episode.words || {}).length > 0 ||
+                Object.keys(episode.sentences || {}).length > 0
+            );
+
+        if (remoteHasProgress) {
+            localStorage.setItem(profileName, JSON.stringify(remoteProfile));
+            console.log(`☁️ Perfil ${profileName} já tem progresso no Firebase; dados locais substituídos pelos dados sincronizados`);
+            return;
+        }
+
+        if (!localProfile.totalWords && !(localProfile.totalCorrect || localProfile.totalWrong)) {
+            return;
+        }
+
         console.log(`📤 Sincronizando dados locais de ${profileName} para Firebase...`);
         
-        await this.saveProfile(profileName, profile);
+        await this.saveProfile(profileName, localProfile);
         console.log(`✅ Dados de ${profileName} sincronizados com sucesso!`);
     }
 

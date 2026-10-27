@@ -126,23 +126,26 @@ class GameManager {
     prepareUnlearnedWords() {
         const words = [];
         const sentences = [];
+        const progress = storage.getEpisodeProgress(this.currentProfile, this.currentEpisode);
+        const shouldPractice = itemProgress => {
+            if (!itemProgress || itemProgress.attempts === 0) {
+                return true;
+            }
 
-        // Obter palavras já dominadas (não mostrar elas)
-        const wordsMastered = storage.getWordsMastered(this.currentProfile, this.currentEpisode);
-        const wordsNeedingPractice = storage.getWordsNeedingPractice(this.currentProfile, this.currentEpisode);
-        const sentencesNeedingPractice = storage.getSentencesNeedingPractice(this.currentProfile, this.currentEpisode);
+            if (typeof itemProgress.lastCorrect === 'boolean') {
+                return !itemProgress.lastCorrect;
+            }
+
+            // Older progress records do not contain the result of the last attempt.
+            return !itemProgress.correct;
+        };
         
         const categories = this.getCategoriesForFilter();
         
         categories.forEach(category => {
             if (this.episodeData[category] && Array.isArray(this.episodeData[category])) {
                 this.episodeData[category].forEach(item => {
-                    // Verificar se a palavra JÁ foi dominada
-                    const isMastered = wordsMastered.includes(item.palavra);
-                    
-                    // Se não foi dominada, ou se precisa praticar, incluir
-                    if (!isMastered) {
-                        // Adicionar exercício de palavra
+                    if (shouldPractice(progress.words?.[item.palavra])) {
                         words.push({
                             word: item.palavra,
                             translation: item.traducao,
@@ -152,46 +155,29 @@ class GameManager {
                             category: category,
                             isSentence: false
                         });
-
-                        // Adicionar exercícios de frases
-                        const exampleSentences = [
-                            item.exemplo_diferente,
-                            item.exemplo_episodio,
-                            item.exemplo_adicional
-                        ].filter(s => s && s.trim());
-
-                        exampleSentences.forEach(sentence => {
-                            const sentenceKey = `${item.palavra}_${sentence}`;
-                            
-                            // Verificar se a frase foi dominada
-                            // Se não tem no histórico, incluir
-                            // Se tem e precisa praticar, incluir
-                            const shouldInclude = !sentencesNeedingPractice.length || 
-                                                 sentencesNeedingPractice.includes(sentenceKey) ||
-                                                 !storage.getEpisodeProgress(this.currentProfile, this.currentEpisode).sentences ||
-                                                 !storage.getEpisodeProgress(this.currentProfile, this.currentEpisode).sentences[sentenceKey];
-                            
-                            if (shouldInclude) {
-                                sentences.push({
-                                    word: item.palavra,
-                                    sentence: sentence,
-                                    translation: item.traducao,
-                                    category: category,
-                                    isSentence: true
-                                });
-                            }
-                        });
                     }
+
+                    const exampleSentences = [
+                        item.exemplo_diferente,
+                        item.exemplo_episodio,
+                        item.exemplo_adicional
+                    ].filter(s => s && s.trim());
+
+                    exampleSentences.forEach(sentence => {
+                        const sentenceKey = `${item.palavra}_${sentence}`;
+                        if (shouldPractice(progress.sentences?.[sentenceKey])) {
+                            sentences.push({
+                                word: item.palavra,
+                                sentence: sentence,
+                                translation: item.traducao,
+                                category: category,
+                                isSentence: true
+                            });
+                        }
+                    });
                 });
             }
         });
-
-        // Se não houver palavras para praticar (todas dominadas), usar todas
-        if (words.length === 0 && sentences.length === 0) {
-            console.log('✅ Todas as palavras dominadas! Mostrando todas novamente.');
-            this.prepareAllWords();
-            return;
-        }
 
         console.log(`📝 Continuar: ${words.length} palavras + ${sentences.length} frases para praticar`);
 
@@ -426,7 +412,7 @@ class GameManager {
     /**
      * Verifica a resposta do usuário
      */
-    checkAnswer(selectedOption) {
+    async checkAnswer(selectedOption) {
         const isCorrect = selectedOption === this.currentQuestion.correctTranslation;
         
         // Calcular pontos
@@ -454,27 +440,34 @@ class GameManager {
             : this.currentQuestion.word;
 
         // Salvar progresso imediatamente
-        storage.saveQuestionProgress(this.currentProfile, this.currentEpisode, {
-            word: wordKey,
-            category: this.currentQuestion.category,
-            correct: isCorrect,
-            points: points,
-            isSentence: this.currentQuestion.isSentence || false
-        });
-
         this.currentQuestionIndex++;
+
+        let persistenceError = null;
+        try {
+            await storage.saveQuestionProgress(this.currentProfile, this.currentEpisode, {
+                word: wordKey,
+                category: this.currentQuestion.category,
+                correct: isCorrect,
+                points: points,
+                isSentence: this.currentQuestion.isSentence || false
+            });
+        } catch (error) {
+            persistenceError = error;
+            console.error('Erro ao sincronizar o progresso da resposta:', error);
+        }
 
         return {
             correct: isCorrect,
             points: points,
-            correctAnswer: this.currentQuestion.correctTranslation
+            correctAnswer: this.currentQuestion.correctTranslation,
+            persistenceError: persistenceError
         };
     }
 
     /**
      * Obtém o resultado final do jogo
      */
-    getGameResult() {
+    async getGameResult() {
         const total = this.correctCount + this.wrongCount;
         const accuracy = total > 0 ? (this.correctCount / total * 100).toFixed(1) : 0;
 
@@ -489,7 +482,7 @@ class GameManager {
         };
 
         // Salvar resultado final
-        storage.saveGameResult(this.currentProfile, this.currentEpisode, result);
+        await storage.saveGameResult(this.currentProfile, this.currentEpisode, result);
 
         return result;
     }

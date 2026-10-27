@@ -18,6 +18,7 @@ Não abra `index.html` diretamente como arquivo (`file://`).
 - Modos para continuar, iniciar nova tentativa e revisar erros.
 - Filtros de exercícios por categoria.
 - Exercícios de palavras seguidos por exercícios de frases; frases fazem parte do jogo.
+- Em "Continuar", respostas corretas deixam de aparecer; respostas incorretas voltam para prática.
 
 O app exige conexão com o Firebase para iniciar. O progresso associado a um perfil pode ser acessado em outros dispositivos que usem esse mesmo perfil.
 

@@ -328,11 +328,16 @@ class App {
             // Configurar botão de reset de perfil
             const btnResetProfile = document.getElementById('btn-reset-profile');
             if (btnResetProfile) {
-                btnResetProfile.onclick = () => {
+                btnResetProfile.onclick = async () => {
                     if (confirm(`⚠️ ATENÇÃO!\n\nIsso irá APAGAR TODO O PROGRESSO de ${profileName}!\n\nTodas as palavras aprendidas, pontos e estatísticas serão perdidos.\n\nTem certeza absoluta?`)) {
-                        storage.resetProfile(profileName);
-                        this.updateEpisodeScreen();
-                        alert('✅ Perfil resetado com sucesso!');
+                        try {
+                            await storage.resetProfile(profileName);
+                            this.updateEpisodeScreen();
+                            alert('✅ Perfil resetado com sucesso!');
+                        } catch (error) {
+                            console.error('Erro ao resetar perfil:', error);
+                            alert('Não foi possível sincronizar o reset do perfil com o Firebase. Verifique sua conexão.');
+                        }
                     }
                 };
             }
@@ -501,11 +506,16 @@ class App {
         };
         btnReview.style.display = progress.canReview ? 'block' : 'none';
 
-        btnResetEpisode.onclick = () => {
+        btnResetEpisode.onclick = async () => {
             if (confirm('Tem certeza que deseja zerar o progresso deste episódio?')) {
-                storage.resetEpisode(this.currentProfile, episodeId);
-                modal.classList.remove('active');
-                this.updateEpisodeScreen();
+                try {
+                    await storage.resetEpisode(this.currentProfile, episodeId);
+                    modal.classList.remove('active');
+                    this.updateEpisodeScreen();
+                } catch (error) {
+                    console.error('Erro ao resetar progresso do episódio:', error);
+                    alert('Não foi possível sincronizar o reset do episódio com o Firebase. Verifique sua conexão.');
+                }
             }
         };
 
@@ -565,7 +575,7 @@ class App {
             
             if (totalQuestions === 0) {
                 this.hideLoading(loading);
-                alert('Nenhuma palavra disponível para este modo!');
+                alert('Não há exercícios pendentes neste modo. Escolha "Nova Tentativa" para praticar tudo novamente.');
                 return;
             }
 
@@ -651,14 +661,14 @@ class App {
     /**
      * Processa a resposta do usuário
      */
-    handleAnswer(button, selectedOption) {
+    async handleAnswer(button, selectedOption) {
         // Desabilitar todos os botões
         document.querySelectorAll('.option-btn').forEach(btn => {
             btn.disabled = true;
         });
 
         // Verificar resposta
-        const result = game.checkAnswer(selectedOption);
+        const result = await game.checkAnswer(selectedOption);
 
         // Adicionar classe visual
         if (result.correct) {
@@ -674,6 +684,10 @@ class App {
                     btn.classList.add('correct');
                 }
             });
+        }
+
+        if (result.persistenceError) {
+            alert('A resposta foi salva neste dispositivo, mas não foi confirmada pelo Firebase. Mantenha o app aberto e verifique sua conexão para sincronizar o progresso.');
         }
 
         // Atualizar estatísticas mini
@@ -706,8 +720,15 @@ class App {
     /**
      * Mostra os resultados
      */
-    showResults() {
-        const result = game.getGameResult();
+    async showResults() {
+        let result;
+        try {
+            result = await game.getGameResult();
+        } catch (error) {
+            console.error('Erro ao salvar o resultado do jogo:', error);
+            alert('O resultado foi salvo neste dispositivo, mas não foi confirmado pelo Firebase. Verifique sua conexão.');
+            return;
+        }
         
         // Atualizar círculo de progresso
         const circle = document.getElementById('score-circle');
