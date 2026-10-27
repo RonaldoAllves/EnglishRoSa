@@ -254,7 +254,10 @@ class FirebaseStorageManager {
         itemData.lastAttempt = new Date().toISOString();
 
         // Atualizar estatísticas globais do perfil
-        profile.totalWords++;
+        // totalWords só incrementa para palavras, não para frases
+        if (!isSentence) {
+            profile.totalWords++;
+        }
         if (correct) {
             profile.totalCorrect++;
         } else {
