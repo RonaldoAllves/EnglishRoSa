@@ -414,17 +414,10 @@ class App {
     createEpisodeCard(episodeData) {
         const episodeId = episodeData.episodio;
         const progress = storage.getEpisodeProgress(this.currentProfile, episodeId);
-        
-        // Calcular total de palavras
-        const totalWords = (
-            (episodeData.adjetivos?.length || 0) +
-            (episodeData.substantivos?.length || 0) +
-            (episodeData.verbos?.length || 0) +
-            (episodeData.expressoes?.length || 0)
-        );
-
-        const wordsLearned = progress.correctAnswers;
-        const completion = totalWords > 0 ? Math.round((wordsLearned / totalWords) * 100) : 0;
+        const exerciseProgress = this.getExerciseProgress(episodeData, progress).all;
+        const completion = exerciseProgress.total > 0
+            ? Math.round((exerciseProgress.completed / exerciseProgress.total) * 100)
+            : 0;
 
         const card = document.createElement('div');
         card.className = 'episode-card';
@@ -432,7 +425,7 @@ class App {
         let statusIcon = '';
         if (progress.completed) {
             statusIcon = '✅';
-        } else if (wordsLearned > 0) {
+        } else if (exerciseProgress.completed > 0) {
             statusIcon = '🔄';
         }
 
@@ -440,7 +433,7 @@ class App {
             <div class="episode-info">
                 <h4>${episodeId.toUpperCase()} ${statusIcon}</h4>
                 <div class="episode-progress-text">
-                    ${wordsLearned}/${totalWords} palavras
+                    ${exerciseProgress.completed}/${exerciseProgress.total} exercícios
                 </div>
                 ${progress.attempts > 0 ? `<div class="episode-attempts">Tentativas: ${progress.attempts}</div>` : ''}
             </div>
@@ -455,6 +448,53 @@ class App {
         });
 
         return card;
+    }
+
+    getExerciseProgress(episodeData, progress, categories = ['adjetivos', 'substantivos', 'verbos', 'expressoes']) {
+        const categoryProgress = {
+            all: { completed: 0, total: 0 },
+            adjetivos: { completed: 0, total: 0 },
+            substantivos: { completed: 0, total: 0 },
+            verbos: { completed: 0, total: 0 },
+            expressoes: { completed: 0, total: 0 }
+        };
+
+        const recordCompletion = (category, itemProgress) => {
+            const completed = typeof itemProgress?.lastCorrect === 'boolean'
+                ? itemProgress.lastCorrect
+                : Boolean(itemProgress?.correct);
+
+            categoryProgress[category].total++;
+            categoryProgress.all.total++;
+
+            if (completed) {
+                categoryProgress[category].completed++;
+                categoryProgress.all.completed++;
+            }
+        };
+
+        for (const category of categories) {
+            for (const item of episodeData[category] || []) {
+                recordCompletion(category, progress.words?.[item.palavra]);
+
+                const examples = [
+                    item.exemplo_diferente,
+                    item.exemplo_episodio,
+                    item.exemplo_adicional
+                ].filter(sentence => sentence && sentence.trim());
+
+                for (const sentence of examples) {
+                    const match = sentence.match(/^(.*?)\s*\((.*?)\)\s*$/);
+                    const englishSentence = match ? match[1].trim() : sentence.trim();
+                    const sentenceKey = `${item.palavra}_${englishSentence}`;
+                    const sentenceProgress = progress.sentences?.[sentenceKey] ||
+                        progress.sentences?.[`${item.palavra}_${sentence}`];
+                    recordCompletion(category, sentenceProgress);
+                }
+            }
+        }
+
+        return categoryProgress;
     }
 
     /**
@@ -560,46 +600,7 @@ class App {
         }
 
         const progress = storage.getEpisodeProgress(this.currentProfile, episodeId);
-        const categoryProgress = {
-            all: { completed: 0, total: 0 },
-            adjetivos: { completed: 0, total: 0 },
-            substantivos: { completed: 0, total: 0 },
-            verbos: { completed: 0, total: 0 },
-            expressoes: { completed: 0, total: 0 }
-        };
-
-        const recordCompletion = (category, itemProgress) => {
-            const completed = typeof itemProgress?.lastCorrect === 'boolean'
-                ? itemProgress.lastCorrect
-                : Boolean(itemProgress?.correct);
-
-            categoryProgress[category].total++;
-            categoryProgress.all.total++;
-
-            if (completed) {
-                categoryProgress[category].completed++;
-                categoryProgress.all.completed++;
-            }
-        };
-
-        for (const category of ['adjetivos', 'substantivos', 'verbos', 'expressoes']) {
-            for (const item of episodeData[category] || []) {
-                recordCompletion(category, progress.words?.[item.palavra]);
-
-                const examples = [
-                    item.exemplo_diferente,
-                    item.exemplo_episodio,
-                    item.exemplo_adicional
-                ].filter(sentence => sentence && sentence.trim());
-
-                for (const sentence of examples) {
-                    const match = sentence.match(/^(.*?)\s*\((.*?)\)\s*$/);
-                    const englishSentence = match ? match[1].trim() : sentence.trim();
-                    const sentenceKey = `${item.palavra}_${englishSentence}`;
-                    recordCompletion(category, progress.sentences?.[sentenceKey]);
-                }
-            }
-        }
+        const categoryProgress = this.getExerciseProgress(episodeData, progress);
 
         for (const [category, stats] of Object.entries(categoryProgress)) {
             const percentage = stats.total > 0
