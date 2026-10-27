@@ -23,7 +23,26 @@
                 <p class="firebase-status" id="firebase-status">🔄 Conectando ao Firebase...</p>
             </div>
             
-            <div class="profile-selection">
+            <!-- Loading enquanto conecta -->
+            <div id="firebase-loading" class="firebase-loading">
+                <div class="loading-spinner"></div>
+                <p>Conectando ao Firebase...</p>
+                <p class="loading-detail">Aguarde, carregando seus dados da nuvem</p>
+            </div>
+
+            <!-- Erro de conexão -->
+            <div id="firebase-error" class="firebase-error" style="display: none;">
+                <div class="error-icon">❌</div>
+                <h3>Não foi possível conectar ao Firebase</h3>
+                <p>O aplicativo requer conexão com a internet para funcionar.</p>
+                <p class="error-detail">Verifique sua conexão e tente novamente.</p>
+                <button class="btn btn-primary" onclick="location.reload()">
+                    🔄 Tentar Novamente
+                </button>
+            </div>
+            
+            <!-- Conteúdo principal (escondido até conectar) -->
+            <div id="profile-content" class="profile-selection" style="display: none;">
                 <h2>Escolha seu perfil</h2>
                 <div class="profile-cards">
                     <div class="profile-card" data-profile="ronaldo">
@@ -58,8 +77,8 @@
                 </div>
                 
                 <div class="sync-info">
-                    <p>🔥 Agora com sincronização em nuvem!</p>
-                    <p class="sync-detail">Seu progresso será salvo automaticamente no Firebase</p>
+                    <p>🔥 Sincronização em nuvem ativa!</p>
+                    <p class="sync-detail">Seu progresso está sendo salvo automaticamente</p>
                 </div>
             </div>
         </div>
@@ -285,14 +304,6 @@
                 <label class="radio-label">
                     <input type="radio" name="category-filter" value="expressoes">
                     💬 Apenas Expressões
-                </label>
-            </div>
-
-            <div class="filter-section">
-                <h4>Exercícios de Frases</h4>
-                <label class="checkbox-label">
-                    <input type="checkbox" id="include-sentences" checked>
-                    Incluir exercícios com frases de exemplo
                 </label>
             </div>
 

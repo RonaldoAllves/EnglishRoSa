@@ -16,23 +16,127 @@ class App {
      * Inicializa a aplicação
      */
     async init() {
-        // Atualizar status do Firebase
-        this.updateFirebaseStatus();
+        try {
+            // Mostrar loading
+            this.showFirebaseLoading();
+            
+            // Aguardar e verificar conexão Firebase (timeout de 15 segundos)
+            const connected = await this.waitForFirebaseConnection(15000);
+            
+            if (!connected) {
+                this.showFirebaseError();
+                return; // Não continua sem Firebase
+            }
+            
+            // Firebase conectado!
+            this.hideFirebaseLoading();
+            this.showProfileContent();
+            
+            // Atualizar status do Firebase
+            this.updateFirebaseStatus();
+            
+            // Carregar dados dos episódios
+            await this.loadEpisodesData();
+            
+            // Verificar se há dados locais antigos para migrar
+            await this.checkAndMigrateLocalData();
+            
+            // Configurar listeners
+            this.setupEventListeners();
+            
+            // Atualizar estatísticas dos perfis
+            this.updateProfileStats();
+            
+        } catch (error) {
+            console.error('❌ Erro ao inicializar app:', error);
+            this.showFirebaseError();
+        }
+    }
+
+    /**
+     * Aguarda conexão com Firebase
+     */
+    async waitForFirebaseConnection(timeout = 15000) {
+        return new Promise((resolve) => {
+            let elapsed = 0;
+            const checkInterval = 500;
+            
+            const checkConnection = setInterval(() => {
+                elapsed += checkInterval;
+                
+                // Verificar se Firebase está inicializado e online
+                if (window.firebaseDatabase && window.firebaseStorage) {
+                    // Verificar se está realmente conectado
+                    if (window.firebaseStorage.isOnline) {
+                        clearInterval(checkConnection);
+                        console.log('✅ Firebase conectado com sucesso!');
+                        resolve(true);
+                        return;
+                    }
+                }
+                
+                // Timeout
+                if (elapsed >= timeout) {
+                    clearInterval(checkConnection);
+                    console.error('❌ Timeout: Firebase não conectou');
+                    resolve(false);
+                }
+            }, checkInterval);
+        });
+    }
+
+    /**
+     * Mostra loading do Firebase
+     */
+    showFirebaseLoading() {
+        const loading = document.getElementById('firebase-loading');
+        const error = document.getElementById('firebase-error');
+        const content = document.getElementById('profile-content');
         
-        // Carregar dados dos episódios
-        await this.loadEpisodesData();
+        if (loading) loading.style.display = 'block';
+        if (error) error.style.display = 'none';
+        if (content) content.style.display = 'none';
+    }
+
+    /**
+     * Esconde loading do Firebase
+     */
+    hideFirebaseLoading() {
+        const loading = document.getElementById('firebase-loading');
+        if (loading) loading.style.display = 'none';
+    }
+
+    /**
+     * Mostra erro de conexão
+     */
+    showFirebaseError() {
+        const loading = document.getElementById('firebase-loading');
+        const error = document.getElementById('firebase-error');
+        const content = document.getElementById('profile-content');
         
-        // Verificar se há dados locais antigos para migrar
-        await this.checkAndMigrateLocalData();
+        if (loading) loading.style.display = 'none';
+        if (error) error.style.display = 'block';
+        if (content) content.style.display = 'none';
         
-        // Configurar listeners
-        this.setupEventListeners();
+        // Atualizar status
+        const statusEl = document.getElementById('firebase-status');
+        if (statusEl) {
+            statusEl.textContent = '🔴 Sem conexão';
+            statusEl.className = 'firebase-status offline';
+        }
+    }
+
+    /**
+     * Mostra conteúdo dos perfis
+     */
+    showProfileContent() {
+        const loading = document.getElementById('firebase-loading');
+        const error = document.getElementById('firebase-error');
+        const content = document.getElementById('profile-content');
         
-        // Atualizar estatísticas dos perfis
-        this.updateProfileStats();
-        
-        // Mostrar tela inicial
-        this.showScreen('profile-screen');
+        if (loading) loading.style.display = 'none';
+        if (error) error.style.display = 'none';
+        if (content) content.style.display = 'block';
     }
 
     /**
@@ -449,14 +553,13 @@ class App {
 
         btnStartGame.onclick = () => {
             const categoryFilter = document.querySelector('input[name="category-filter"]:checked').value;
-            const includeSentences = document.getElementById('include-sentences').checked;
 
             modal.classList.remove('active');
             
             this.startGame(episodeId, {
                 ...initialOptions,
                 categoryFilter,
-                includeSentences
+                includeSentences: true // Sempre incluir frases
             });
         };
 
@@ -707,31 +810,30 @@ class App {
 document.addEventListener('DOMContentLoaded', async () => {
     console.log('📱 DOM carregado, iniciando app...');
     
-    // Aguardar Firebase carregar (máximo 10 segundos)
+    // Aguardar Firebase Storage carregar (máximo 10 segundos)
     let attempts = 0;
-    await new Promise(resolve => {
+    const firebaseReady = await new Promise(resolve => {
         const checkFirebase = setInterval(() => {
             attempts++;
             if (window.firebaseStorage) {
                 clearInterval(checkFirebase);
                 console.log('✅ Firebase Storage disponível');
-                resolve();
+                resolve(true);
             } else if (attempts > 100) { // 10 segundos
                 clearInterval(checkFirebase);
-                console.warn('⚠️ Firebase não carregou, usando fallback localStorage');
-                resolve();
+                console.error('❌ Firebase Storage não carregou');
+                resolve(false);
             }
         }, 100);
     });
 
-    // Definir storage global
-    if (window.firebaseStorage) {
-        window.storage = window.firebaseStorage;
-    } else {
-        // Fallback: usar localStorage diretamente
-        console.warn('⚠️ Usando localStorage como fallback');
-        // Importar storage.js antigo se necessário
+    if (!firebaseReady) {
+        console.error('❌ Não foi possível inicializar Firebase Storage');
+        // App.init() vai mostrar erro de conexão
     }
+
+    // Definir storage global (obrigatório agora)
+    window.storage = window.firebaseStorage;
     
     const app = new App();
     window.app = app; // Tornar acessível globalmente para debug

@@ -6,13 +6,15 @@
 class FirebaseStorageManager {
     constructor() {
         this.database = window.firebaseDatabase;
-        this.isOnline = true;
+        this.isOnline = false;
         this.syncQueue = []; // Fila para operações offline
         
         // Verificar se Firebase foi inicializado
         if (!this.database) {
-            console.error('❌ Firebase não inicializado! Usando fallback para localStorage');
+            console.error('❌ Firebase não inicializado!');
             this.isOnline = false;
+        } else {
+            console.log('✅ Firebase Storage inicializado');
         }
 
         this.initializeProfiles();
@@ -91,10 +93,8 @@ class FirebaseStorageManager {
      * Obtém os dados de um perfil do Firebase
      */
     async getProfile(profileName) {
-        if (!this.isOnline || !this.database) {
-            // Fallback para localStorage
-            const data = localStorage.getItem(profileName);
-            return data ? JSON.parse(data) : this.createDefaultProfile(profileName);
+        if (!this.database) {
+            throw new Error('Firebase não está disponível');
         }
 
         try {
@@ -108,9 +108,7 @@ class FirebaseStorageManager {
             }
         } catch (error) {
             console.error('Erro ao obter perfil do Firebase:', error);
-            // Fallback para localStorage
-            const data = localStorage.getItem(profileName);
-            return data ? JSON.parse(data) : this.createDefaultProfile(profileName);
+            throw error; // Propagar erro ao invés de usar fallback
         }
     }
 
@@ -121,10 +119,8 @@ class FirebaseStorageManager {
         // Sempre salvar no localStorage como backup
         localStorage.setItem(profileName, JSON.stringify(profileData));
 
-        if (!this.isOnline || !this.database) {
-            // Adicionar à fila para sincronizar depois
-            this.syncQueue.push(() => this.saveProfile(profileName, profileData));
-            return;
+        if (!this.database) {
+            throw new Error('Firebase não está disponível');
         }
 
         try {
@@ -133,8 +129,9 @@ class FirebaseStorageManager {
             console.log(`💾 Perfil ${profileName} salvo no Firebase`);
         } catch (error) {
             console.error('Erro ao salvar perfil no Firebase:', error);
-            // Adicionar à fila para tentar depois
+            // Ainda adiciona à fila para tentar depois
             this.syncQueue.push(() => this.saveProfile(profileName, profileData));
+            throw error;
         }
     }
 

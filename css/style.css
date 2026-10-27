@@ -885,3 +885,66 @@ body {
     color: var(--text-secondary);
     font-size: 1rem;
 }
+
+/* Firebase Loading */
+.firebase-loading {
+    text-align: center;
+    padding: 3rem 1rem;
+}
+
+.firebase-loading .loading-spinner {
+    width: 80px;
+    height: 80px;
+    border: 6px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 2rem;
+}
+
+.firebase-loading p {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin: 0.5rem 0;
+}
+
+.loading-detail {
+    font-size: 0.9rem !important;
+    color: var(--text-secondary) !important;
+}
+
+/* Firebase Error */
+.firebase-error {
+    text-align: center;
+    padding: 3rem 1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.error-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+}
+
+.firebase-error h3 {
+    color: var(--error);
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+}
+
+.firebase-error p {
+    color: var(--text-secondary);
+    margin: 0.5rem 0;
+    line-height: 1.6;
+}
+
+.error-detail {
+    font-size: 0.9rem !important;
+    margin-top: 1rem !important;
+}
+
+.firebase-error .btn {
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 300px;
+}

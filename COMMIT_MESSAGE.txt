@@ -1,102 +1,93 @@
-feat: Integração Firebase + Sistema de tentativas e filtros
+feat: Frases sempre ativas + Conexão Firebase obrigatória
 
-🔥 GRANDE ATUALIZAÇÃO: Sincronização em nuvem + Melhorias no sistema de aprendizado
+EXERCÍCIOS DE FRASES:
+- ✅ Removida opção de incluir/excluir frases de exemplo
+- ✅ Frases agora são sempre incluídas nos exercícios
+- ✅ Palavras aparecem PRIMEIRO, frases DEPOIS (ordem garantida)
+- ✅ Embaralhamento separado: palavras entre si, frases entre si
+- ✅ Funciona com todos os filtros (Todos/Verbos/Adjetivos/etc)
+- ✅ Ao filtrar por categoria, frases também são filtradas
 
-FIREBASE - SINCRONIZAÇÃO EM NUVEM:
-- ✅ Integração completa com Firebase Realtime Database
-- ✅ Sincronização automática entre dispositivos
-- ✅ Funciona offline com fila de sincronização
-- ✅ Migração automática de dados do localStorage
-- ✅ Fallback inteligente para localStorage se Firebase falhar
-- ✅ Indicador visual de status de conexão (online/offline)
-- ✅ Loading ao carregar dados do Firebase
-- ✅ Suporte a múltiplos formatos de dados (array e objeto)
+CONEXÃO FIREBASE OBRIGATÓRIA:
+- ✅ App agora requer conexão com Firebase para funcionar
+- ✅ Tela de loading ao iniciar (aguarda até 15s)
+- ✅ Tela de erro se não conseguir conectar
+- ✅ Botão "Tentar Novamente" na tela de erro
+- ✅ Não permite uso offline (sem fallback para localStorage)
+- ✅ Perfis só aparecem após conexão confirmada
+- ✅ Status visual claro (loading → sucesso/erro)
 
-SISTEMA DE APRENDIZADO:
-- ✅ Sistema de tentativas - salva as 5 melhores de cada episódio
-- ✅ Modal de opções ao clicar em episódio (Continuar/Nova/Revisar/Zerar)
-- ✅ Exercícios com tradução de frases completas (além de palavras)
-- ✅ Filtros por categoria (todos/verbos/adjetivos/substantivos/expressões)
-- ✅ Opção de incluir/excluir exercícios de frases
-- ✅ Continuar progresso agora mostra apenas palavras não dominadas (erro > 30%)
-- ✅ Flag canReview persiste após completar episódio
-- ✅ Histórico de tentativas ordenado por pontuação (top 5)
-- ✅ Ícones de status nos cards (✅ completo, 🔄 em progresso)
+COMPORTAMENTO POR FILTRO:
+- **Todos (Aleatório)**: 
+  - Palavras de todas categorias (embaralhadas) → Primeiro
+  - Frases de todas categorias (embaralhadas) → Depois
 
-INTERFACE:
-- ✅ Modais para opções de episódio e filtros de jogo
-- ✅ Indicador de status Firebase na tela inicial
-- ✅ Loading overlay ao carregar dados
-- ✅ Interface diferenciada para questões de frases vs palavras
-- ✅ Botão para zerar episódio específico
-- ✅ Botão para zerar todo o progresso do perfil
-- ✅ Informação sobre sincronização em nuvem na tela inicial
+- **Apenas Verbos**:
+  - Palavras de verbos (embaralhadas) → Primeiro
+  - Frases de verbos (embaralhadas) → Depois
 
-ARQUIVOS NOVOS:
-- js/firebase-config.js - Configuração e inicialização do Firebase
-- js/firebase-storage.js - Sistema de armazenamento com sincronização
-- FIREBASE_SETUP.md - Documentação completa da integração
-- firebase-rules.json - Regras de segurança do Firebase
-- DEPLOY.md - Guia completo de deploy
-- GUIA_RAPIDO.md - Instruções de uso das funcionalidades
-- SINCRONIZACAO.md - Explicação sobre sincronização
-- test-firebase.html - Teste de conexão Firebase
-- test-simple.html - Teste de carregamento de episódios
-- fix-firebase-data.html - Script para corrigir dados no Firebase
+- **Apenas Adjetivos**:
+  - Palavras de adjetivos (embaralhadas) → Primeiro
+  - Frases de adjetivos (embaralhadas) → Depois
+
+- E assim por diante para Substantivos e Expressões
 
 ARQUIVOS MODIFICADOS:
-- index.html - Scripts Firebase, status de conexão, modais
-- js/app.js - Integração Firebase, loading, migração automática
-- js/game.js - Suporte a filtros, exercícios de frases, categorização
-- js/storage.js - Melhorias no sistema de progresso e tentativas
-- css/style.css - Estilos para modais, Firebase status, loading
-- .gitignore - Adicionado node_modules e arquivos Firebase
-- README.md - Atualizado com instruções Firebase
+- index.html - Removido checkbox de frases, adicionado loading/erro
+- js/app.js - Verificação obrigatória de conexão Firebase
+- js/game.js - Separação de palavras e frases, ordem garantida
+- js/firebase-storage.js - Removidos fallbacks para localStorage
+- css/style.css - Estilos para loading e tela de erro
 
-COMO FUNCIONA:
-1. App conecta ao Firebase automaticamente
-2. Migra dados antigos do localStorage para Firebase
-3. Carrega progresso do Firebase ao selecionar perfil
-4. Salva cada ação localmente + Firebase em tempo real
-5. Se offline, adiciona à fila e sincroniza quando voltar online
-6. Permite acesso de qualquer dispositivo com progresso sincronizado
+ARQUIVOS NOVOS:
+- test-order.html - Teste de ordem dos exercícios
+- test-offline.html - Instruções para testar modo offline
+
+LÓGICA DE ORDEM DOS EXERCÍCIOS:
+```javascript
+// Antes (misturado):
+[palavra1, frase1, palavra2, frase2, palavra3] ❌
+
+// Agora (organizado):
+[palavra1, palavra2, palavra3, frase1, frase2] ✅
+```
+
+REMOÇÕES:
+- ❌ Checkbox "Incluir exercícios com frases de exemplo"
+- ❌ Opção includeSentences (sempre true agora)
+- ❌ Fallback para localStorage sem Firebase
+- ❌ Modo offline funcional
+- ❌ Embaralhamento final que misturava palavras e frases
 
 BENEFÍCIOS:
-✅ Progresso sincronizado entre dispositivos (PC, celular, tablet)
-✅ Backup automático na nuvem
-✅ Não perde dados ao limpar cache do navegador
-✅ Funciona offline com sincronização posterior
-✅ Sistema de tentativas para melhorar pontuação
-✅ Filtros personalizados de exercícios
-✅ Exercícios mais completos (palavras + frases)
+✅ Experiência de aprendizado mais progressiva (palavras antes de frases)
+✅ Garante que dados estão sempre sincronizados na nuvem
+✅ Evita inconsistências entre dispositivos
+✅ Força backup automático
+✅ Usuário sempre tem dados atualizados
 
-CONFIGURAÇÃO FIREBASE:
-- Projeto: englishrosa-a3e97
-- Database: Realtime Database
-- Regras: profiles (read/write), episodios (read-only)
-- SDK: Firebase 9.22.0 (compat mode)
+SEGURANÇA:
+✅ Dados sempre salvos na nuvem
+✅ Não depende de cache local volátil
+✅ Sincronização garantida
+✅ Backup automático obrigatório
 
-COMPATIBILIDADE:
-- Totalmente retrocompatível com dados existentes
-- localStorage mantido como cache e fallback
-- Funciona sem Firebase se necessário
-- Migração automática transparente
+EXPERIÊNCIA DO USUÁRIO:
+- Loading claro ao iniciar
+- Erro informativo se sem internet
+- Botão para tentar reconectar
+- Mensagens claras de status
+- Não frustra com "modo limitado"
 
 TESTADO:
-✅ Sincronização entre múltiplos dispositivos
-✅ Modo offline com sincronização posterior
-✅ Migração de dados do localStorage
-✅ Fallback para localStorage quando Firebase falha
-✅ Carregamento de episódios (arquivo local e Firebase)
-✅ Sistema de tentativas e filtros
-✅ Exercícios com frases
-✅ Loading states e feedback visual
+✅ Ordem das palavras vs frases
+✅ Filtros por categoria mantêm ordem
+✅ Loading e conexão Firebase
+✅ Tela de erro sem conexão
+✅ Impossibilidade de usar offline
+✅ Todos os modos (Continuar/Nova/Revisar)
 
-FERRAMENTAS DE DEBUG:
-- test-firebase.html - Testa conexão e carregamento Firebase
-- test-simple.html - Testa carregamento básico de episódios
-- fix-firebase-data.html - Corrige formato de dados no Firebase
-
-Resolve #issue: Progresso zerado entre dispositivos
-Resolve #issue: Contador sempre começando em 1/40
-Resolve #issue: Opção de revisar desaparecendo
+Breaking Changes:
+- App não funciona mais offline
+- Requer internet para usar
+- Firebase obrigatório (não opcional)

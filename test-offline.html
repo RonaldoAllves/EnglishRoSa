@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Teste - Modo Offline Bloqueado</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+            background: #0f172a;
+            color: #f1f5f9;
+        }
+        .info {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+            border: 2px solid #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 Teste - Modo Offline Bloqueado</h1>
+    
+    <div class="info">
+        <h3>Como testar:</h3>
+        <ol>
+            <li>Abra o DevTools (F12)</li>
+            <li>Vá em "Network" ou "Rede"</li>
+            <li>Selecione "Offline" no dropdown</li>
+            <li>Recarregue a página</li>
+            <li>O app deve mostrar erro e NÃO permitir uso</li>
+        </ol>
+    </div>
+
+    <div class="info">
+        <h3>Comportamento esperado:</h3>
+        <ul>
+            <li>❌ Loading "Conectando ao Firebase..."</li>
+            <li>❌ Depois de 15 segundos: Erro de conexão</li>
+            <li>❌ Botão "Tentar Novamente"</li>
+            <li>✅ NÃO deve mostrar os perfis</li>
+            <li>✅ NÃO deve permitir jogar</li>
+        </ul>
+    </div>
+
+    <div class="info">
+        <h3>Com internet:</h3>
+        <ul>
+            <li>✅ Loading "Conectando ao Firebase..."</li>
+            <li>✅ Status "🟢 Conectado ao Firebase"</li>
+            <li>✅ Mostra perfis normalmente</li>
+            <li>✅ Permite jogar</li>
+        </ul>
+    </div>
+
+    <hr style="margin: 2rem 0; border-color: #334155;">
+
+    <a href="index.html" style="color: #6366f1; font-size: 1.2rem;">
+        ← Voltar para o App Principal
+    </a>
+</body>
+</html>

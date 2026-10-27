@@ -24,8 +24,8 @@ class GameManager {
         };
         this.isReviewMode = false;
         this.categoryFilter = 'all'; // 'all', 'adjetivos', 'substantivos', 'verbos', 'expressoes'
-        this.includeSentences = true; // Se deve incluir exercícios de frases
         this.isNewAttempt = false; // Se é uma nova tentativa (reiniciar progresso)
+        // includeSentences removido - sempre será true
     }
 
     /**
@@ -37,8 +37,8 @@ class GameManager {
         this.episodeData = episodeData;
         this.isReviewMode = options.reviewMode || false;
         this.categoryFilter = options.categoryFilter || 'all';
-        this.includeSentences = options.includeSentences !== false;
         this.isNewAttempt = options.isNewAttempt || false;
+        // includeSentences sempre true (removido da opção)
         
         // Reset das estatísticas
         this.currentQuestionIndex = 0;
@@ -63,8 +63,8 @@ class GameManager {
             this.prepareUnlearnedWords(); // Continuar do progresso
         }
 
-        // Embaralhar
-        this.shuffleArray(this.allWords);
+        // NÃO embaralhar aqui - já embaralhamos palavras e frases separadamente
+        // this.shuffleArray(this.allWords); // REMOVIDO
 
         return this.allWords.length;
     }
@@ -73,7 +73,8 @@ class GameManager {
      * Prepara todas as palavras do episódio
      */
     prepareAllWords() {
-        this.allWords = [];
+        const words = [];
+        const sentences = [];
 
         const categories = this.getCategoriesForFilter();
         
@@ -81,7 +82,7 @@ class GameManager {
             if (this.episodeData[category] && Array.isArray(this.episodeData[category])) {
                 this.episodeData[category].forEach(item => {
                     // Adicionar exercício de palavra
-                    this.allWords.push({
+                    words.push({
                         word: item.palavra,
                         translation: item.traducao,
                         exampleDiff: item.exemplo_diferente,
@@ -91,34 +92,40 @@ class GameManager {
                         isSentence: false
                     });
 
-                    // Adicionar exercícios de frases (se habilitado)
-                    if (this.includeSentences) {
-                        const sentences = [
-                            item.exemplo_diferente,
-                            item.exemplo_episodio,
-                            item.exemplo_adicional
-                        ].filter(s => s && s.trim());
+                    // Adicionar exercícios de frases (sempre, mas em array separado)
+                    const exampleSentences = [
+                        item.exemplo_diferente,
+                        item.exemplo_episodio,
+                        item.exemplo_adicional
+                    ].filter(s => s && s.trim());
 
-                        sentences.forEach(sentence => {
-                            this.allWords.push({
-                                word: item.palavra,
-                                sentence: sentence,
-                                translation: item.traducao,
-                                category: category,
-                                isSentence: true
-                            });
+                    exampleSentences.forEach(sentence => {
+                        sentences.push({
+                            word: item.palavra,
+                            sentence: sentence,
+                            translation: item.traducao,
+                            category: category,
+                            isSentence: true
                         });
-                    }
+                    });
                 });
             }
         });
+
+        // Embaralhar palavras e frases separadamente
+        this.shuffleArray(words);
+        this.shuffleArray(sentences);
+
+        // Concatenar: palavras primeiro, frases depois
+        this.allWords = [...words, ...sentences];
     }
 
     /**
      * Prepara apenas palavras não aprendidas (continuar progresso)
      */
     prepareUnlearnedWords() {
-        this.allWords = [];
+        const words = [];
+        const sentences = [];
 
         const wordsToSkip = storage.getWordsForPractice(this.currentProfile, this.currentEpisode);
         const sentencesToSkip = storage.getSentencesForPractice(this.currentProfile, this.currentEpisode);
@@ -133,7 +140,7 @@ class GameManager {
                     
                     if (needsPractice) {
                         // Adicionar exercício de palavra
-                        this.allWords.push({
+                        words.push({
                             word: item.palavra,
                             translation: item.traducao,
                             exampleDiff: item.exemplo_diferente,
@@ -143,39 +150,45 @@ class GameManager {
                             isSentence: false
                         });
 
-                        // Adicionar exercícios de frases (se habilitado)
-                        if (this.includeSentences) {
-                            const sentences = [
-                                item.exemplo_diferente,
-                                item.exemplo_episodio,
-                                item.exemplo_adicional
-                            ].filter(s => s && s.trim());
+                        // Adicionar exercícios de frases
+                        const exampleSentences = [
+                            item.exemplo_diferente,
+                            item.exemplo_episodio,
+                            item.exemplo_adicional
+                        ].filter(s => s && s.trim());
 
-                            sentences.forEach(sentence => {
-                                const sentenceKey = `${item.palavra}_${sentence}`;
-                                const needsSentencePractice = sentencesToSkip.length === 0 || 
-                                                             sentencesToSkip.includes(sentenceKey);
-                                
-                                if (needsSentencePractice) {
-                                    this.allWords.push({
-                                        word: item.palavra,
-                                        sentence: sentence,
-                                        translation: item.traducao,
-                                        category: category,
-                                        isSentence: true
-                                    });
-                                }
-                            });
-                        }
+                        exampleSentences.forEach(sentence => {
+                            const sentenceKey = `${item.palavra}_${sentence}`;
+                            const needsSentencePractice = sentencesToSkip.length === 0 || 
+                                                         sentencesToSkip.includes(sentenceKey);
+                            
+                            if (needsSentencePractice) {
+                                sentences.push({
+                                    word: item.palavra,
+                                    sentence: sentence,
+                                    translation: item.traducao,
+                                    category: category,
+                                    isSentence: true
+                                });
+                            }
+                        });
                     }
                 });
             }
         });
 
         // Se não houver palavras para praticar, usar todas
-        if (this.allWords.length === 0) {
+        if (words.length === 0 && sentences.length === 0) {
             this.prepareAllWords();
+            return;
         }
+
+        // Embaralhar palavras e frases separadamente
+        this.shuffleArray(words);
+        this.shuffleArray(sentences);
+
+        // Concatenar: palavras primeiro, frases depois
+        this.allWords = [...words, ...sentences];
     }
 
     /**
