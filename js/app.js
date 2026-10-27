@@ -532,6 +532,7 @@ class App {
         const btnCancelFilter = document.getElementById('btn-cancel-filter');
 
         title.textContent = episodeId.toUpperCase();
+        this.updateCategoryProgress(episodeId);
 
         btnStartGame.onclick = () => {
             const categoryFilter = document.querySelector('input[name="category-filter"]:checked').value;
@@ -550,6 +551,72 @@ class App {
         };
 
         modal.classList.add('active');
+    }
+
+    updateCategoryProgress(episodeId) {
+        const episodeData = this.episodesData.episodios.find(ep => ep.episodio === episodeId);
+        if (!episodeData) {
+            return;
+        }
+
+        const progress = storage.getEpisodeProgress(this.currentProfile, episodeId);
+        const categoryProgress = {
+            all: { completed: 0, total: 0 },
+            adjetivos: { completed: 0, total: 0 },
+            substantivos: { completed: 0, total: 0 },
+            verbos: { completed: 0, total: 0 },
+            expressoes: { completed: 0, total: 0 }
+        };
+
+        const recordCompletion = (category, itemProgress) => {
+            const completed = typeof itemProgress?.lastCorrect === 'boolean'
+                ? itemProgress.lastCorrect
+                : Boolean(itemProgress?.correct);
+
+            categoryProgress[category].total++;
+            categoryProgress.all.total++;
+
+            if (completed) {
+                categoryProgress[category].completed++;
+                categoryProgress.all.completed++;
+            }
+        };
+
+        for (const category of ['adjetivos', 'substantivos', 'verbos', 'expressoes']) {
+            for (const item of episodeData[category] || []) {
+                recordCompletion(category, progress.words?.[item.palavra]);
+
+                const examples = [
+                    item.exemplo_diferente,
+                    item.exemplo_episodio,
+                    item.exemplo_adicional
+                ].filter(sentence => sentence && sentence.trim());
+
+                for (const sentence of examples) {
+                    const match = sentence.match(/^(.*?)\s*\((.*?)\)\s*$/);
+                    const englishSentence = match ? match[1].trim() : sentence.trim();
+                    const sentenceKey = `${item.palavra}_${englishSentence}`;
+                    recordCompletion(category, progress.sentences?.[sentenceKey]);
+                }
+            }
+        }
+
+        for (const [category, stats] of Object.entries(categoryProgress)) {
+            const percentage = stats.total > 0
+                ? Math.round((stats.completed / stats.total) * 100)
+                : 0;
+            const count = document.querySelector(`[data-progress-count="${category}"]`);
+            const bar = document.querySelector(`[data-progress-bar="${category}"]`);
+
+            if (count) {
+                count.textContent = `Concluídos: ${stats.completed}/${stats.total} (${percentage}%)`;
+            }
+
+            if (bar) {
+                bar.value = percentage;
+                bar.setAttribute('aria-valuetext', `${percentage}% concluído`);
+            }
+        }
     }
 
     /**

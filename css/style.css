@@ -729,6 +729,31 @@ body {
     transition: all 0.2s;
 }
 
+.radio-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.filter-option-content {
+    display: grid;
+    flex: 1;
+    gap: 0.4rem;
+}
+
+.filter-progress {
+    display: grid;
+    gap: 0.25rem;
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+}
+
+.filter-progress progress {
+    width: 100%;
+    height: 0.5rem;
+    accent-color: var(--primary);
+}
+
 .radio-label:hover,
 .checkbox-label:hover {
     border-color: var(--primary);
@@ -738,6 +763,10 @@ body {
 .checkbox-label input {
     margin-right: 0.75rem;
     cursor: pointer;
+}
+
+.radio-label input {
+    margin-right: 0;
 }
 
 .radio-label input:checked,

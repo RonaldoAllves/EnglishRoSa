@@ -164,7 +164,7 @@ class GameManager {
                     ].filter(s => s && s.trim());
 
                     exampleSentences.forEach(sentence => {
-                        const sentenceKey = `${item.palavra}_${sentence}`;
+                        const sentenceKey = this.getSentenceProgressKey(item.palavra, sentence);
                         if (shouldPractice(progress.sentences?.[sentenceKey])) {
                             sentences.push({
                                 word: item.palavra,
@@ -197,6 +197,12 @@ class GameManager {
             return ['adjetivos', 'substantivos', 'verbos', 'expressoes'];
         }
         return [this.categoryFilter];
+    }
+
+    getSentenceProgressKey(word, sentence) {
+        const match = sentence.match(/^(.*?)\s*\((.*?)\)\s*$/);
+        const englishSentence = match ? match[1].trim() : sentence.trim();
+        return `${word}_${englishSentence}`;
     }
 
     /**
@@ -436,7 +442,7 @@ class GameManager {
 
         // Preparar dados para salvar
         const wordKey = this.currentQuestion.isSentence 
-            ? `${this.currentQuestion.word}_${this.currentQuestion.sentence}` 
+            ? this.getSentenceProgressKey(this.currentQuestion.word, this.currentQuestion.sentence)
             : this.currentQuestion.word;
 
         // Salvar progresso imediatamente
