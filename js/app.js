@@ -32,9 +32,6 @@ class App {
             this.hideFirebaseLoading();
             this.showProfileContent();
             
-            // Atualizar status do Firebase
-            this.updateFirebaseStatus();
-            
             // Carregar dados dos episódios
             await this.loadEpisodesData();
             
@@ -117,13 +114,6 @@ class App {
         if (loading) loading.style.display = 'none';
         if (error) error.style.display = 'block';
         if (content) content.style.display = 'none';
-        
-        // Atualizar status
-        const statusEl = document.getElementById('firebase-status');
-        if (statusEl) {
-            statusEl.textContent = '🔴 Sem conexão';
-            statusEl.className = 'firebase-status offline';
-        }
     }
 
     /**
@@ -137,24 +127,6 @@ class App {
         if (loading) loading.style.display = 'none';
         if (error) error.style.display = 'none';
         if (content) content.style.display = 'block';
-    }
-
-    /**
-     * Atualiza o indicador de status do Firebase
-     */
-    updateFirebaseStatus() {
-        const statusEl = document.getElementById('firebase-status');
-        
-        if (window.firebaseStorage && window.firebaseStorage.isOnline) {
-            statusEl.textContent = '🟢 Conectado ao Firebase';
-            statusEl.className = 'firebase-status online';
-        } else {
-            statusEl.textContent = '🔴 Modo Offline (usando cache local)';
-            statusEl.className = 'firebase-status offline';
-        }
-
-        // Atualizar a cada 5 segundos
-        setTimeout(() => this.updateFirebaseStatus(), 5000);
     }
 
     /**

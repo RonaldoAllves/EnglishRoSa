@@ -807,23 +807,6 @@ body {
     }
 }
 
-/* Firebase Status */
-.firebase-status {
-    font-size: 0.85rem;
-    margin-top: 0.5rem;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    background: var(--bg-card);
-}
-
-.firebase-status.online {
-    color: var(--success);
-}
-
-.firebase-status.offline {
-    color: var(--warning);
-}
-
 /* Sync Info */
 .sync-info {
     margin-top: 2rem;
