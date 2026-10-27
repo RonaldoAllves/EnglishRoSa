@@ -125,6 +125,8 @@ class FirebaseStorageManager {
      * Salva os dados de um perfil no Firebase
      */
     async saveProfile(profileName, profileData) {
+        this.normalizeSentenceKeys(profileData);
+
         // Sempre salvar no localStorage como backup
         localStorage.setItem(profileName, JSON.stringify(profileData));
 
@@ -142,6 +144,57 @@ class FirebaseStorageManager {
             console.error('Erro ao salvar perfil no Firebase:', error);
             this.syncQueue.set(profileName, profileData);
             throw error;
+        }
+    }
+
+    getSentenceProgressKey(word, sentence) {
+        const match = sentence.match(/^(.*?)\s*\((.*?)\)\s*$/);
+        const englishSentence = match ? match[1].trim() : sentence.trim();
+        const rawKey = `${word}_${englishSentence}`;
+        const encodedKey = Array.from(rawKey, character =>
+            character.codePointAt(0).toString(16).padStart(6, '0')
+        ).join('');
+
+        return `sentence_${encodedKey}`;
+    }
+
+    normalizeSentenceKeys(profile) {
+        for (const episode of Object.values(profile.episodes || {})) {
+            if (!episode.sentences) {
+                continue;
+            }
+
+            const normalizedSentences = {};
+            for (const [key, sentenceProgress] of Object.entries(episode.sentences)) {
+                let normalizedKey = key;
+                if (!/^sentence_[0-9a-f]+$/i.test(key)) {
+                    const separatorIndex = key.indexOf('_');
+                    if (separatorIndex > 0) {
+                        const word = key.slice(0, separatorIndex);
+                        const sentence = key.slice(separatorIndex + 1)
+                            .replace(/\s*\([^()]*\)\s*$/, '')
+                            .trim();
+                        normalizedKey = this.getSentenceProgressKey(word, sentence);
+                    } else {
+                        normalizedKey = this.getSentenceProgressKey('', key);
+                    }
+                }
+
+                if (normalizedSentences[normalizedKey]) {
+                    const existing = normalizedSentences[normalizedKey];
+                    existing.attempts = (Number(existing.attempts) || 0) + (Number(sentenceProgress.attempts) || 0);
+                    existing.correct = (Number(existing.correct) || 0) + (Number(sentenceProgress.correct) || 0);
+                    existing.wrong = (Number(existing.wrong) || 0) + (Number(sentenceProgress.wrong) || 0);
+                    if (sentenceProgress.lastAttempt > existing.lastAttempt) {
+                        existing.lastAttempt = sentenceProgress.lastAttempt;
+                        existing.lastCorrect = sentenceProgress.lastCorrect;
+                    }
+                } else {
+                    normalizedSentences[normalizedKey] = { ...sentenceProgress };
+                }
+            }
+
+            episode.sentences = normalizedSentences;
         }
     }
 

@@ -486,8 +486,9 @@ class App {
                 for (const sentence of examples) {
                     const match = sentence.match(/^(.*?)\s*\((.*?)\)\s*$/);
                     const englishSentence = match ? match[1].trim() : sentence.trim();
-                    const sentenceKey = `${item.palavra}_${englishSentence}`;
+                    const sentenceKey = storage.getSentenceProgressKey(item.palavra, englishSentence);
                     const sentenceProgress = progress.sentences?.[sentenceKey] ||
+                        progress.sentences?.[`${item.palavra}_${englishSentence}`] ||
                         progress.sentences?.[`${item.palavra}_${sentence}`];
                     recordCompletion(category, sentenceProgress);
                 }
