@@ -82,7 +82,6 @@ roda apenas no seu computador!
 📄 LEIA-ME.html      - Instruções visuais (abra no navegador)
 📄 QUICK_START.md    - Início rápido
 📄 README.md         - Documentação completa
-📄 test.html         - Testar se está funcionando
 
 
 ╔═══════════════════════════════════════════════════════════════╗
