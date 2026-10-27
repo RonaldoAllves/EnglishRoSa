@@ -302,6 +302,7 @@ class App {
         });
 
         document.getElementById('btn-back-episodes-result').addEventListener('click', () => {
+            this.updateEpisodeScreen();
             this.showScreen('episode-screen');
         });
 
@@ -546,7 +547,7 @@ class App {
 
         btnNewAttempt.onclick = () => {
             modal.classList.remove('active');
-            this.startGameWithOptions(episodeId, { isNewAttempt: true });
+            this.startGameWithOptions(episodeId, { isNewAttempt: true, resetDisplayedProgress: true });
         };
 
         btnReview.onclick = () => {
@@ -579,9 +580,10 @@ class App {
         const title = document.getElementById('filter-episode-title');
         const btnStartGame = document.getElementById('btn-start-game');
         const btnCancelFilter = document.getElementById('btn-cancel-filter');
+        const { resetDisplayedProgress = false, ...gameOptions } = initialOptions;
 
         title.textContent = episodeId.toUpperCase();
-        this.updateCategoryProgress(episodeId);
+        this.updateCategoryProgress(episodeId, resetDisplayedProgress);
 
         btnStartGame.onclick = () => {
             const categoryFilter = document.querySelector('input[name="category-filter"]:checked').value;
@@ -589,7 +591,7 @@ class App {
             modal.classList.remove('active');
             
             this.startGame(episodeId, {
-                ...initialOptions,
+                ...gameOptions,
                 categoryFilter,
                 includeSentences: true // Sempre incluir frases
             });
@@ -602,7 +604,7 @@ class App {
         modal.classList.add('active');
     }
 
-    updateCategoryProgress(episodeId) {
+    updateCategoryProgress(episodeId, resetProgress = false) {
         const episodeData = this.episodesData.episodios.find(ep => ep.episodio === episodeId);
         if (!episodeData) {
             return;
@@ -612,14 +614,15 @@ class App {
         const categoryProgress = this.getExerciseProgress(episodeData, progress);
 
         for (const [category, stats] of Object.entries(categoryProgress)) {
+            const completed = resetProgress ? 0 : stats.completed;
             const percentage = stats.total > 0
-                ? Math.round((stats.completed / stats.total) * 100)
+                ? Math.round((completed / stats.total) * 100)
                 : 0;
             const count = document.querySelector(`[data-progress-count="${category}"]`);
             const bar = document.querySelector(`[data-progress-bar="${category}"]`);
 
             if (count) {
-                count.textContent = `Concluídos: ${stats.completed}/${stats.total} (${percentage}%)`;
+                count.textContent = `Concluídos: ${completed}/${stats.total} (${percentage}%)`;
             }
 
             if (bar) {

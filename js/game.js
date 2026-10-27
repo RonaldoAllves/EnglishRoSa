@@ -531,7 +531,9 @@ class GameManager {
         };
 
         // Salvar resultado final
-        await storage.saveGameResult(this.currentProfile, this.currentEpisode, result);
+        if (!this.isReviewMode && this.categoryFilter === 'all') {
+            await storage.saveGameResult(this.currentProfile, this.currentEpisode, result);
+        }
 
         return result;
     }
