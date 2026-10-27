@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <title>English Learning - TBBT</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="manifest" href="manifest.json">
+</head>
+<body>
+    <!-- Tela de Seleção de Perfil -->
+    <div id="profile-screen" class="screen active">
+        <div class="container">
+            <div class="logo">
+                <h1>📺 English Learning</h1>
+                <p class="subtitle">The Big Bang Theory</p>
+            </div>
+            
+            <div class="profile-selection">
+                <h2>Escolha seu perfil</h2>
+                <div class="profile-cards">
+                    <div class="profile-card" data-profile="ronaldo">
+                        <div class="profile-avatar">👨‍💻</div>
+                        <h3>Ronaldo</h3>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="ronaldo-words">0</span>
+                                <span class="stat-label">palavras</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="ronaldo-episodes">0</span>
+                                <span class="stat-label">episódios</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-card" data-profile="sarah">
+                        <div class="profile-avatar">👩‍💼</div>
+                        <h3>Sarah</h3>
+                        <div class="profile-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="sarah-words">0</span>
+                                <span class="stat-label">palavras</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="sarah-episodes">0</span>
+                                <span class="stat-label">episódios</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Seleção de Episódio -->
+    <div id="episode-screen" class="screen">
+        <div class="header">
+            <button class="btn-back" id="btn-back-profile">← Perfil</button>
+            <h2 id="current-profile-name">Ronaldo</h2>
+            <div class="profile-points">
+                <span id="profile-total-points">0</span> pts
+            </div>
+        </div>
+        
+        <div class="container">
+            <div class="stats-overview">
+                <div class="stat-card">
+                    <div class="stat-icon">📚</div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="total-words">0</span>
+                        <span class="stat-text">Palavras</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="total-correct">0</span>
+                        <span class="stat-text">Acertos</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-info">
+                        <span class="stat-number" id="accuracy">0%</span>
+                        <span class="stat-text">Precisão</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3 class="section-title">Escolha o episódio</h3>
+            <div id="episodes-list" class="episodes-list">
+                <!-- Episódios serão inseridos dinamicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Jogo -->
+    <div id="game-screen" class="screen">
+        <div class="header">
+            <button class="btn-back" id="btn-back-episodes">← Episódios</button>
+            <div class="game-info">
+                <h3 id="game-episode">S01E01</h3>
+                <div class="game-progress">
+                    <span id="current-question">1</span>/<span id="total-questions">40</span>
+                </div>
+            </div>
+            <div class="game-points">
+                <span id="game-points">0</span> pts
+            </div>
+        </div>
+
+        <div class="game-container">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+
+            <div class="category-badge" id="category-badge">Verbo</div>
+
+            <div class="question-card">
+                <div class="word-display">
+                    <h2 id="word-text">think</h2>
+                </div>
+
+                <div class="translation-options" id="translation-options">
+                    <!-- Opções de tradução -->
+                </div>
+            </div>
+
+            <div class="stats-mini">
+                <div class="mini-stat">
+                    <span class="mini-icon">✅</span>
+                    <span id="mini-correct">0</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-icon">❌</span>
+                    <span id="mini-wrong">0</span>
+                </div>
+                <div class="mini-stat">
+                    <span class="mini-icon">🔥</span>
+                    <span id="mini-streak">0</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tela de Resultado -->
+    <div id="result-screen" class="screen">
+        <div class="header">
+            <button class="btn-back" id="btn-back-episodes-result">← Episódios</button>
+            <h2>Resultado</h2>
+            <div></div>
+        </div>
+
+        <div class="container">
+            <div class="result-container">
+                <div class="result-score">
+                    <div class="score-circle">
+                        <svg width="200" height="200">
+                            <circle cx="100" cy="100" r="90" class="score-bg"></circle>
+                            <circle cx="100" cy="100" r="90" class="score-progress" id="score-circle"></circle>
+                        </svg>
+                        <div class="score-text">
+                            <span class="score-percentage" id="result-percentage">0%</span>
+                            <span class="score-label">Acertos</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="result-stats">
+                    <div class="result-stat">
+                        <span class="result-label">Total de Questões</span>
+                        <span class="result-value" id="result-total">0</span>
+                    </div>
+                    <div class="result-stat success">
+                        <span class="result-label">✅ Acertos</span>
+                        <span class="result-value" id="result-correct">0</span>
+                    </div>
+                    <div class="result-stat error">
+                        <span class="result-label">❌ Erros</span>
+                        <span class="result-value" id="result-wrong">0</span>
+                    </div>
+                    <div class="result-stat points">
+                        <span class="result-label">🎯 Pontos Ganhos</span>
+                        <span class="result-value" id="result-points">0</span>
+                    </div>
+                    <div class="result-stat streak">
+                        <span class="result-label">🔥 Maior Sequência</span>
+                        <span class="result-value" id="result-streak">0</span>
+                    </div>
+                </div>
+
+                <div class="result-category-breakdown">
+                    <h3>Desempenho por Categoria</h3>
+                    <div id="category-breakdown">
+                        <!-- Breakdown será inserido aqui -->
+                    </div>
+                </div>
+
+                <div class="result-actions">
+                    <button class="btn btn-primary" id="btn-play-again">
+                        🔄 Jogar Novamente
+                    </button>
+                    <button class="btn btn-secondary" id="btn-review">
+                        📖 Revisar Erros
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feedback Toast -->
+    <div id="feedback-toast" class="feedback-toast">
+        <div class="feedback-content">
+            <span class="feedback-icon"></span>
+            <span class="feedback-text"></span>
+        </div>
+    </div>
+
+    <script src="js/storage.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

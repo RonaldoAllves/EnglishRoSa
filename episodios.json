@@ -1,0 +1,2240 @@
+{
+  "serie": "The Big Bang Theory",
+  "temporada": 1,
+  "total_episodios": 7,
+  "episodios": [
+    {
+      "episodio": "s01e01",
+      "adjetivos": [
+        {
+          "palavra": "good",
+          "traducao": "bom",
+          "exemplo_diferente": "This is a good movie (Este é um bom filme)",
+          "exemplo_episodio": "I just think it's a good idea (Eu só acho que é uma boa ideia)",
+          "exemplo_adicional": "She's a good teacher (Ela é uma boa professora)"
+        },
+        {
+          "palavra": "new",
+          "traducao": "novo",
+          "exemplo_diferente": "I bought a new phone (Eu comprei um celular novo)",
+          "exemplo_episodio": "New neighbor? (Novo vizinho?)",
+          "exemplo_adicional": "They opened a new restaurant (Eles abriram um restaurante novo)"
+        },
+        {
+          "palavra": "little",
+          "traducao": "pequeno/pouco",
+          "exemplo_diferente": "I'm a little tired (Estou um pouco cansado)",
+          "exemplo_episodio": "A little extra money (Um dinheiro extra)",
+          "exemplo_adicional": "The little dog is cute (O cachorrinho é fofo)"
+        },
+        {
+          "palavra": "high",
+          "traducao": "alto",
+          "exemplo_diferente": "The building is very high (O prédio é muito alto)",
+          "exemplo_episodio": "Is this the high-IQ sperm bank? (Este é o banco de esperma de QI alto?)",
+          "exemplo_adicional": "High temperatures today (Temperaturas altas hoje)"
+        },
+        {
+          "palavra": "interesting",
+          "traducao": "interessante",
+          "exemplo_diferente": "This book is interesting (Este livro é interessante)",
+          "exemplo_episodio": "You wanna hear an interesting thing about stairs? (Você quer ouvir uma coisa interessante sobre escadas?)",
+          "exemplo_adicional": "That's an interesting perspective (Essa é uma perspectiva interessante)"
+        },
+        {
+          "palavra": "poor",
+          "traducao": "pobre",
+          "exemplo_diferente": "He is a poor man (Ele é um homem pobre)",
+          "exemplo_episodio": "There's some poor woman (Há alguma pobre mulher)",
+          "exemplo_adicional": "Poor people deserve help (Pessoas pobres merecem ajuda)"
+        },
+        {
+          "palavra": "nice",
+          "traducao": "legal/agradável",
+          "exemplo_diferente": "She is a nice person (Ela é uma pessoa legal)",
+          "exemplo_episodio": "Oh, that's nice (Ah, que legal)",
+          "exemplo_adicional": "What a nice surprise! (Que surpresa legal!)"
+        },
+        {
+          "palavra": "sure",
+          "traducao": "certo/certeza",
+          "exemplo_diferente": "I'm not sure about this (Não tenho certeza sobre isso)",
+          "exemplo_episodio": "I'm sure she'll still love him (Tenho certeza de que ela ainda vai amá-lo)",
+          "exemplo_adicional": "Are you sure? (Você tem certeza?)"
+        },
+        {
+          "palavra": "same",
+          "traducao": "mesmo/igual",
+          "exemplo_diferente": "We have the same taste (Temos o mesmo gosto)",
+          "exemplo_episodio": "I have a sister with the same basic DNA (Eu tenho uma irmã com o mesmo DNA básico)",
+          "exemplo_adicional": "We're in the same class (Estamos na mesma turma)"
+        },
+        {
+          "palavra": "mad",
+          "traducao": "bravo/louco",
+          "exemplo_diferente": "Don't be mad at me (Não fique bravo comigo)",
+          "exemplo_episodio": "Are you still mad about the sperm bank? (Você ainda está bravo sobre o banco de esperma?)",
+          "exemplo_adicional": "He's mad because he lost (Ele está bravo porque perdeu)"
+        }
+      ],
+      "substantivos": [
+        {
+          "palavra": "idea",
+          "traducao": "ideia",
+          "exemplo_diferente": "That's a great idea! (Essa é uma ótima ideia!)",
+          "exemplo_episodio": "I just think it's a good idea for a T-shirt (Eu só acho que é uma boa ideia para uma camiseta)",
+          "exemplo_adicional": "Do you have any ideas? (Você tem alguma ideia?)"
+        },
+        {
+          "palavra": "point",
+          "traducao": "ponto/sentido",
+          "exemplo_diferente": "What's the main point? (Qual é o ponto principal?)",
+          "exemplo_episodio": "What's your point? (Qual é o seu ponto?)",
+          "exemplo_adicional": "I see your point (Eu entendo seu ponto)"
+        },
+        {
+          "palavra": "time",
+          "traducao": "tempo/vez",
+          "exemplo_diferente": "What time is it? (Que horas são?)",
+          "exemplo_episodio": "Oh, take your time (Ah, sem pressa/leve seu tempo)",
+          "exemplo_adicional": "We don't have much time (Não temos muito tempo)"
+        },
+        {
+          "palavra": "place",
+          "traducao": "lugar",
+          "exemplo_diferente": "This is a nice place (Este é um lugar legal)",
+          "exemplo_episodio": "I think this is the place (Eu acho que este é o lugar)",
+          "exemplo_adicional": "There's no place like home (Não há lugar como o lar)"
+        },
+        {
+          "palavra": "neighbor",
+          "traducao": "vizinho",
+          "exemplo_diferente": "My neighbor is friendly (Meu vizinho é amigável)",
+          "exemplo_episodio": "New neighbor? (Novo vizinho?)",
+          "exemplo_adicional": "The neighbors are having a party (Os vizinhos estão fazendo uma festa)"
+        },
+        {
+          "palavra": "sperm",
+          "traducao": "esperma",
+          "exemplo_diferente": "Sperm bank donation (Doação de banco de esperma)",
+          "exemplo_episodio": "Are you still mad about the sperm bank? (Você ainda está bravo sobre o banco de esperma?)",
+          "exemplo_adicional": "Sperm cells are microscopic (Células de esperma são microscópicas)"
+        },
+        {
+          "palavra": "sister",
+          "traducao": "irmã",
+          "exemplo_diferente": "I have one sister (Eu tenho uma irmã)",
+          "exemplo_episodio": "I have a sister with the same basic DNA mix (Eu tenho uma irmã com a mesma mistura básica de DNA)",
+          "exemplo_adicional": "My sister lives in Canada (Minha irmã mora no Canadá)"
+        },
+        {
+          "palavra": "money",
+          "traducao": "dinheiro",
+          "exemplo_diferente": "I need more money (Eu preciso de mais dinheiro)",
+          "exemplo_episodio": "A little extra money (Um dinheiro extra)",
+          "exemplo_adicional": "Money can't buy happiness (Dinheiro não compra felicidade)"
+        },
+        {
+          "palavra": "hall",
+          "traducao": "corredor",
+          "exemplo_diferente": "The hall is dark (O corredor está escuro)",
+          "exemplo_episodio": "We live across the hall (Nós moramos do outro lado do corredor)",
+          "exemplo_adicional": "Meet me in the hall (Me encontre no corredor)"
+        },
+        {
+          "palavra": "apartment",
+          "traducao": "apartamento",
+          "exemplo_diferente": "I love my apartment (Eu amo meu apartamento)",
+          "exemplo_episodio": "Get T1 bandwidth in the apartment (Conseguir banda larga T1 no apartamento)",
+          "exemplo_adicional": "Her apartment has two bedrooms (O apartamento dela tem dois quartos)"
+        }
+      ],
+      "verbos": [
+        {
+          "palavra": "think",
+          "traducao": "pensar/achar",
+          "exemplo_diferente": "I think coffee is good (Eu acho que café é bom)",
+          "exemplo_episodio": "I just think it's a good idea for a T-shirt (Eu só acho que é uma boa ideia para uma camiseta)",
+          "exemplo_adicional": "I think we should leave early (Acho que devemos sair cedo)"
+        },
+        {
+          "palavra": "know",
+          "traducao": "saber/conhecer",
+          "exemplo_diferente": "Do you know her name? (Você sabe o nome dela?)",
+          "exemplo_episodio": "I don't know (Eu não sei)",
+          "exemplo_adicional": "I know how to fix this (Eu sei como consertar isso)"
+        },
+        {
+          "palavra": "want",
+          "traducao": "querer",
+          "exemplo_diferente": "I want pizza for dinner (Eu quero pizza no jantar)",
+          "exemplo_episodio": "What do you wanna do? (O que você quer fazer?)",
+          "exemplo_adicional": "She wants to travel next month (Ela quer viajar no próximo mês)"
+        },
+        {
+          "palavra": "have",
+          "traducao": "ter",
+          "exemplo_diferente": "I have a dog (Eu tenho um cachorro)",
+          "exemplo_episodio": "If you have to ask, maybe you shouldn't be here (Se você tem que perguntar, talvez não deveria estar aqui)",
+          "exemplo_adicional": "They have three children (Eles têm três filhos)"
+        },
+        {
+          "palavra": "live",
+          "traducao": "morar/viver",
+          "exemplo_diferente": "I live in São Paulo (Eu moro em São Paulo)",
+          "exemplo_episodio": "We live across the hall (Nós moramos do outro lado do corredor)",
+          "exemplo_adicional": "My parents live in the countryside (Meus pais moram no interior)"
+        },
+        {
+          "palavra": "can",
+          "traducao": "poder/conseguir",
+          "exemplo_diferente": "Can you swim? (Você consegue nadar?)",
+          "exemplo_episodio": "I don't think I can do this (Eu não acho que consigo fazer isso)",
+          "exemplo_adicional": "Can you help me tomorrow? (Você pode me ajudar amanhã?)"
+        },
+        {
+          "palavra": "leave",
+          "traducao": "sair/deixar",
+          "exemplo_diferente": "I need to leave now (Eu preciso sair agora)",
+          "exemplo_episodio": "I want to leave (Eu quero sair)",
+          "exemplo_adicional": "Don't leave your keys in the car (Não deixe suas chaves no carro)"
+        },
+        {
+          "palavra": "help",
+          "traducao": "ajudar",
+          "exemplo_diferente": "Can you help me? (Você pode me ajudar?)",
+          "exemplo_episodio": "Can I help you? (Posso ajudá-lo?)",
+          "exemplo_adicional": "She always helps her neighbors (Ela sempre ajuda seus vizinhos)"
+        },
+        {
+          "palavra": "try",
+          "traducao": "tentar",
+          "exemplo_diferente": "Try to understand (Tente entender)",
+          "exemplo_episodio": "Let's try just walking out (Vamos tentar apenas sair andando)",
+          "exemplo_adicional": "I'll try my best (Vou tentar o meu melhor)"
+        },
+        {
+          "palavra": "care",
+          "traducao": "importar-se/cuidar",
+          "exemplo_diferente": "I don't care what they think (Não me importo com o que eles pensam)",
+          "exemplo_episodio": "I don't care (Eu não me importo)",
+          "exemplo_adicional": "Who cares about that? (Quem se importa com isso?)"
+        }
+      ],
+      "expressoes": [
+        {
+          "palavra": "hang on",
+          "traducao": "espera aí/aguenta aí",
+          "exemplo_diferente": "Hang on, I'm almost ready (Espera aí, estou quase pronto)",
+          "exemplo_episodio": "Hang on (Espera aí)",
+          "exemplo_adicional": "Hang on a second (Aguenta aí um segundo)"
+        },
+        {
+          "palavra": "excuse me",
+          "traducao": "com licença",
+          "exemplo_diferente": "Excuse me, where is the bathroom? (Com licença, onde fica o banheiro?)",
+          "exemplo_episodio": "Excuse me (Com licença)",
+          "exemplo_adicional": "Excuse me, can I pass? (Com licença, posso passar?)"
+        },
+        {
+          "palavra": "are you kidding",
+          "traducao": "você está brincando",
+          "exemplo_diferente": "Are you kidding me? That's amazing! (Você está brincando? Isso é incrível!)",
+          "exemplo_episodio": "What, are you kidding? (O quê, você está brincando?)",
+          "exemplo_adicional": "Are you kidding right now? (Você está brincando agora?)"
+        },
+        {
+          "palavra": "think about that",
+          "traducao": "pense sobre isso",
+          "exemplo_diferente": "Think about that before you decide (Pense sobre isso antes de decidir)",
+          "exemplo_episodio": "Think about that (Pense sobre isso)",
+          "exemplo_adicional": "Just think about that for a minute (Apenas pense sobre isso por um minuto)"
+        },
+        {
+          "palavra": "take your time",
+          "traducao": "sem pressa/leve seu tempo",
+          "exemplo_diferente": "Take your time, no hurry (Sem pressa, não há pressa)",
+          "exemplo_episodio": "Oh, take your time (Ah, leve seu tempo)",
+          "exemplo_adicional": "Take your time with the test (Leve seu tempo com a prova)"
+        },
+        {
+          "palavra": "I don't care",
+          "traducao": "não me importo",
+          "exemplo_diferente": "I don't care what he says (Não me importo com o que ele diz)",
+          "exemplo_episodio": "I don't care (Eu não me importo)",
+          "exemplo_adicional": "I don't care about that (Não me importo com isso)"
+        },
+        {
+          "palavra": "that's why",
+          "traducao": "é por isso que",
+          "exemplo_diferente": "That's why I love this place (É por isso que eu amo este lugar)",
+          "exemplo_episodio": "Is that why they sent you to boarding school? (É por isso que te mandaram para o internato?)",
+          "exemplo_adicional": "That's why I called you (É por isso que eu liguei pra você)"
+        },
+        {
+          "palavra": "what if",
+          "traducao": "e se",
+          "exemplo_diferente": "What if it rains tomorrow? (E se chover amanhã?)",
+          "exemplo_episodio": "What if she winds up with a toddler... (E se ela acabar com uma criança...)",
+          "exemplo_adicional": "What if we're wrong? (E se estivermos errados?)"
+        },
+        {
+          "palavra": "across the hall",
+          "traducao": "do outro lado do corredor",
+          "exemplo_diferente": "My friend lives across the hall (Meu amigo mora do outro lado do corredor)",
+          "exemplo_episodio": "We live across the hall (Nós moramos do outro lado do corredor)",
+          "exemplo_adicional": "The bathroom is across the hall (O banheiro fica do outro lado do corredor)"
+        },
+        {
+          "palavra": "wanna",
+          "traducao": "querer (informal)",
+          "exemplo_diferente": "I wanna go home (Eu quero ir pra casa)",
+          "exemplo_episodio": "What do you wanna do? (O que você quer fazer?)",
+          "exemplo_adicional": "I wanna try that restaurant (Eu quero experimentar aquele restaurante)"
+        }
+      ]
+    },
+    {
+      "episodio": "s01e02",
+      "adjetivos": [
+        {
+          "palavra": "puffy",
+          "traducao": "inchado",
+          "exemplo_diferente": "My face looks puffy (Meu rosto parece inchado)",
+          "exemplo_episodio": "Do I look puffy? (Eu pareço inchado?)",
+          "exemplo_adicional": "Her eyes are puffy from crying (Os olhos dela estão inchados de tanto chorar)"
+        },
+        {
+          "palavra": "minimum",
+          "traducao": "mínimo",
+          "exemplo_diferente": "The minimum age is 18 (A idade mínima é 18)",
+          "exemplo_episodio": "I get minimum wage (Eu ganho salário mínimo)",
+          "exemplo_adicional": "What's the minimum payment? (Qual é o pagamento mínimo?)"
+        },
+        {
+          "palavra": "attractive",
+          "traducao": "atraente",
+          "exemplo_diferente": "She is very attractive (Ela é muito atraente)",
+          "exemplo_episodio": "He can't talk to attractive women (Ele não consegue falar com mulheres atraentes)",
+          "exemplo_adicional": "That's an attractive offer (Essa é uma oferta atraente)"
+        },
+        {
+          "palavra": "beautiful",
+          "traducao": "bonita/lindo",
+          "exemplo_diferente": "What a beautiful day (Que dia lindo)",
+          "exemplo_episodio": "How beautiful you are (Quão bonita você é)",
+          "exemplo_adicional": "The view is beautiful (A vista é linda)"
+        },
+        {
+          "palavra": "flawless",
+          "traducao": "perfeito/impecável",
+          "exemplo_diferente": "Her English is flawless (O inglês dela é perfeito)",
+          "exemplo_episodio": "In flawless Russian (Em russo perfeito)",
+          "exemplo_adicional": "A flawless performance (Uma performance impecável)"
+        },
+        {
+          "palavra": "great",
+          "traducao": "ótimo/legal",
+          "exemplo_diferente": "That's great news (Essa é uma ótima notícia)",
+          "exemplo_episodio": "That's great (Que legal)",
+          "exemplo_adicional": "You did a great job (Você fez um ótimo trabalho)"
+        },
+        {
+          "palavra": "sure",
+          "traducao": "certo/claro",
+          "exemplo_diferente": "I'm not sure (Não tenho certeza)",
+          "exemplo_episodio": "I'm not sure (Não tenho certeza)",
+          "exemplo_adicional": "Sure, I can help (Claro, posso ajudar)"
+        },
+        {
+          "palavra": "sorry",
+          "traducao": "desculpa",
+          "exemplo_diferente": "I'm sorry about that (Desculpa por isso)",
+          "exemplo_episodio": "I'm sorry? (Desculpa?)",
+          "exemplo_adicional": "I'm so sorry (Sinto muito)"
+        },
+        {
+          "palavra": "Thai",
+          "traducao": "tailandês",
+          "exemplo_diferente": "I love Thai food (Eu amo comida tailandesa)",
+          "exemplo_episodio": "This is Thai food (Essa é comida tailandesa)",
+          "exemplo_adicional": "She's Thai (Ela é tailandesa)"
+        },
+        {
+          "palavra": "used",
+          "traducao": "acostumado",
+          "exemplo_diferente": "I'm used to it (Estou acostumado)",
+          "exemplo_episodio": "Get used to it (Acostume-se)",
+          "exemplo_adicional": "He's not used to the cold (Ele não está acostumado ao frio)"
+        }
+      ],
+      "substantivos": [
+        {
+          "palavra": "eye",
+          "traducao": "olho",
+          "exemplo_diferente": "Close your eyes (Feche seus olhos)",
+          "exemplo_episodio": "Keep an eye on Howard (Fique de olho no Howard)",
+          "exemplo_adicional": "My eyes are tired (Meus olhos estão cansados)"
+        },
+        {
+          "palavra": "case",
+          "traducao": "caso",
+          "exemplo_diferente": "In that case, I'll go (Nesse caso, eu vou)",
+          "exemplo_episodio": "In case he starts to swell up (Caso ele comece a inchar)",
+          "exemplo_adicional": "In any case, call me (Em qualquer caso, me ligue)"
+        },
+        {
+          "palavra": "fork",
+          "traducao": "garfo",
+          "exemplo_diferente": "I need a fork (Eu preciso de um garfo)",
+          "exemplo_episodio": "Thailand has had the fork (A Tailândia tem o garfo)",
+          "exemplo_adicional": "Where's the fork? (Onde está o garfo?)"
+        },
+        {
+          "palavra": "napkin",
+          "traducao": "guardanapo",
+          "exemplo_diferente": "Can I get a napkin? (Posso pegar um guardanapo?)",
+          "exemplo_episodio": "Ask him for a napkin (Peça um guardanapo a ele)",
+          "exemplo_adicional": "Use a napkin, please (Use um guardanapo, por favor)"
+        },
+        {
+          "palavra": "work",
+          "traducao": "trabalho",
+          "exemplo_diferente": "I finish work at 5 (Eu termino o trabalho às 5)",
+          "exemplo_episodio": "You're coming home from work (Você está vindo do trabalho)",
+          "exemplo_adicional": "Work was busy today (O trabalho foi agitado hoje)"
+        },
+        {
+          "palavra": "company",
+          "traducao": "companhia",
+          "exemplo_diferente": "I enjoy your company (Eu gosto da sua companhia)",
+          "exemplo_episodio": "Sounds like you have company (Parece que você tem companhia)",
+          "exemplo_adicional": "She works for a tech company (Ela trabalha para uma empresa de tecnologia)"
+        },
+        {
+          "palavra": "cheesecake",
+          "traducao": "bolo de queijo",
+          "exemplo_diferente": "I love cheesecake (Eu amo cheesecake)",
+          "exemplo_episodio": "People order cheesecake (Pessoas pedem cheesecake)",
+          "exemplo_adicional": "This cheesecake is delicious (Este cheesecake está delicioso)"
+        },
+        {
+          "palavra": "furniture",
+          "traducao": "móveis",
+          "exemplo_diferente": "New furniture arrived (Móveis novos chegaram)",
+          "exemplo_episodio": "I'm having some furniture delivered (Vou receber uns móveis)",
+          "exemplo_adicional": "The furniture is expensive (Os móveis são caros)"
+        },
+        {
+          "palavra": "problem",
+          "traducao": "problema",
+          "exemplo_diferente": "That's not a problem (Isso não é problema)",
+          "exemplo_episodio": "No problem (Sem problema)",
+          "exemplo_adicional": "We have a problem (Temos um problema)"
+        },
+        {
+          "palavra": "pathology",
+          "traducao": "patologia",
+          "exemplo_diferente": "It's a medical pathology (É uma patologia médica)",
+          "exemplo_episodio": "It's his pathology (É a patologia dele)",
+          "exemplo_adicional": "They're studying pathology (Eles estão estudando patologia)"
+        }
+      ],
+      "verbos": [
+        {
+          "palavra": "keep",
+          "traducao": "manter/guardar",
+          "exemplo_diferente": "Keep the door closed (Mantenha a porta fechada)",
+          "exemplo_episodio": "Keep an eye on Howard (Fique de olho no Howard)",
+          "exemplo_adicional": "Keep trying (Continue tentando)"
+        },
+        {
+          "palavra": "starts",
+          "traducao": "começa",
+          "exemplo_diferente": "The movie starts at 8 (O filme começa às 8)",
+          "exemplo_episodio": "In case he starts to swell up (Caso ele comece a inchar)",
+          "exemplo_adicional": "School starts next week (A escola começa semana que vem)"
+        },
+        {
+          "palavra": "don't need",
+          "traducao": "não precisar",
+          "exemplo_diferente": "I don't need help (Eu não preciso de ajuda)",
+          "exemplo_episodio": "Don't need chopsticks (Não preciso de palitinhos)",
+          "exemplo_adicional": "We don't need more chairs (Não precisamos de mais cadeiras)"
+        },
+        {
+          "palavra": "feel",
+          "traducao": "sentir",
+          "exemplo_diferente": "I feel tired (Eu me sinto cansado)",
+          "exemplo_episodio": "I feel puffy (Eu me sinto inchado)",
+          "exemplo_adicional": "How do you feel today? (Como você se sente hoje?)"
+        },
+        {
+          "palavra": "interrupting",
+          "traducao": "interrompendo",
+          "exemplo_diferente": "Am I interrupting? (Estou interrompendo?)",
+          "exemplo_episodio": "Am I interrupting? (Estou interrompendo?)",
+          "exemplo_adicional": "Sorry for interrupting (Desculpa por interromper)"
+        },
+        {
+          "palavra": "sounds like",
+          "traducao": "parece que",
+          "exemplo_diferente": "Sounds like a good plan (Parece um bom plano)",
+          "exemplo_episodio": "Sounds like you have company (Parece que você tem companhia)",
+          "exemplo_adicional": "Sounds like fun (Parece divertido)"
+        },
+        {
+          "palavra": "coming",
+          "traducao": "vindo",
+          "exemplo_diferente": "She's coming tomorrow (Ela está vindo amanhã)",
+          "exemplo_episodio": "You're coming home from work (Você está vindo do trabalho)",
+          "exemplo_adicional": "They're coming to visit (Eles estão vindo visitar)"
+        },
+        {
+          "palavra": "bring",
+          "traducao": "trazer",
+          "exemplo_diferente": "Can you bring coffee? (Você pode trazer café?)",
+          "exemplo_episodio": "I bring it to them (Eu trago para eles)",
+          "exemplo_adicional": "Bring your jacket (Traga sua jaqueta)"
+        },
+        {
+          "palavra": "get",
+          "traducao": "ganhar/receber/pegar",
+          "exemplo_diferente": "I get paid tomorrow (Eu recebo amanhã)",
+          "exemplo_episodio": "I get minimum wage (Eu ganho salário mínimo)",
+          "exemplo_adicional": "Did you get my message? (Você recebeu minha mensagem?)"
+        },
+        {
+          "palavra": "wondering",
+          "traducao": "me perguntando",
+          "exemplo_diferente": "I was wondering about that (Eu estava me perguntando sobre isso)",
+          "exemplo_episodio": "I was wondering if you could help (Eu estava me perguntando se você poderia ajudar)",
+          "exemplo_adicional": "I'm wondering what to eat (Estou me perguntando o que comer)"
+        },
+        {
+          "palavra": "could",
+          "traducao": "poderia/podia",
+          "exemplo_diferente": "Could you call me? (Você poderia me ligar?)",
+          "exemplo_episodio": "Could you sign for it? (Você poderia assinar por ele?)",
+          "exemplo_adicional": "Could you repeat that? (Você poderia repetir isso?)"
+        },
+        {
+          "palavra": "delivered",
+          "traducao": "entregue",
+          "exemplo_diferente": "The package was delivered (O pacote foi entregue)",
+          "exemplo_episodio": "I'm having some furniture delivered (Vou receber uns móveis)",
+          "exemplo_adicional": "The pizza was delivered cold (A pizza foi entregue fria)"
+        }
+      ],
+      "expressoes": [
+        {
+          "palavra": "here you go",
+          "traducao": "aqui está/pronto",
+          "exemplo_diferente": "Here you go, your coffee (Aqui está seu café)",
+          "exemplo_episodio": "Here you go. Pad Thai (Aqui está. Pad Thai)",
+          "exemplo_adicional": "Here you go, all done (Aqui está, tudo pronto)"
+        },
+        {
+          "palavra": "in case",
+          "traducao": "caso/no caso de",
+          "exemplo_diferente": "Bring an umbrella in case it rains (Traga um guarda-chuva caso chova)",
+          "exemplo_episodio": "In case he starts to swell up (Caso ele comece a inchar)",
+          "exemplo_adicional": "Call me in case of emergency (Me ligue em caso de emergência)"
+        },
+        {
+          "palavra": "here we go",
+          "traducao": "lá vamos nós/aqui está",
+          "exemplo_diferente": "Here we go again (Lá vamos nós de novo)",
+          "exemplo_episodio": "Here we go (Lá vamos nós)",
+          "exemplo_adicional": "Here we go, finally! (Aqui está, finalmente!)"
+        },
+        {
+          "palavra": "I dare you",
+          "traducao": "eu te desafio",
+          "exemplo_diferente": "I dare you to do it (Eu te desafio a fazer isso)",
+          "exemplo_episodio": "I dare you (Eu te desafio)",
+          "exemplo_adicional": "I dare you to try (Eu te desafio a tentar)"
+        },
+        {
+          "palavra": "I'll get it",
+          "traducao": "eu atendo/eu pego",
+          "exemplo_diferente": "Someone's calling, I'll get it (Alguém está ligando, eu atendo)",
+          "exemplo_episodio": "I'll get it (Eu atendo)",
+          "exemplo_adicional": "Don't worry, I'll get it (Não se preocupe, eu pego)"
+        },
+        {
+          "palavra": "Am I interrupting",
+          "traducao": "Estou interrompendo",
+          "exemplo_diferente": "Am I interrupting something? (Estou interrompendo algo?)",
+          "exemplo_episodio": "Am I interrupting? (Estou interrompendo?)",
+          "exemplo_adicional": "Am I interrupting your work? (Estou interrompendo seu trabalho?)"
+        },
+        {
+          "palavra": "sounds like",
+          "traducao": "parece que",
+          "exemplo_diferente": "Sounds like fun (Parece divertido)",
+          "exemplo_episodio": "Sounds like you have company (Parece que você tem companhia)",
+          "exemplo_adicional": "Sounds like a plan (Parece um plano)"
+        },
+        {
+          "palavra": "how was",
+          "traducao": "como foi",
+          "exemplo_diferente": "How was your day? (Como foi seu dia?)",
+          "exemplo_episodio": "How was work? (Como foi o trabalho?)",
+          "exemplo_adicional": "How was the party? (Como foi a festa?)"
+        },
+        {
+          "palavra": "kind of",
+          "traducao": "meio que/tipo",
+          "exemplo_diferente": "It's kind of late (Está meio tarde)",
+          "exemplo_episodio": "You kind of act as (Você meio que age como)",
+          "exemplo_adicional": "I'm kind of busy (Estou meio ocupado)"
+        },
+        {
+          "palavra": "call it whatever you want",
+          "traducao": "chame do que quiser",
+          "exemplo_diferente": "Call it whatever you want (Chame do que quiser)",
+          "exemplo_episodio": "Call it whatever you want (Chame do que quiser)",
+          "exemplo_adicional": "You can call it whatever you want (Você pode chamar do que quiser)"
+        },
+        {
+          "palavra": "take it personally",
+          "traducao": "levar para o pessoal",
+          "exemplo_diferente": "Don't take it personally (Não leve para o pessoal)",
+          "exemplo_episodio": "Don't take it personally (Não leve para o pessoal)",
+          "exemplo_adicional": "I didn't mean for you to take it personally (Não quis que você levasse para o pessoal)"
+        },
+        {
+          "palavra": "in your case",
+          "traducao": "no seu caso",
+          "exemplo_diferente": "In your case, it's different (No seu caso, é diferente)",
+          "exemplo_episodio": "In your case (No seu caso)",
+          "exemplo_adicional": "In your case, I'd wait (No seu caso, eu esperaria)"
+        }
+      ]
+    },
+    {
+      "episodio": "s01e03",
+      "adjetivos": [
+        {
+          "palavra": "few",
+          "traducao": "poucos/alguns",
+          "exemplo_diferente": "Just a few minutes (Apenas alguns minutos)",
+          "exemplo_episodio": "Just a few more feet (Apenas mais alguns pés)",
+          "exemplo_adicional": "I have a few questions (Tenho algumas perguntas)"
+        },
+        {
+          "palavra": "good",
+          "traducao": "bom",
+          "exemplo_diferente": "That's good (Isso é bom)",
+          "exemplo_episodio": "Good Lord (Meu Deus)",
+          "exemplo_adicional": "Good morning! (Bom dia!)"
+        },
+        {
+          "palavra": "many",
+          "traducao": "muitos",
+          "exemplo_diferente": "So many options (Tantas opções)",
+          "exemplo_episodio": "So many goblins (Tantos goblins)",
+          "exemplo_adicional": "How many are there? (Quantos há?)"
+        },
+        {
+          "palavra": "sweaty",
+          "traducao": "suado",
+          "exemplo_diferente": "I'm all sweaty (Estou todo suado)",
+          "exemplo_episodio": "I'm all sweaty (Estou todo suado)",
+          "exemplo_adicional": "He looks sweaty after the run (Ele parece suado depois da corrida)"
+        },
+        {
+          "palavra": "virtual",
+          "traducao": "virtual",
+          "exemplo_diferente": "Virtual reality is cool (Realidade virtual é legal)",
+          "exemplo_episodio": "I just built a virtual pool (Acabei de construir uma piscina virtual)",
+          "exemplo_adicional": "This is a virtual meeting (Esta é uma reunião virtual)"
+        },
+        {
+          "palavra": "right",
+          "traducao": "certo/direito",
+          "exemplo_diferente": "That's right (Isso está certo)",
+          "exemplo_episodio": "Right, right (Certo, certo)",
+          "exemplo_adicional": "You're right about that (Você está certo sobre isso)"
+        },
+        {
+          "palavra": "rogue",
+          "traducao": "desonesto/rebelde",
+          "exemplo_diferente": "He's a rogue agent (Ele é um agente desonesto)",
+          "exemplo_episodio": "I'm a rogue knight (Sou um cavaleiro desonesto)",
+          "exemplo_adicional": "A rogue cop (Um policial rebelde)"
+        },
+        {
+          "palavra": "prehensile",
+          "traducao": "preênsil",
+          "exemplo_diferente": "Monkeys have prehensile tails (Macacos têm caudas preênseis)",
+          "exemplo_episodio": "My tail's prehensile (Minha cauda é preênsil)",
+          "exemplo_adicional": "Prehensile limbs are useful (Membros preênseis são úteis)"
+        },
+        {
+          "palavra": "magic",
+          "traducao": "mágico",
+          "exemplo_diferente": "It's magic (É mágico)",
+          "exemplo_episodio": "Magic wielders (Portadores de magia)",
+          "exemplo_adicional": "A magic trick (Um truque mágico)"
+        }
+      ],
+      "substantivos": [
+        {
+          "palavra": "feet",
+          "traducao": "pés (medida)",
+          "exemplo_diferente": "A few more feet (Mais alguns pés)",
+          "exemplo_episodio": "Just a few more feet (Apenas mais alguns pés)",
+          "exemplo_adicional": "It's six feet tall (Tem seis pés de altura)"
+        },
+        {
+          "palavra": "gates",
+          "traducao": "portões",
+          "exemplo_diferente": "Open the gates (Abra os portões)",
+          "exemplo_episodio": "The Gates of Elzebub (Os Portões de Elzebub)",
+          "exemplo_adicional": "Close the gates! (Fechem os portões!)"
+        },
+        {
+          "palavra": "Lord",
+          "traducao": "Senhor",
+          "exemplo_diferente": "Oh Lord (Oh Senhor)",
+          "exemplo_episodio": "Good Lord (Meu Deus)",
+          "exemplo_adicional": "Lord have mercy (Senhor tenha misericórdia)"
+        },
+        {
+          "palavra": "horde",
+          "traducao": "horda",
+          "exemplo_diferente": "A horde of zombies (Uma horda de zumbis)",
+          "exemplo_episodio": "A horde of goblins (Uma horda de goblins)",
+          "exemplo_adicional": "A horde of fans (Uma horda de fãs)"
+        },
+        {
+          "palavra": "sword",
+          "traducao": "espada",
+          "exemplo_diferente": "Draw your sword (Saque sua espada)",
+          "exemplo_episodio": "The Sword of Azeroth (A Espada de Azeroth)",
+          "exemplo_adicional": "He dropped his sword (Ele derrubou sua espada)"
+        },
+        {
+          "palavra": "weapons",
+          "traducao": "armas",
+          "exemplo_diferente": "Drop your weapons (Larguem suas armas)",
+          "exemplo_episodio": "Unsheathe your weapons (Desembainhem suas armas)",
+          "exemplo_adicional": "They have powerful weapons (Eles têm armas poderosas)"
+        },
+        {
+          "palavra": "tail",
+          "traducao": "cauda/rabo",
+          "exemplo_diferente": "The dog's tail (O rabo do cachorro)",
+          "exemplo_episodio": "You got one on your tail (Você tem um na sua cauda)",
+          "exemplo_adicional": "The cat's tail is fluffy (A cauda do gato é fofinha)"
+        },
+        {
+          "palavra": "trap",
+          "traducao": "armadilha",
+          "exemplo_diferente": "It's a trap (É uma armadilha)",
+          "exemplo_episodio": "It's a trap (É uma armadilha)",
+          "exemplo_adicional": "Don't fall into the trap (Não caia na armadilha)"
+        },
+        {
+          "palavra": "spell",
+          "traducao": "feitiço",
+          "exemplo_diferente": "Cast a spell (Lance um feitiço)",
+          "exemplo_episodio": "Use your sleep spell (Use seu feitiço de sono)",
+          "exemplo_adicional": "The spell worked! (O feitiço funcionou!)"
+        },
+        {
+          "palavra": "money",
+          "traducao": "dinheiro",
+          "exemplo_diferente": "I need money (Eu preciso de dinheiro)",
+          "exemplo_episodio": "You betrayed us for money (Você nos traiu por dinheiro)",
+          "exemplo_adicional": "How much money? (Quanto dinheiro?)"
+        },
+        {
+          "palavra": "character",
+          "traducao": "personagem",
+          "exemplo_diferente": "Choose your character (Escolha seu personagem)",
+          "exemplo_episodio": "Character descriptions (Descrições de personagem)",
+          "exemplo_adicional": "My favorite character (Meu personagem favorito)"
+        },
+        {
+          "palavra": "pool",
+          "traducao": "piscina",
+          "exemplo_diferente": "Let's go to the pool (Vamos para a piscina)",
+          "exemplo_episodio": "I just built a virtual pool (Acabei de construir uma piscina virtual)",
+          "exemplo_adicional": "The pool is closed (A piscina está fechada)"
+        },
+        {
+          "palavra": "avatar",
+          "traducao": "avatar",
+          "exemplo_diferente": "Your avatar looks cool (Seu avatar parece legal)",
+          "exemplo_episodio": "Your avatar (Seu avatar)",
+          "exemplo_adicional": "Create a new avatar (Crie um novo avatar)"
+        },
+        {
+          "palavra": "neighbor",
+          "traducao": "vizinho",
+          "exemplo_diferente": "My neighbor is nice (Meu vizinho é legal)",
+          "exemplo_episodio": "Your neighbor's home (Seu vizinho está em casa)",
+          "exemplo_adicional": "The neighbors are loud (Os vizinhos são barulhentos)"
+        },
+        {
+          "palavra": "mail",
+          "traducao": "correspondência",
+          "exemplo_diferente": "Check the mail (Cheque a correspondência)",
+          "exemplo_episodio": "Don't forget the mail (Não esqueça a correspondência)",
+          "exemplo_adicional": "The mail arrived (A correspondência chegou)"
+        },
+        {
+          "palavra": "excuse",
+          "traducao": "desculpa",
+          "exemplo_diferente": "That's a good excuse (Essa é uma boa desculpa)",
+          "exemplo_episodio": "An excuse to talk to her (Uma desculpa para falar com ela)",
+          "exemplo_adicional": "What's your excuse? (Qual é a sua desculpa?)"
+        }
+      ],
+      "verbos": [
+        {
+          "palavra": "stay",
+          "traducao": "ficar",
+          "exemplo_diferente": "Stay here (Fique aqui)",
+          "exemplo_episodio": "Stay frosty (Fiquem alertas)",
+          "exemplo_adicional": "Stay calm (Fique calmo)"
+        },
+        {
+          "palavra": "raise",
+          "traducao": "levantar",
+          "exemplo_diferente": "Raise your hand (Levante sua mão)",
+          "exemplo_episodio": "Raise your wands (Levantem suas varinhas)",
+          "exemplo_adicional": "Raise the flag (Levante a bandeira)"
+        },
+        {
+          "palavra": "blow",
+          "traducao": "explodir/soprar",
+          "exemplo_diferente": "Blow the candles (Sopre as velas)",
+          "exemplo_episodio": "Blow the gates (Exploda os portões)",
+          "exemplo_adicional": "Blow up the balloon (Sopre o balão)"
+        },
+        {
+          "palavra": "stand",
+          "traducao": "ficar parado",
+          "exemplo_diferente": "Don't stand there (Não fique aí parado)",
+          "exemplo_episodio": "Don't just stand there (Não fique só aí parado)",
+          "exemplo_adicional": "Stand up straight (Fique em pé direito)"
+        },
+        {
+          "palavra": "got",
+          "traducao": "peguei/consegui",
+          "exemplo_diferente": "I got it (Eu peguei)",
+          "exemplo_episodio": "I got him (Eu peguei ele)",
+          "exemplo_adicional": "I got a new job (Consegui um emprego novo)"
+        },
+        {
+          "palavra": "use",
+          "traducao": "usar",
+          "exemplo_diferente": "Use your brain (Use seu cérebro)",
+          "exemplo_episodio": "Use your sleep spell (Use seu feitiço de sono)",
+          "exemplo_adicional": "Use a pencil (Use um lápis)"
+        },
+        {
+          "palavra": "forget",
+          "traducao": "esquecer",
+          "exemplo_diferente": "Don't forget (Não esqueça)",
+          "exemplo_episodio": "Forget the sword (Esqueça a espada)",
+          "exemplo_adicional": "I forgot my keys (Esqueci minhas chaves)"
+        },
+        {
+          "palavra": "dying",
+          "traducao": "morrendo",
+          "exemplo_diferente": "We're dying (Estamos morrendo)",
+          "exemplo_episodio": "We're dying here (Estamos morrendo aqui)",
+          "exemplo_adicional": "The plant is dying (A planta está morrendo)"
+        },
+        {
+          "palavra": "selling",
+          "traducao": "vendendo",
+          "exemplo_diferente": "He's selling his car (Ele está vendendo o carro)",
+          "exemplo_episodio": "He's selling the Sword (Ele está vendendo a Espada)",
+          "exemplo_adicional": "They're selling everything (Eles estão vendendo tudo)"
+        },
+        {
+          "palavra": "betrayed",
+          "traducao": "traiu",
+          "exemplo_diferente": "You betrayed me (Você me traiu)",
+          "exemplo_episodio": "You betrayed us (Você nos traiu)",
+          "exemplo_adicional": "He betrayed his country (Ele traiu seu país)"
+        },
+        {
+          "palavra": "read",
+          "traducao": "ler",
+          "exemplo_diferente": "Did you read it? (Você leu?)",
+          "exemplo_episodio": "Don't you people read? (Vocês não leem?)",
+          "exemplo_adicional": "I read the book (Eu li o livro)"
+        },
+        {
+          "palavra": "built",
+          "traducao": "construí",
+          "exemplo_diferente": "I built a house (Eu construí uma casa)",
+          "exemplo_episodio": "I just built a virtual pool (Acabei de construir uma piscina virtual)",
+          "exemplo_adicional": "They built a bridge (Eles construíram uma ponte)"
+        },
+        {
+          "palavra": "can't look",
+          "traducao": "não consigo olhar",
+          "exemplo_diferente": "I can't look at this (Não consigo olhar para isso)",
+          "exemplo_episodio": "I can't look at you (Não consigo olhar para você)",
+          "exemplo_adicional": "I can't look away (Não consigo desviar o olhar)"
+        }
+      ],
+      "expressoes": [
+        {
+          "palavra": "all right",
+          "traducao": "tudo bem/ok",
+          "exemplo_diferente": "All right, let's go (Tudo bem, vamos)",
+          "exemplo_episodio": "All right, just a few more feet (Tudo bem, apenas mais alguns pés)",
+          "exemplo_adicional": "All right, I understand (Tudo bem, eu entendo)"
+        },
+        {
+          "palavra": "here we are",
+          "traducao": "aqui estamos/chegamos",
+          "exemplo_diferente": "Here we are at last (Aqui estamos finalmente)",
+          "exemplo_episodio": "Here we are, gentlemen (Aqui estamos, senhores)",
+          "exemplo_adicional": "Here we are, home sweet home (Aqui estamos, lar doce lar)"
+        },
+        {
+          "palavra": "good Lord",
+          "traducao": "meu Deus/nossa senhora",
+          "exemplo_diferente": "Good Lord, what happened? (Meu Deus, o que aconteceu?)",
+          "exemplo_episodio": "Good Lord (Meu Deus)",
+          "exemplo_adicional": "Good Lord, that's terrible (Meu Deus, isso é terrível)"
+        },
+        {
+          "palavra": "don't panic",
+          "traducao": "não entre em pânico",
+          "exemplo_diferente": "Don't panic, stay calm (Não entre em pânico, fique calmo)",
+          "exemplo_episodio": "Don't panic (Não entre em pânico)",
+          "exemplo_adicional": "Don't panic, we have time (Não entre em pânico, temos tempo)"
+        },
+        {
+          "palavra": "lock and load",
+          "traducao": "preparar/armar",
+          "exemplo_diferente": "Lock and load, soldiers (Preparem-se, soldados)",
+          "exemplo_episodio": "Lock and load (Preparem-se)",
+          "exemplo_adicional": "Lock and load, let's do this (Preparem-se, vamos fazer isso)"
+        },
+        {
+          "palavra": "my God",
+          "traducao": "meu Deus",
+          "exemplo_diferente": "Oh, my God (Oh, meu Deus)",
+          "exemplo_episodio": "Oh, my God (Oh, meu Deus)",
+          "exemplo_adicional": "My God, I can't believe it (Meu Deus, não acredito)"
+        },
+        {
+          "palavra": "got me",
+          "traducao": "me pegou",
+          "exemplo_diferente": "He got me (Ele me pegou)",
+          "exemplo_episodio": "He's got me (Ele me pegou)",
+          "exemplo_adicional": "You got me this time (Você me pegou dessa vez)"
+        },
+        {
+          "palavra": "look out",
+          "traducao": "cuidado",
+          "exemplo_diferente": "Look out! (Cuidado!)",
+          "exemplo_episodio": "Leonard, look out (Leonard, cuidado)",
+          "exemplo_adicional": "Look out for that car (Cuidado com aquele carro)"
+        },
+        {
+          "palavra": "damn it",
+          "traducao": "droga/caramba",
+          "exemplo_diferente": "Damn it, I'm late (Droga, estou atrasado)",
+          "exemplo_episodio": "Damn it, man (Droga, cara)",
+          "exemplo_adicional": "Damn it, I forgot (Droga, esqueci)"
+        },
+        {
+          "palavra": "wait, wait",
+          "traducao": "espera, espera",
+          "exemplo_diferente": "Wait, wait, don't go (Espera, espera, não vá)",
+          "exemplo_episodio": "Wait, wait, wait (Espera, espera, espera)",
+          "exemplo_adicional": "Wait, wait, I have a question (Espera, espera, tenho uma pergunta)"
+        },
+        {
+          "palavra": "sounds like",
+          "traducao": "parece que",
+          "exemplo_diferente": "Sounds like a party (Parece uma festa)",
+          "exemplo_episodio": "Sounds like your neighbor's home (Parece que seu vizinho está em casa)",
+          "exemplo_adicional": "Sounds like rain (Parece chuva)"
+        },
+        {
+          "palavra": "don't forget",
+          "traducao": "não esqueça",
+          "exemplo_diferente": "Don't forget your keys (Não esqueça suas chaves)",
+          "exemplo_episodio": "Don't forget the mail (Não esqueça a correspondência)",
+          "exemplo_adicional": "Don't forget to call (Não esqueça de ligar)"
+        }
+      ]
+    },
+    {
+      "episodio": "s01e04",
+      "adjetivos": [
+        {
+          "palavra": "interesting",
+          "traducao": "interessante",
+          "exemplo_diferente": "That's interesting (Isso é interessante)",
+          "exemplo_episodio": "Interesting (Interessante)",
+          "exemplo_adicional": "An interesting story (Uma história interessante)"
+        },
+        {
+          "palavra": "familiar",
+          "traducao": "familiar",
+          "exemplo_diferente": "That sounds familiar (Isso soa familiar)",
+          "exemplo_episodio": "I'm familiar with you (Estou familiarizado com você)",
+          "exemplo_adicional": "This place looks familiar (Este lugar parece familiar)"
+        },
+        {
+          "palavra": "nice",
+          "traducao": "legal/agradável",
+          "exemplo_diferente": "That's nice (Isso é legal)",
+          "exemplo_episodio": "Mahalo is a nice touch (Mahalo é um toque legal)",
+          "exemplo_adicional": "Have a nice day (Tenha um dia legal)"
+        },
+        {
+          "palavra": "special",
+          "traducao": "especial",
+          "exemplo_diferente": "This is special (Isso é especial)",
+          "exemplo_episodio": "My special lady friend (Minha amiga especial)",
+          "exemplo_adicional": "You're special to me (Você é especial para mim)"
+        },
+        {
+          "palavra": "plausible",
+          "traducao": "plausível",
+          "exemplo_diferente": "That's plausible (Isso é plausível)",
+          "exemplo_episodio": "A more plausible explanation (Uma explicação mais plausível)",
+          "exemplo_adicional": "Is that plausible? (Isso é plausível?)"
+        },
+        {
+          "palavra": "amazing",
+          "traducao": "incrível",
+          "exemplo_diferente": "That's amazing (Isso é incrível)",
+          "exemplo_episodio": "His work has made an amazing leap (Seu trabalho deu um salto incrível)",
+          "exemplo_adicional": "What an amazing view (Que vista incrível)"
+        },
+        {
+          "palavra": "extra",
+          "traducao": "extra",
+          "exemplo_diferente": "I need extra time (Preciso de tempo extra)",
+          "exemplo_episodio": "Touching's extra (Tocar é extra)",
+          "exemplo_adicional": "Can I get extra cheese? (Posso pegar queijo extra?)"
+        },
+        {
+          "palavra": "Hawaiian",
+          "traducao": "havaiano",
+          "exemplo_diferente": "I love Hawaiian pizza (Eu amo pizza havaiana)",
+          "exemplo_episodio": "In the Hawaiian language (Na língua havaiana)",
+          "exemplo_adicional": "Hawaiian music is relaxing (Música havaiana é relaxante)"
+        }
+      ],
+      "substantivos": [
+        {
+          "palavra": "time travel",
+          "traducao": "viagem no tempo",
+          "exemplo_diferente": "Time travel is fascinating (Viagem no tempo é fascinante)",
+          "exemplo_episodio": "I've been thinking about time travel (Tenho pensado em viagem no tempo)",
+          "exemplo_adicional": "Is time travel possible? (Viagem no tempo é possível?)"
+        },
+        {
+          "palavra": "roadblock",
+          "traducao": "obstáculo/bloqueio",
+          "exemplo_diferente": "We hit a roadblock (Atingimos um obstáculo)",
+          "exemplo_episodio": "Did you hit a roadblock? (Você atingiu um obstáculo?)",
+          "exemplo_adicional": "There's a roadblock ahead (Há um obstáculo à frente)"
+        },
+        {
+          "palavra": "pressure",
+          "traducao": "pressão",
+          "exemplo_diferente": "I'm under pressure (Estou sob pressão)",
+          "exemplo_episodio": "It takes the pressure off (Tira a pressão)",
+          "exemplo_adicional": "Don't put pressure on me (Não me pressione)"
+        },
+        {
+          "palavra": "breakthrough",
+          "traducao": "descoberta/avanço",
+          "exemplo_diferente": "That's a breakthrough (Isso é uma descoberta)",
+          "exemplo_episodio": "Sounds like a breakthrough (Parece uma descoberta)",
+          "exemplo_adicional": "We had a breakthrough yesterday (Tivemos uma descoberta ontem)"
+        },
+        {
+          "palavra": "party",
+          "traducao": "festa",
+          "exemplo_diferente": "Are you going to the party? (Você vai à festa?)",
+          "exemplo_episodio": "I'm not going to enjoy this party (Não vou aproveitar esta festa)",
+          "exemplo_adicional": "The party starts at 8 (A festa começa às 8)"
+        },
+        {
+          "palavra": "cover",
+          "traducao": "capa/cobertura",
+          "exemplo_diferente": "The magazine cover (A capa da revista)",
+          "exemplo_episodio": "Tell them to hold the cover (Diga a eles para segurar a capa)",
+          "exemplo_adicional": "Take cover! (Procure cobertura!)"
+        },
+        {
+          "palavra": "congratulations",
+          "traducao": "parabéns",
+          "exemplo_diferente": "Congratulations on your success (Parabéns pelo seu sucesso)",
+          "exemplo_episodio": "Congratulations are in order (Parabéns estão em ordem)",
+          "exemplo_adicional": "Congratulations on the baby! (Parabéns pelo bebê!)"
+        },
+        {
+          "palavra": "caves",
+          "traducao": "cavernas",
+          "exemplo_diferente": "Exploring caves is fun (Explorar cavernas é divertido)",
+          "exemplo_episodio": "What's interesting about caves? (O que há de interessante sobre cavernas?)",
+          "exemplo_adicional": "The caves are dark (As cavernas são escuras)"
+        },
+        {
+          "palavra": "buffet",
+          "traducao": "buffet",
+          "exemplo_diferente": "I love buffet food (Eu amo comida de buffet)",
+          "exemplo_episodio": "Look at this buffet (Olhe esse buffet)",
+          "exemplo_adicional": "The buffet is all-you-can-eat (O buffet é à vontade)"
+        },
+        {
+          "palavra": "date",
+          "traducao": "encontro/data",
+          "exemplo_diferente": "He brought a date (Ele trouxe um encontro)",
+          "exemplo_episodio": "Howard brought a date (Howard trouxe um encontro)",
+          "exemplo_adicional": "What's the date today? (Qual é a data hoje?)"
+        },
+        {
+          "palavra": "lady friend",
+          "traducao": "amiga/namorada",
+          "exemplo_diferente": "This is my lady friend (Esta é minha amiga)",
+          "exemplo_episodio": "My special lady friend (Minha amiga especial)",
+          "exemplo_adicional": "He's with his lady friend (Ele está com sua amiga)"
+        }
+      ],
+      "verbos": [
+        {
+          "palavra": "I've been thinking",
+          "traducao": "tenho pensado",
+          "exemplo_diferente": "I've been thinking about you (Tenho pensado em você)",
+          "exemplo_episodio": "I've been thinking about time travel (Tenho pensado em viagem no tempo)",
+          "exemplo_adicional": "I've been thinking about moving (Tenho pensado em me mudar)"
+        },
+        {
+          "palavra": "hit",
+          "traducao": "atingir/acertar",
+          "exemplo_diferente": "Did you hit the target? (Você acertou o alvo?)",
+          "exemplo_episodio": "Did you hit a roadblock? (Você atingiu um obstáculo?)",
+          "exemplo_adicional": "He hit the ball (Ele acertou a bola)"
+        },
+        {
+          "palavra": "occurs",
+          "traducao": "ocorre",
+          "exemplo_diferente": "It occurs often (Ocorre frequentemente)",
+          "exemplo_episodio": "It occurs to me (Ocorre-me que)",
+          "exemplo_adicional": "It occurs every day (Ocorre todo dia)"
+        },
+        {
+          "palavra": "eliminating",
+          "traducao": "eliminando",
+          "exemplo_diferente": "He's eliminating options (Ele está eliminando opções)",
+          "exemplo_episodio": "Thus eliminating the need (Assim eliminando a necessidade)",
+          "exemplo_adicional": "They're eliminating errors (Eles estão eliminando erros)"
+        },
+        {
+          "palavra": "takes",
+          "traducao": "leva/tira",
+          "exemplo_diferente": "It takes time (Leva tempo)",
+          "exemplo_episodio": "It takes the pressure off (Tira a pressão)",
+          "exemplo_adicional": "She takes the bus (Ela pega o ônibus)"
+        },
+        {
+          "palavra": "should",
+          "traducao": "deveria",
+          "exemplo_diferente": "You should try (Você deveria tentar)",
+          "exemplo_episodio": "Should I call? (Eu deveria ligar?)",
+          "exemplo_adicional": "We should leave soon (Deveríamos sair logo)"
+        },
+        {
+          "palavra": "will have done",
+          "traducao": "terei feito",
+          "exemplo_diferente": "I will have done it (Eu terei feito isso)",
+          "exemplo_episodio": "I will have done that (Eu terei feito isso)",
+          "exemplo_adicional": "By then, I will have done everything (Até lá, terei feito tudo)"
+        },
+        {
+          "palavra": "avoid",
+          "traducao": "evitar",
+          "exemplo_diferente": "Let's avoid problems (Vamos evitar problemas)",
+          "exemplo_episodio": "We'll avoid Finkleday (Vamos evitar Finkleday)",
+          "exemplo_adicional": "Avoid the traffic (Evite o trânsito)"
+        },
+        {
+          "palavra": "meet",
+          "traducao": "conhecer/encontrar",
+          "exemplo_diferente": "Let's meet tomorrow (Vamos nos encontrar amanhã)",
+          "exemplo_episodio": "Meet the new head (Conhecer o novo chefe)",
+          "exemplo_adicional": "Nice to meet you (Prazer em conhecê-lo)"
+        },
+        {
+          "palavra": "shake",
+          "traducao": "apertar/sacudir",
+          "exemplo_diferente": "Shake his hand (Aperte a mão dele)",
+          "exemplo_episodio": "Shake his hand and go (Apertar a mão dele e ir)",
+          "exemplo_adicional": "Shake the bottle (Sacuda a garrafa)"
+        },
+        {
+          "palavra": "brought",
+          "traducao": "trouxe",
+          "exemplo_diferente": "He brought food (Ele trouxe comida)",
+          "exemplo_episodio": "Howard brought a date (Howard trouxe um encontro)",
+          "exemplo_adicional": "She brought her sister (Ela trouxe sua irmã)"
+        },
+        {
+          "palavra": "introduce",
+          "traducao": "apresentar",
+          "exemplo_diferente": "Let me introduce myself (Deixe-me me apresentar)",
+          "exemplo_episodio": "May I introduce my lady friend (Posso apresentar minha amiga)",
+          "exemplo_adicional": "I'd like to introduce you (Gostaria de te apresentar)"
+        }
+      ],
+      "expressoes": [
+        {
+          "palavra": "you know",
+          "traducao": "sabe/você sabe",
+          "exemplo_diferente": "You know what I mean (Você sabe o que quero dizer)",
+          "exemplo_episodio": "You know, I've been thinking (Sabe, eu estive pensando)",
+          "exemplo_adicional": "You know how it is (Você sabe como é)"
+        },
+        {
+          "palavra": "put it on",
+          "traducao": "colocar em",
+          "exemplo_diferente": "Put it on the table (Coloque na mesa)",
+          "exemplo_episodio": "Put it on the back burner (Coloque em segundo plano)",
+          "exemplo_adicional": "Put it on my tab (Coloque na minha conta)"
+        },
+        {
+          "palavra": "not so fast",
+          "traducao": "não tão rápido/calma lá",
+          "exemplo_diferente": "Not so fast, wait (Não tão rápido, espere)",
+          "exemplo_episodio": "Not so fast (Calma lá)",
+          "exemplo_adicional": "Not so fast, young man (Calma lá, jovem)"
+        },
+        {
+          "palavra": "in order",
+          "traducao": "em ordem",
+          "exemplo_diferente": "Everything is in order (Tudo está em ordem)",
+          "exemplo_episodio": "Congratulations are in order (Parabéns estão em ordem)",
+          "exemplo_adicional": "Put things in order (Coloque as coisas em ordem)"
+        },
+        {
+          "palavra": "here's",
+          "traducao": "aqui está",
+          "exemplo_diferente": "Here's your coffee (Aqui está seu café)",
+          "exemplo_episodio": "Here's an interesting turn (Aqui está uma virada interessante)",
+          "exemplo_adicional": "Here's what I think (Aqui está o que eu penso)"
+        },
+        {
+          "palavra": "what up",
+          "traducao": "e aí/qual é",
+          "exemplo_diferente": "What up, dude? (E aí, cara?)",
+          "exemplo_episodio": "What up, science bitches? (E aí, vadias da ciência?)",
+          "exemplo_adicional": "What up with you? (E aí com você?)"
+        },
+        {
+          "palavra": "may I",
+          "traducao": "posso eu",
+          "exemplo_diferente": "May I help you? (Posso ajudá-lo?)",
+          "exemplo_episodio": "May I introduce (Posso apresentar)",
+          "exemplo_adicional": "May I ask a question? (Posso fazer uma pergunta?)"
+        },
+        {
+          "palavra": "I told you",
+          "traducao": "eu te disse",
+          "exemplo_diferente": "I told you so (Eu te disse)",
+          "exemplo_episodio": "I told you (Eu te disse)",
+          "exemplo_adicional": "I told you it would rain (Eu te disse que ia chover)"
+        },
+        {
+          "palavra": "sounds like",
+          "traducao": "parece que",
+          "exemplo_diferente": "Sounds like fun (Parece divertido)",
+          "exemplo_episodio": "Sounds like a breakthrough (Parece uma descoberta)",
+          "exemplo_adicional": "Sounds like trouble (Parece problema)"
+        },
+        {
+          "palavra": "takes the pressure off",
+          "traducao": "tira a pressão",
+          "exemplo_diferente": "That takes the pressure off me (Isso tira a pressão de mim)",
+          "exemplo_episodio": "It really takes the pressure off (Realmente tira a pressão)",
+          "exemplo_adicional": "This takes the pressure off everyone (Isso tira a pressão de todos)"
+        }
+      ]
+    },
+    {
+      "episodio": "s01e05",
+      "adjetivos": [
+        {
+          "palavra": "ready",
+          "traducao": "pronto",
+          "exemplo_diferente": "I'm ready to go (Estou pronto para ir)",
+          "exemplo_episodio": "You guys ready to order? (Vocês estão prontos para pedir?)",
+          "exemplo_adicional": "Are you ready for the test? (Você está pronto para a prova?)"
+        },
+        {
+          "palavra": "magic",
+          "traducao": "mágico",
+          "exemplo_diferente": "It's magic (É mágico)",
+          "exemplo_episodio": "Orcs are magic (Orcs são mágicos)",
+          "exemplo_adicional": "That was pure magic (Aquilo foi pura magia)"
+        },
+        {
+          "palavra": "vulnerable",
+          "traducao": "vulnerável",
+          "exemplo_diferente": "He's vulnerable (Ele é vulnerável)",
+          "exemplo_episodio": "Superman is vulnerable to magic (Superman é vulnerável a magia)",
+          "exemplo_adicional": "We're all vulnerable sometimes (Todos somos vulneráveis às vezes)"
+        },
+        {
+          "palavra": "entire",
+          "traducao": "inteiro",
+          "exemplo_diferente": "The entire family (A família inteira)",
+          "exemplo_episodio": "Against the entire Union Army (Contra todo o Exército da União)",
+          "exemplo_adicional": "I ate the entire pizza (Eu comi a pizza inteira)"
+        },
+        {
+          "palavra": "sorry",
+          "traducao": "desculpado",
+          "exemplo_diferente": "I'm sorry (Desculpa)",
+          "exemplo_episodio": "I'm sorry (Desculpa)",
+          "exemplo_adicional": "I'm so sorry for being late (Sinto muito por estar atrasado)"
+        },
+        {
+          "palavra": "unlikely",
+          "traducao": "improvável",
+          "exemplo_diferente": "That's unlikely (Isso é improvável)",
+          "exemplo_episodio": "Statistically unlikely (Estatisticamente improvável)",
+          "exemplo_adicional": "It's unlikely to rain today (É improvável que chova hoje)"
+        },
+        {
+          "palavra": "usual",
+          "traducao": "usual",
+          "exemplo_diferente": "The usual place (O lugar de sempre)",
+          "exemplo_episodio": "Where we usually eat (Onde normalmente comemos)",
+          "exemplo_adicional": "It's the usual routine (É a rotina de sempre)"
+        },
+        {
+          "palavra": "disturbing",
+          "traducao": "perturbador",
+          "exemplo_diferente": "That's disturbing (Isso é perturbador)",
+          "exemplo_episodio": "This is a disturbing aberration (Esta é uma aberração perturbadora)",
+          "exemplo_adicional": "The news was disturbing (A notícia foi perturbadora)"
+        },
+        {
+          "palavra": "classic",
+          "traducao": "clássico",
+          "exemplo_diferente": "A classic movie (Um filme clássico)",
+          "exemplo_episodio": "The classic burger (O hambúrguer clássico)",
+          "exemplo_adicional": "That's a classic mistake (Esse é um erro clássico)"
+        }
+      ],
+      "substantivos": [
+        {
+          "palavra": "battle",
+          "traducao": "batalha",
+          "exemplo_diferente": "The battle was fierce (A batalha foi feroz)",
+          "exemplo_episodio": "The Battle of Gettysburg (A Batalha de Gettysburg)",
+          "exemplo_adicional": "They won the battle (Eles venceram a batalha)"
+        },
+        {
+          "palavra": "orcs",
+          "traducao": "orcs",
+          "exemplo_diferente": "Orcs are fantasy creatures (Orcs são criaturas de fantasia)",
+          "exemplo_episodio": "A battalion of orcs (Um batalhão de orcs)",
+          "exemplo_adicional": "The orcs attacked at dawn (Os orcs atacaram ao amanhecer)"
+        },
+        {
+          "palavra": "guys",
+          "traducao": "caras/pessoal",
+          "exemplo_diferente": "Hey guys, what's up? (E aí pessoal?)",
+          "exemplo_episodio": "You guys ready? (Vocês estão prontos?)",
+          "exemplo_adicional": "Thanks guys! (Obrigado pessoal!)"
+        },
+        {
+          "palavra": "boss",
+          "traducao": "chefe",
+          "exemplo_diferente": "My boss called me (Meu chefe me ligou)",
+          "exemplo_episodio": "My boss says (Meu chefe diz)",
+          "exemplo_adicional": "The boss is angry (O chefe está bravo)"
+        },
+        {
+          "palavra": "morning",
+          "traducao": "manhã",
+          "exemplo_diferente": "Good morning (Bom dia)",
+          "exemplo_episodio": "A morning of weight-training (Uma manhã de musculação)",
+          "exemplo_adicional": "I wake up every morning at 7 (Eu acordo toda manhã às 7)"
+        },
+        {
+          "palavra": "shower",
+          "traducao": "banho/chuveiro",
+          "exemplo_diferente": "I need a shower (Preciso de um banho)",
+          "exemplo_episodio": "A shower (Um banho)",
+          "exemplo_adicional": "The shower is broken (O chuveiro está quebrado)"
+        },
+        {
+          "palavra": "hamburger",
+          "traducao": "hambúrguer",
+          "exemplo_diferente": "I want a hamburger (Eu quero um hambúrguer)",
+          "exemplo_episodio": "Just get a hamburger (Apenas pegue um hambúrguer)",
+          "exemplo_adicional": "This hamburger is delicious (Este hambúrguer está delicioso)"
+        },
+        {
+          "palavra": "assumption",
+          "traducao": "suposição",
+          "exemplo_diferente": "That's a wrong assumption (Essa é uma suposição errada)",
+          "exemplo_episodio": "You can't make the assumption (Você não pode fazer a suposição)",
+          "exemplo_adicional": "That's a big assumption (Essa é uma grande suposição)"
+        },
+        {
+          "palavra": "world",
+          "traducao": "mundo",
+          "exemplo_diferente": "In a perfect world (Em um mundo perfeito)",
+          "exemplo_episodio": "In a world that already includes (Em um mundo que já inclui)",
+          "exemplo_adicional": "Around the world (Ao redor do mundo)"
+        },
+        {
+          "palavra": "waitresses",
+          "traducao": "garçonetes",
+          "exemplo_diferente": "The waitresses are nice (As garçonetes são legais)",
+          "exemplo_episodio": "Waitresses don't yell (Garçonetes não gritam)",
+          "exemplo_adicional": "The waitresses are busy (As garçonetes estão ocupadas)"
+        },
+        {
+          "palavra": "neighbor",
+          "traducao": "vizinho",
+          "exemplo_diferente": "My neighbor is friendly (Meu vizinho é amigável)",
+          "exemplo_episodio": "I didn't know you ate here (Eu não sabia que você comia aqui)",
+          "exemplo_adicional": "My neighbor has a dog (Meu vizinho tem um cachorro)"
+        }
+      ],
+      "verbos": [
+        {
+          "palavra": "flank",
+          "traducao": "flanquear",
+          "exemplo_diferente": "They flanked the enemy (Eles flanquearam o inimigo)",
+          "exemplo_episodio": "We flank the Tennessee volunteers (Nós flanqueamos os voluntários do Tennessee)",
+          "exemplo_adicional": "Flank them from the left (Flanqueie-os pela esquerda)"
+        },
+        {
+          "palavra": "wins",
+          "traducao": "vence",
+          "exemplo_diferente": "The team wins (O time vence)",
+          "exemplo_episodio": "The North wins (O Norte vence)",
+          "exemplo_adicional": "She wins every time (Ela vence toda vez)"
+        },
+        {
+          "palavra": "remember",
+          "traducao": "lembrar",
+          "exemplo_diferente": "Do you remember? (Você se lembra?)",
+          "exemplo_episodio": "Remember, the South still has (Lembre-se, o Sul ainda tem)",
+          "exemplo_adicional": "I remember you (Eu me lembro de você)"
+        },
+        {
+          "palavra": "lost",
+          "traducao": "perdeu",
+          "exemplo_diferente": "I lost my keys (Perdi minhas chaves)",
+          "exemplo_episodio": "You already lost Godzilla (Você já perdeu o Godzilla)",
+          "exemplo_adicional": "They lost the game (Eles perderam o jogo)"
+        },
+        {
+          "palavra": "ready to",
+          "traducao": "pronto para",
+          "exemplo_diferente": "Are you ready to leave? (Está pronto para sair?)",
+          "exemplo_episodio": "You guys ready to order? (Vocês estão prontos para pedir?)",
+          "exemplo_adicional": "I'm ready to start (Estou pronto para começar)"
+        },
+        {
+          "palavra": "hang on",
+          "traducao": "espera aí",
+          "exemplo_diferente": "Hang on a minute (Espera aí um minuto)",
+          "exemplo_episodio": "Hang on (Espera aí)",
+          "exemplo_adicional": "Hang on, let me check (Espera aí, deixa eu verificar)"
+        },
+        {
+          "palavra": "charge",
+          "traducao": "atacar/carregar",
+          "exemplo_diferente": "Charge the hill (Ataquem a colina)",
+          "exemplo_episodio": "Have Robert E. Lee charge the line (Faça Robert E. Lee atacar a linha)",
+          "exemplo_adicional": "Charge your phone (Carregue seu telefone)"
+        },
+        {
+          "palavra": "yell",
+          "traducao": "gritar",
+          "exemplo_diferente": "Don't yell at me (Não grite comigo)",
+          "exemplo_episodio": "Waitresses don't yell at you (Garçonetes não gritam com você)",
+          "exemplo_adicional": "Why are you yelling? (Por que você está gritando?)"
+        },
+        {
+          "palavra": "settle",
+          "traducao": "contentar-se",
+          "exemplo_diferente": "I won't settle for less (Não vou me contentar com menos)",
+          "exemplo_episodio": "Why would I settle for (Por que eu me contentaria com)",
+          "exemplo_adicional": "Let's settle this now (Vamos resolver isso agora)"
+        },
+        {
+          "palavra": "didn't know",
+          "traducao": "não sabia",
+          "exemplo_diferente": "I didn't know that (Eu não sabia disso)",
+          "exemplo_episodio": "I didn't know you ate here (Eu não sabia que você comia aqui)",
+          "exemplo_adicional": "I didn't know she was coming (Eu não sabia que ela estava vindo)"
+        },
+        {
+          "palavra": "recommend",
+          "traducao": "recomendar",
+          "exemplo_diferente": "What do you recommend? (O que você recomenda?)",
+          "exemplo_episodio": "What do you recommend? (O que você recomenda?)",
+          "exemplo_adicional": "I recommend the chicken (Eu recomendo o frango)"
+        }
+      ],
+      "expressoes": [
+        {
+          "palavra": "all right",
+          "traducao": "tudo bem/certo",
+          "exemplo_diferente": "All right, let's start (Tudo bem, vamos começar)",
+          "exemplo_episodio": "All right, I'm moving (Tudo bem, estou movendo)",
+          "exemplo_adicional": "All right, I got it (Tudo bem, entendi)"
+        },
+        {
+          "palavra": "not so fast",
+          "traducao": "não tão rápido",
+          "exemplo_diferente": "Not so fast, buddy (Não tão rápido, amigo)",
+          "exemplo_episodio": "Not so fast (Não tão rápido)",
+          "exemplo_adicional": "Not so fast, wait for me (Não tão rápido, espere por mim)"
+        },
+        {
+          "palavra": "no, no, no",
+          "traducao": "não, não, não",
+          "exemplo_diferente": "No, no, no, that's wrong (Não, não, não, isso está errado)",
+          "exemplo_episodio": "No, no, no. Orcs are magic (Não, não, não. Orcs são mágicos)",
+          "exemplo_adicional": "No, no, no, don't do that (Não, não, não, não faça isso)"
+        },
+        {
+          "palavra": "not to mention",
+          "traducao": "sem falar que/sem mencionar",
+          "exemplo_diferente": "Not to mention it's expensive (Sem falar que é caro)",
+          "exemplo_episodio": "Not to mention you already lost (Sem falar que você já perdeu)",
+          "exemplo_adicional": "Not to mention the weather (Sem falar do tempo)"
+        },
+        {
+          "palavra": "hang on",
+          "traducao": "espera aí",
+          "exemplo_diferente": "Hang on a second (Espera aí um segundo)",
+          "exemplo_episodio": "Hang on (Espera aí)",
+          "exemplo_adicional": "Hang on, I'm coming (Espera aí, já vou)"
+        },
+        {
+          "palavra": "I'll be back",
+          "traducao": "eu volto",
+          "exemplo_diferente": "I'll be back in a minute (Eu volto em um minuto)",
+          "exemplo_episodio": "I'll be back (Eu volto)",
+          "exemplo_adicional": "I'll be back soon (Eu volto logo)"
+        },
+        {
+          "palavra": "you guys",
+          "traducao": "vocês",
+          "exemplo_diferente": "Are you guys ready? (Vocês estão prontos?)",
+          "exemplo_episodio": "You guys ready to order? (Vocês estão prontos para pedir?)",
+          "exemplo_adicional": "You guys are awesome (Vocês são incríveis)"
+        },
+        {
+          "palavra": "ready to",
+          "traducao": "pronto para",
+          "exemplo_diferente": "I'm ready to go (Estou pronto para ir)",
+          "exemplo_episodio": "Ready to order? (Pronto para pedir?)",
+          "exemplo_adicional": "Ready to start? (Pronto para começar?)"
+        },
+        {
+          "palavra": "excuse me",
+          "traducao": "com licença",
+          "exemplo_diferente": "Excuse me, can I pass? (Com licença, posso passar?)",
+          "exemplo_episodio": "Excuse me (Com licença)",
+          "exemplo_adicional": "Excuse me, is this seat taken? (Com licença, esse lugar está ocupado?)"
+        },
+        {
+          "palavra": "make the assumption",
+          "traducao": "presumir/supor",
+          "exemplo_diferente": "Don't make the assumption (Não presuma)",
+          "exemplo_episodio": "You can't make the assumption (Você não pode presumir)",
+          "exemplo_adicional": "Never make the assumption (Nunca presuma)"
+        },
+        {
+          "palavra": "I'm sorry",
+          "traducao": "desculpa",
+          "exemplo_diferente": "I'm sorry for that (Desculpa por isso)",
+          "exemplo_episodio": "I'm sorry (Desculpa)",
+          "exemplo_adicional": "I'm sorry I'm late (Desculpa pelo atraso)"
+        },
+        {
+          "palavra": "give him",
+          "traducao": "dê a ele",
+          "exemplo_diferente": "Give him a chance (Dê uma chance a ele)",
+          "exemplo_episodio": "Give him a hamburger (Dê um hambúrguer a ele)",
+          "exemplo_adicional": "Give him the book (Dê o livro a ele)"
+        }
+      ]
+    },
+    {
+      "episodio": "s01e06",
+      "adjetivos": [
+        {
+          "palavra": "",
+          "traducao": "humilhante",
+          "exemplo_diferente": "That was humiliating (Isso foi humilhante)",
+          "exemplo_episodio": "That was absolutely humiliating (Isso foi absolutamente humilhante)",
+          "exemplo_adicional": "It was a humiliating experience (Foi uma experiência humilhante)"
+        },
+        {
+          "palavra": "",
+          "traducao": "selvagem/feroz",
+          "exemplo_diferente": "A savage attack (Um ataque feroz)",
+          "exemplo_episodio": "Some fairly savage Jews (Alguns judeus bastante ferozes)",
+          "exemplo_adicional": "The savage beast (A besta selvagem)"
+        },
+        {
+          "palavra": "",
+          "traducao": "próprio",
+          "exemplo_diferente": "My own house (Minha própria casa)",
+          "exemplo_episodio": "Our own incompetence (Nossa própria incompetência)",
+          "exemplo_adicional": "Do it on your own (Faça por conta própria)"
+        },
+        {
+          "palavra": "",
+          "traducao": "claro",
+          "exemplo_diferente": "That's clear (Isso está claro)",
+          "exemplo_episodio": "I was giving clear orders (Eu estava dando ordens claras)",
+          "exemplo_adicional": "Is that clear? (Está claro?)"
+        },
+        {
+          "palavra": "",
+          "traducao": "conciso",
+          "exemplo_diferente": "Be concise (Seja conciso)",
+          "exemplo_episodio": "Clear, concise orders (Ordens claras e concisas)",
+          "exemplo_adicional": "Your answer was concise (Sua resposta foi concisa)"
+        },
+        {
+          "palavra": "",
+          "traducao": "bom",
+          "exemplo_diferente": "That's a good idea (Essa é uma boa ideia)",
+          "exemplo_episodio": "For a good reason (Por um bom motivo)",
+          "exemplo_adicional": "Good job! (Bom trabalho!)"
+        },
+        {
+          "palavra": "",
+          "traducao": "certo/certeza",
+          "exemplo_diferente": "Are you sure? (Você tem certeza?)",
+          "exemplo_episodio": "Are you sure? (Você tem certeza?)",
+          "exemplo_adicional": "I'm sure about it (Tenho certeza sobre isso)"
+        }
+      ],
+      "substantivos": [
+        {
+          "palavra": "",
+          "traducao": "paintball",
+          "exemplo_diferente": "Let's play paintball (Vamos jogar paintball)",
+          "exemplo_episodio": "We really suck at paintball (Nós somos ruins em paintball)",
+          "exemplo_adicional": "Paintball is fun (Paintball é divertido)"
+        },
+        {
+          "palavra": "",
+          "traducao": "batalhas",
+          "exemplo_diferente": "Epic battles (Batalhas épicas)",
+          "exemplo_episodio": "Some battles you win (Algumas batalhas você vence)",
+          "exemplo_adicional": "They fought many battles (Eles lutaram muitas batalhas)"
+        },
+        {
+          "palavra": "",
+          "traducao": "festa",
+          "exemplo_diferente": "Are you going to the party? (Você vai à festa?)",
+          "exemplo_episodio": "I'm having a party (Estou dando uma festa)",
+          "exemplo_adicional": "The party was great (A festa foi ótima)"
+        },
+        {
+          "palavra": "",
+          "traducao": "bar mitzvah",
+          "exemplo_diferente": "His bar mitzvah was fun (O bar mitzvah dele foi divertido)",
+          "exemplo_episodio": "Kyle Bernstein's bar mitzvah party (Festa de bar mitzvah do Kyle Bernstein)",
+          "exemplo_adicional": "I'm invited to a bar mitzvah (Fui convidado para um bar mitzvah)"
+        },
+        {
+          "palavra": "",
+          "traducao": "comando",
+          "exemplo_diferente": "Follow the command (Siga o comando)",
+          "exemplo_episodio": "The chain of command (A cadeia de comando)",
+          "exemplo_adicional": "Who's in command? (Quem está no comando?)"
+        },
+        {
+          "palavra": "",
+          "traducao": "fato",
+          "exemplo_diferente": "That's a fact (Isso é um fato)",
+          "exemplo_episodio": "I wanna talk about the fact (Eu quero falar sobre o fato)",
+          "exemplo_adicional": "The fact is clear (O fato é claro)"
+        },
+        {
+          "palavra": "",
+          "traducao": "costas",
+          "exemplo_diferente": "My back hurts (Minhas costas doem)",
+          "exemplo_episodio": "You shot me in the back (Você atirou nas minhas costas)",
+          "exemplo_adicional": "Behind your back (Pelas suas costas)"
+        },
+        {
+          "palavra": "",
+          "traducao": "motivo",
+          "exemplo_diferente": "Give me a reason (Me dê um motivo)",
+          "exemplo_episodio": "I shot you for a good reason (Eu atirei em você por um bom motivo)",
+          "exemplo_adicional": "What's the reason? (Qual é o motivo?)"
+        },
+        {
+          "palavra": "",
+          "traducao": "árvore",
+          "exemplo_diferente": "Climb the tree (Suba na árvore)",
+          "exemplo_episodio": "You hid behind a tree (Você se escondeu atrás de uma árvore)",
+          "exemplo_adicional": "The tree is tall (A árvore é alta)"
+        },
+        {
+          "palavra": "",
+          "traducao": "amigos",
+          "exemplo_diferente": "My best friends (Meus melhores amigos)",
+          "exemplo_episodio": "A bunch of my friends (Um monte de meus amigos)",
+          "exemplo_adicional": "Friends forever (Amigos para sempre)"
+        },
+        {
+          "palavra": "",
+          "traducao": "cerveja",
+          "exemplo_diferente": "I want a beer (Eu quero uma cerveja)",
+          "exemplo_episodio": "Have some beer (Tomar uma cerveja)",
+          "exemplo_adicional": "Cold beer is great (Cerveja gelada é ótima)"
+        },
+        {
+          "palavra": "",
+          "traducao": "dança",
+          "exemplo_diferente": "I love dancing (Eu amo dançar)",
+          "exemplo_episodio": "Do a little dancing (Fazer um pouco de dança)",
+          "exemplo_adicional": "Let's go dancing (Vamos dançar)"
+        },
+        {
+          "palavra": "",
+          "traducao": "Halloween",
+          "exemplo_diferente": "Happy Halloween (Feliz Halloween)",
+          "exemplo_episodio": "It's Halloween (É Halloween)",
+          "exemplo_adicional": "Halloween is my favorite holiday (Halloween é meu feriado favorito)"
+        }
+      ],
+      "verbos": [
+        {
+          "palavra": "",
+          "traducao": "ser ruim",
+          "exemplo_diferente": "This movie sucks (Este filme é ruim)",
+          "exemplo_episodio": "We really suck at paintball (Nós somos realmente ruins em paintball)",
+          "exemplo_adicional": "That sucks! (Isso é uma droga!)"
+        },
+        {
+          "palavra": "",
+          "traducao": "vencer",
+          "exemplo_diferente": "Did you win? (Você venceu?)",
+          "exemplo_episodio": "Some battles you win (Algumas batalhas você vence)",
+          "exemplo_adicional": "We will win (Nós vamos vencer)"
+        },
+        {
+          "palavra": "",
+          "traducao": "perder",
+          "exemplo_diferente": "I don't want to lose (Não quero perder)",
+          "exemplo_episodio": "Some battles you lose (Algumas batalhas você perde)",
+          "exemplo_adicional": "Don't lose hope (Não perca a esperança)"
+        },
+        {
+          "palavra": "",
+          "traducao": "atirei",
+          "exemplo_diferente": "I shot the target (Eu atirei no alvo)",
+          "exemplo_episodio": "Wolowitz shot me in the back (Wolowitz atirou nas minhas costas)",
+          "exemplo_adicional": "He shot the basketball (Ele arremessou a bola de basquete)"
+        },
+        {
+          "palavra": "",
+          "traducao": "deixa pra lá",
+          "exemplo_diferente": "Just let it go (Apenas deixa pra lá)",
+          "exemplo_episodio": "Sheldon, let it go (Sheldon, deixa pra lá)",
+          "exemplo_adicional": "Let it go, man (Deixa pra lá, cara)"
+        },
+        {
+          "palavra": "",
+          "traducao": "querer",
+          "exemplo_diferente": "I wanna leave (Eu quero sair)",
+          "exemplo_episodio": "I wanna talk about (Eu quero falar sobre)",
+          "exemplo_adicional": "I wanna see you (Eu quero te ver)"
+        },
+        {
+          "palavra": "",
+          "traducao": "se divertir",
+          "exemplo_diferente": "Did you have fun? (Você se divertiu?)",
+          "exemplo_episodio": "Did you have fun? (Você se divertiu?)",
+          "exemplo_adicional": "Have fun at the party (Divirta-se na festa)"
+        },
+        {
+          "palavra": "",
+          "traducao": "considerar",
+          "exemplo_diferente": "I'll consider it (Vou considerar)",
+          "exemplo_episodio": "If you consider being fragged (Se você considerar ser atacado)",
+          "exemplo_adicional": "Consider the options (Considere as opções)"
+        },
+        {
+          "palavra": "",
+          "traducao": "aparecer/passar",
+          "exemplo_diferente": "Come by my house (Passa lá em casa)",
+          "exemplo_episodio": "If you're around, come by (Se estiver por perto, apareça)",
+          "exemplo_adicional": "Come by anytime (Apareça quando quiser)"
+        },
+        {
+          "palavra": "",
+          "traducao": "estou tendo/dando",
+          "exemplo_diferente": "I'm having dinner (Estou jantando)",
+          "exemplo_episodio": "I'm having a party (Estou dando uma festa)",
+          "exemplo_adicional": "I'm having a great time (Estou me divertindo muito)"
+        },
+        {
+          "palavra": "",
+          "traducao": "não sei",
+          "exemplo_diferente": "I don't know yet (Eu ainda não sei)",
+          "exemplo_episodio": "I don't know, Penny (Eu não sei, Penny)",
+          "exemplo_adicional": "I don't know what to do (Não sei o que fazer)"
+        }
+      ],
+      "expressoes": [
+        {
+          "palavra": "",
+          "traducao": "se mais ninguém",
+          "exemplo_diferente": "If no one else wants it (Se mais ninguém quer)",
+          "exemplo_episodio": "If no one else will say it (Se mais ninguém vai dizer)",
+          "exemplo_adicional": "If no one else can do it (Se mais ninguém consegue fazer)"
+        },
+        {
+          "palavra": "",
+          "traducao": "qualé/vamos",
+          "exemplo_diferente": "Come on, let's go (Vamos, bora)",
+          "exemplo_episodio": "Oh, come on (Ah, qualé)",
+          "exemplo_adicional": "Come on, hurry up (Vamos, se apresse)"
+        },
+        {
+          "palavra": "",
+          "traducao": "deixa pra lá",
+          "exemplo_diferente": "Just let it go (Apenas deixa pra lá)",
+          "exemplo_episodio": "Sheldon, let it go (Sheldon, deixa pra lá)",
+          "exemplo_adicional": "Let it go already (Deixa pra lá já)"
+        },
+        {
+          "palavra": "",
+          "traducao": "eu quero",
+          "exemplo_diferente": "I wanna go home (Eu quero ir pra casa)",
+          "exemplo_episodio": "I wanna talk about (Eu quero falar sobre)",
+          "exemplo_adicional": "I wanna eat pizza (Eu quero comer pizza)"
+        },
+        {
+          "palavra": "",
+          "traducao": "nas costas/pela costa",
+          "exemplo_diferente": "Stabbed in the back (Apunhalado pelas costas)",
+          "exemplo_episodio": "Shot me in the back (Atirou nas minhas costas)",
+          "exemplo_adicional": "Attacked from the back (Atacado pelas costas)"
+        },
+        {
+          "palavra": "",
+          "traducao": "oi/ei",
+          "exemplo_diferente": "Oh, hey there (Oi, olá)",
+          "exemplo_episodio": "Oh, hey, Penny (Oi, Penny)",
+          "exemplo_adicional": "Oh, hey, what's up? (Oi, e aí?)"
+        },
+        {
+          "palavra": "",
+          "traducao": "você se divertiu",
+          "exemplo_diferente": "Did you have fun today? (Você se divertiu hoje?)",
+          "exemplo_episodio": "Did you have fun? (Você se divertiu?)",
+          "exemplo_adicional": "Did you have fun at the beach? (Você se divertiu na praia?)"
+        },
+        {
+          "palavra": "",
+          "traducao": "aparecer/passar",
+          "exemplo_diferente": "Come by later (Passa mais tarde)",
+          "exemplo_episodio": "If you're around, come by (Se estiver por perto, apareça)",
+          "exemplo_adicional": "Come by whenever (Apareça quando quiser)"
+        },
+        {
+          "palavra": "",
+          "traducao": "estou dando/tendo",
+          "exemplo_diferente": "I'm having a meeting (Estou tendo uma reunião)",
+          "exemplo_episodio": "I'm having a party (Estou dando uma festa)",
+          "exemplo_adicional": "I'm having trouble (Estou tendo problemas)"
+        },
+        {
+          "palavra": "",
+          "traducao": "tem certeza",
+          "exemplo_diferente": "Are you sure about this? (Você tem certeza disso?)",
+          "exemplo_episodio": "Are you sure? (Você tem certeza?)",
+          "exemplo_adicional": "Are you sure you want to go? (Você tem certeza que quer ir?)"
+        },
+        {
+          "palavra": "",
+          "traducao": "obrigado por",
+          "exemplo_diferente": "Thanks for everything (Obrigado por tudo)",
+          "exemplo_episodio": "Thanks for thinking of us (Obrigado por pensar em nós)",
+          "exemplo_adicional": "Thanks for your help (Obrigado pela sua ajuda)"
+        }
+      ]
+    },
+    {
+      "episodio": "s01e07",
+      "adjetivos": [
+        {
+          "palavra": "",
+          "traducao": "legal/maneiro",
+          "exemplo_diferente": "That's so cool (Isso é tão legal)",
+          "exemplo_episodio": "It's really cool (É realmente legal)",
+          "exemplo_adicional": "Cool idea! (Ideia legal!)"
+        },
+        {
+          "palavra": "",
+          "traducao": "impressionante",
+          "exemplo_diferente": "That's impressive (Isso é impressionante)",
+          "exemplo_episodio": "It's very impressive (É muito impressionante)",
+          "exemplo_adicional": "Your work is impressive (Seu trabalho é impressionante)"
+        },
+        {
+          "palavra": "",
+          "traducao": "racista",
+          "exemplo_diferente": "That's racist (Isso é racista)",
+          "exemplo_episodio": "And a little racist (E um pouco racista)",
+          "exemplo_adicional": "That comment was racist (Esse comentário foi racista)"
+        },
+        {
+          "palavra": "",
+          "traducao": "defeituoso/falho",
+          "exemplo_diferente": "A flawed plan (Um plano falho)",
+          "exemplo_episodio": "The Flawed Technology (A Tecnologia Defeituosa)",
+          "exemplo_adicional": "The system is flawed (O sistema é falho)"
+        },
+        {
+          "palavra": "",
+          "traducao": "deveria",
+          "exemplo_diferente": "I was supposed to call (Eu deveria ter ligado)",
+          "exemplo_episodio": "We were supposed to start at 8 (Deveríamos ter começado às 8)",
+          "exemplo_adicional": "You're supposed to be here (Você deveria estar aqui)"
+        },
+        {
+          "palavra": "",
+          "traducao": "fresco/novo",
+          "exemplo_diferente": "Fresh bread (Pão fresco)",
+          "exemplo_episodio": "What fresh hell is this? (Que novo inferno é este?)",
+          "exemplo_adicional": "Fresh air feels good (Ar fresco é bom)"
+        },
+        {
+          "palavra": "",
+          "traducao": "incrível",
+          "exemplo_diferente": "That's awesome (Isso é incrível)",
+          "exemplo_episodio": "Awesome (Incrível)",
+          "exemplo_adicional": "Awesome job! (Trabalho incrível!)"
+        },
+        {
+          "palavra": "",
+          "traducao": "próximo",
+          "exemplo_diferente": "Next week (Próxima semana)",
+          "exemplo_episodio": "The next thing I know (A próxima coisa que sei)",
+          "exemplo_adicional": "Next time (Próxima vez)"
+        },
+        {
+          "palavra": "",
+          "traducao": "mais promíscua",
+          "exemplo_diferente": "The sluttiest dress (O vestido mais promíscuo)",
+          "exemplo_episodio": "The sluttiest collection (A coleção mais promíscua)",
+          "exemplo_adicional": "That's the sluttiest outfit (Essa é a roupa mais promíscua)"
+        }
+      ],
+      "substantivos": [
+        {
+          "palavra": "",
+          "traducao": "tecnologia",
+          "exemplo_diferente": "Modern technology (Tecnologia moderna)",
+          "exemplo_episodio": "The Flawed Technology (A Tecnologia Defeituosa)",
+          "exemplo_adicional": "Technology is advancing fast (A tecnologia está avançando rápido)"
+        },
+        {
+          "palavra": "",
+          "traducao": "tempo de jogo",
+          "exemplo_diferente": "Save some game time (Economize tempo de jogo)",
+          "exemplo_episodio": "Come out of game time (Sair do tempo de jogo)",
+          "exemplo_adicional": "Game time is over (O tempo de jogo acabou)"
+        },
+        {
+          "palavra": "",
+          "traducao": "banheiro",
+          "exemplo_diferente": "Where's the bathroom? (Onde fica o banheiro?)",
+          "exemplo_episodio": "Bathroom time (Tempo de banheiro)",
+          "exemplo_adicional": "The bathroom is occupied (O banheiro está ocupado)"
+        },
+        {
+          "palavra": "",
+          "traducao": "pausa para pizza",
+          "exemplo_diferente": "Let's take a pizza break (Vamos fazer uma pausa para pizza)",
+          "exemplo_episodio": "The pizza break (A pausa para pizza)",
+          "exemplo_adicional": "Pizza break at 3pm (Pausa para pizza às 15h)"
+        },
+        {
+          "palavra": "",
+          "traducao": "anchovas",
+          "exemplo_diferente": "I hate anchovies (Eu odeio anchovas)",
+          "exemplo_episodio": "If we're having anchovies (Se tivermos anchovas)",
+          "exemplo_adicional": "Anchovies are salty (Anchovas são salgadas)"
+        },
+        {
+          "palavra": "",
+          "traducao": "inferno",
+          "exemplo_diferente": "What the hell (Que diabos)",
+          "exemplo_episodio": "What fresh hell is this? (Que novo inferno é este?)",
+          "exemplo_adicional": "Go to hell (Vá para o inferno)"
+        },
+        {
+          "palavra": "",
+          "traducao": "sorte",
+          "exemplo_diferente": "Good luck (Boa sorte)",
+          "exemplo_episodio": "You'll have good luck (Você terá boa sorte)",
+          "exemplo_adicional": "Wish me luck (Me deseje sorte)"
+        },
+        {
+          "palavra": "",
+          "traducao": "garota",
+          "exemplo_diferente": "There's a girl (Há uma garota)",
+          "exemplo_episodio": "There's this girl I know (Há uma garota que conheço)",
+          "exemplo_adicional": "The girl is pretty (A garota é bonita)"
+        },
+        {
+          "palavra": "",
+          "traducao": "Nebraska",
+          "exemplo_diferente": "I'm from Nebraska (Sou de Nebraska)",
+          "exemplo_episodio": "A girl from back in Nebraska (Uma garota lá de Nebraska)",
+          "exemplo_adicional": "Nebraska is in the Midwest (Nebraska fica no Centro-Oeste)"
+        },
+        {
+          "palavra": "",
+          "traducao": "coisa",
+          "exemplo_diferente": "Next thing (Próxima coisa)",
+          "exemplo_episodio": "The next thing I know (A próxima coisa que sei)",
+          "exemplo_adicional": "What's that thing? (O que é aquela coisa?)"
+        },
+        {
+          "palavra": "",
+          "traducao": "apartamento",
+          "exemplo_diferente": "My apartment is small (Meu apartamento é pequeno)",
+          "exemplo_episodio": "She's just been in my apartment (Ela está no meu apartamento)",
+          "exemplo_adicional": "The apartment has two rooms (O apartamento tem dois quartos)"
+        },
+        {
+          "palavra": "",
+          "traducao": "cara",
+          "exemplo_diferente": "Every guy (Todo cara)",
+          "exemplo_episodio": "Every guy in Omaha (Todo cara em Omaha)",
+          "exemplo_adicional": "That guy is weird (Aquele cara é estranho)"
+        },
+        {
+          "palavra": "",
+          "traducao": "roupa íntima",
+          "exemplo_diferente": "Clean underwear (Roupa íntima limpa)",
+          "exemplo_episodio": "Collection of underwear (Coleção de roupas íntimas)",
+          "exemplo_adicional": "Don't forget your underwear (Não esqueça sua roupa íntima)"
+        }
+      ],
+      "verbos": [
+        {
+          "palavra": "",
+          "traducao": "assistir/olhar",
+          "exemplo_diferente": "Watch the movie (Assista o filme)",
+          "exemplo_episodio": "Watch this (Veja isso)",
+          "exemplo_adicional": "Watch out! (Cuidado!)"
+        },
+        {
+          "palavra": "",
+          "traducao": "ligar/chamar",
+          "exemplo_diferente": "Call me later (Me ligue mais tarde)",
+          "exemplo_episodio": "Call Leonard Hofstadter (Ligue para Leonard Hofstadter)",
+          "exemplo_adicional": "Call the police (Ligue para a polícia)"
+        },
+        {
+          "palavra": "",
+          "traducao": "deixa eu tentar",
+          "exemplo_diferente": "Let me try that (Deixa eu tentar isso)",
+          "exemplo_episodio": "Let me try (Deixa eu tentar)",
+          "exemplo_adicional": "Let me try one more time (Deixa eu tentar mais uma vez)"
+        },
+        {
+          "palavra": "",
+          "traducao": "brincando/jogando",
+          "exemplo_diferente": "Stop playing games (Pare de jogar)",
+          "exemplo_episodio": "If we're through playing (Se terminamos de brincar)",
+          "exemplo_adicional": "They're playing outside (Eles estão brincando lá fora)"
+        },
+        {
+          "palavra": "",
+          "traducao": "seguir com/continuar",
+          "exemplo_diferente": "Let's get on with the plan (Vamos seguir com o plano)",
+          "exemplo_episodio": "Can we get on with Halo night? (Podemos seguir com a noite de Halo?)",
+          "exemplo_adicional": "Get on with it (Siga com isso)"
+        },
+        {
+          "palavra": "",
+          "traducao": "começar",
+          "exemplo_diferente": "Let's start now (Vamos começar agora)",
+          "exemplo_episodio": "We were supposed to start (Deveríamos ter começado)",
+          "exemplo_adicional": "Start the car (Ligue o carro)"
+        },
+        {
+          "palavra": "",
+          "traducao": "decidir",
+          "exemplo_diferente": "We have to decide (Temos que decidir)",
+          "exemplo_episodio": "We have to decide (Temos que decidir)",
+          "exemplo_adicional": "Decide quickly (Decida rápido)"
+        },
+        {
+          "palavra": "",
+          "traducao": "dividir",
+          "exemplo_diferente": "Let's split the bill (Vamos dividir a conta)",
+          "exemplo_episodio": "We could split it (Poderíamos dividir)",
+          "exemplo_adicional": "Split this with me (Divida isso comigo)"
+        },
+        {
+          "palavra": "",
+          "traducao": "se esconder",
+          "exemplo_diferente": "Can I hide out? (Posso me esconder?)",
+          "exemplo_episodio": "Can I hide out here? (Posso me esconder aqui?)",
+          "exemplo_adicional": "He's hiding out from the cops (Ele está se escondendo da polícia)"
+        },
+        {
+          "palavra": "",
+          "traducao": "ligou/chamou",
+          "exemplo_diferente": "She called yesterday (Ela ligou ontem)",
+          "exemplo_episodio": "She called me up (Ela me ligou)",
+          "exemplo_adicional": "Who called? (Quem ligou?)"
+        },
+        {
+          "palavra": "",
+          "traducao": "convidou",
+          "exemplo_diferente": "She invited me (Ela me convidou)",
+          "exemplo_episodio": "She's invited herself (Ela se convidou)",
+          "exemplo_adicional": "They invited everyone (Eles convidaram todo mundo)"
+        },
+        {
+          "palavra": "",
+          "traducao": "chegou aqui",
+          "exemplo_diferente": "They got here early (Eles chegaram cedo)",
+          "exemplo_episodio": "She got here today (Ela chegou aqui hoje)",
+          "exemplo_adicional": "We got here on time (Chegamos aqui na hora)"
+        },
+        {
+          "palavra": "",
+          "traducao": "dormiu/transou",
+          "exemplo_diferente": "I slept well (Eu dormi bem)",
+          "exemplo_episodio": "Every guy she slept with (Todo cara com quem ela transou)",
+          "exemplo_adicional": "He slept all day (Ele dormiu o dia todo)"
+        },
+        {
+          "palavra": "",
+          "traducao": "lavando",
+          "exemplo_diferente": "I'm washing dishes (Estou lavando louças)",
+          "exemplo_episodio": "Washing underwear (Lavando roupas íntimas)",
+          "exemplo_adicional": "She's washing the car (Ela está lavando o carro)"
+        }
+      ],
+      "expressoes": [
+        {
+          "palavra": "",
+          "traducao": "olha isso/veja isso",
+          "exemplo_diferente": "Watch this video (Veja esse vídeo)",
+          "exemplo_episodio": "Watch this, it's really cool (Veja isso, é muito legal)",
+          "exemplo_adicional": "Watch this trick (Olha esse truque)"
+        },
+        {
+          "palavra": "",
+          "traducao": "deixa eu tentar",
+          "exemplo_diferente": "Let me try again (Deixa eu tentar de novo)",
+          "exemplo_episodio": "Here, let me try (Aqui, deixa eu tentar)",
+          "exemplo_adicional": "Let me try it first (Deixa eu tentar primeiro)"
+        },
+        {
+          "palavra": "",
+          "traducao": "seguir com",
+          "exemplo_diferente": "Let's get on with it (Vamos seguir com isso)",
+          "exemplo_episodio": "Can we get on with Halo night? (Podemos seguir com a noite de Halo?)",
+          "exemplo_adicional": "Get on with your work (Siga com seu trabalho)"
+        },
+        {
+          "palavra": "",
+          "traducao": "sair de",
+          "exemplo_diferente": "Come out of there (Saia daí)",
+          "exemplo_episodio": "Come out of game time (Sair do tempo de jogo)",
+          "exemplo_adicional": "Come out of hiding (Saia do esconderijo)"
+        },
+        {
+          "palavra": "",
+          "traducao": "que diabos",
+          "exemplo_diferente": "What the hell is this? (Que diabos é isso?)",
+          "exemplo_episodio": "What fresh hell is this? (Que novo inferno é este?)",
+          "exemplo_adicional": "What the hell happened? (Que diabos aconteceu?)"
+        },
+        {
+          "palavra": "",
+          "traducao": "entre",
+          "exemplo_diferente": "Come on in, please (Entre, por favor)",
+          "exemplo_episodio": "Come on in (Entre)",
+          "exemplo_adicional": "Come on in, the door is open (Entre, a porta está aberta)"
+        },
+        {
+          "palavra": "",
+          "traducao": "não, você não vai",
+          "exemplo_diferente": "No, you won't succeed (Não, você não vai conseguir)",
+          "exemplo_episodio": "No, you won't (Não, você não vai)",
+          "exemplo_adicional": "No, you won't change my mind (Não, você não vai mudar minha opinião)"
+        },
+        {
+          "palavra": "",
+          "traducao": "o que está acontecendo",
+          "exemplo_diferente": "What's going on here? (O que está acontecendo aqui?)",
+          "exemplo_episodio": "What's going on? (O que está acontecendo?)",
+          "exemplo_adicional": "What's going on with you? (O que está acontecendo com você?)"
+        },
+        {
+          "palavra": "",
+          "traducao": "lá em",
+          "exemplo_diferente": "Back in the day (Naquele tempo)",
+          "exemplo_episodio": "A girl from back in Nebraska (Uma garota lá de Nebraska)",
+          "exemplo_adicional": "Back in my hometown (Lá na minha cidade natal)"
+        },
+        {
+          "palavra": "",
+          "traducao": "me ligou",
+          "exemplo_diferente": "She called me up (Ela me ligou)",
+          "exemplo_episodio": "She called me up (Ela me ligou)",
+          "exemplo_adicional": "He called me up yesterday (Ele me ligou ontem)"
+        },
+        {
+          "palavra": "",
+          "traducao": "a próxima coisa que sei",
+          "exemplo_diferente": "The next thing I know, I'm lost (A próxima coisa que sei, estou perdido)",
+          "exemplo_episodio": "The next thing I know (A próxima coisa que sei)",
+          "exemplo_adicional": "The next thing I know, it's midnight (A próxima coisa que sei, é meia-noite)"
+        },
+        {
+          "palavra": "",
+          "traducao": "chegou aqui",
+          "exemplo_diferente": "She got here yesterday (Ela chegou aqui ontem)",
+          "exemplo_episodio": "She got here today (Ela chegou aqui hoje)",
+          "exemplo_adicional": "When did you get here? (Quando você chegou aqui?)"
+        }
+      ]
+    }
+  ]
+}
