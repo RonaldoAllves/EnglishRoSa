@@ -28,21 +28,29 @@ class App {
                 return; // Não continua sem Firebase
             }
             
-            // Firebase conectado!
-            this.hideFirebaseLoading();
-            this.showProfileContent();
-            
             // Carregar dados dos episódios
             await this.loadEpisodesData();
             
             // Verificar se há dados locais antigos para migrar
             await this.checkAndMigrateLocalData();
+
+            // Carregar os dois perfis para que os contadores apareçam atualizados
+            // antes de a tela inicial ser exibida.
+            await Promise.all(
+                ['ronaldo', 'sarah'].map(profileName =>
+                    window.firebaseStorage.loadFromFirebase(profileName)
+                )
+            );
             
             // Configurar listeners
             this.setupEventListeners();
             
             // Atualizar estatísticas dos perfis
             this.updateProfileStats();
+
+            // Firebase e dados dos perfis carregados
+            this.hideFirebaseLoading();
+            this.showProfileContent();
             
         } catch (error) {
             console.error('❌ Erro ao inicializar app:', error);

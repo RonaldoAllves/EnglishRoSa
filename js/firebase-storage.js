@@ -576,6 +576,7 @@ class FirebaseStorageManager {
      * Carrega dados do Firebase para o localStorage (primeira vez em novo dispositivo)
      */
     async loadFromFirebase(profileName) {
+        await this.ready;
         console.log(`📥 Carregando dados de ${profileName} do Firebase...`);
         
         const profile = await this.getProfile(profileName);

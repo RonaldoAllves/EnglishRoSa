@@ -211,7 +211,7 @@ class GameManager {
                     ].filter(s => s && s.trim());
 
                     exampleSentences.forEach(sentence => {
-                        const sentenceKey = this.getSentenceProgressKey(item.palavra, sentence);
+                        const sentenceKey = storage.getSentenceProgressKey(item.palavra, sentence);
                         if (shouldPractice(progress.sentences?.[sentenceKey])) {
                             sentences.push({
                                 word: item.palavra,
