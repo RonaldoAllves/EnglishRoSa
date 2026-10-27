@@ -454,8 +454,19 @@ class FirebaseStorageManager {
     async resetEpisode(profileName, episodeId) {
         const profileStr = localStorage.getItem(profileName);
         const profile = profileStr ? JSON.parse(profileStr) : this.createDefaultProfile(profileName);
-        
-        if (profile.episodes && profile.episodes[episodeId]) {
+
+        const episode = profile.episodes?.[episodeId];
+        if (episode) {
+            const episodeWordAttempts = Object.values(episode.words || {}).reduce(
+                (total, wordProgress) => total + (Number(wordProgress.attempts) || 0),
+                0
+            );
+
+            profile.totalWords = Math.max(0, (Number(profile.totalWords) || 0) - episodeWordAttempts);
+            profile.totalCorrect = Math.max(0, (Number(profile.totalCorrect) || 0) - (Number(episode.correctAnswers) || 0));
+            profile.totalWrong = Math.max(0, (Number(profile.totalWrong) || 0) - (Number(episode.wrongAnswers) || 0));
+            profile.totalPoints = Math.max(0, (Number(profile.totalPoints) || 0) - (Number(episode.points) || 0));
+
             delete profile.episodes[episodeId];
             await this.saveProfile(profileName, profile);
         }
