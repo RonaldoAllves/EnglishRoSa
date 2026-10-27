@@ -90,13 +90,36 @@ class App {
             if (window.firebaseDatabase) {
                 try {
                     console.log('📥 Tentando carregar episódios do Firebase...');
-                    const episodiosRef = window.firebaseRef(window.firebaseDatabase, 'episodios');
-                    const snapshot = await window.firebaseGet(episodiosRef);
+                    const episodiosRef = firebase.database().ref('episodios');
+                    const snapshot = await episodiosRef.once('value');
                     
                     if (snapshot.exists()) {
-                        this.episodesData = snapshot.val();
-                        console.log('✅ Episódios carregados do Firebase:', this.episodesData);
-                        return;
+                        const data = snapshot.val();
+                        
+                        // Verificar se é array ou objeto
+                        if (Array.isArray(data)) {
+                            // Se for array, converter para o formato esperado
+                            this.episodesData = {
+                                serie: "The Big Bang Theory",
+                                temporada: 1,
+                                total_episodios: data.length,
+                                episodios: data
+                            };
+                            console.log('✅ Episódios carregados do Firebase (array):', this.episodesData);
+                        } else if (data.episodios) {
+                            // Já está no formato correto
+                            this.episodesData = data;
+                            console.log('✅ Episódios carregados do Firebase (objeto):', this.episodesData);
+                        } else {
+                            // Formato desconhecido, tentar do arquivo local
+                            console.log('⚠️ Formato inesperado no Firebase, carregando do arquivo local...');
+                            throw new Error('Formato inesperado');
+                        }
+                        
+                        // Se conseguiu carregar, retornar
+                        if (this.episodesData && this.episodesData.episodios && this.episodesData.episodios.length > 0) {
+                            return;
+                        }
                     } else {
                         console.log('⚠️ Nenhum dado de episódios no Firebase, carregando do arquivo local...');
                     }
@@ -106,6 +129,7 @@ class App {
             }
 
             // Fallback: carregar do arquivo local
+            console.log('📥 Carregando episódios do arquivo local...');
             const response = await fetch('episodios.json');
             
             if (!response.ok) {
@@ -115,14 +139,14 @@ class App {
             this.episodesData = await response.json();
             console.log('✅ Episódios carregados do arquivo local:', this.episodesData);
 
-            // Opcional: Salvar no Firebase para próxima vez
-            if (window.firebaseDatabase && window.firebaseStorage.isOnline) {
+            // Opcional: Salvar no Firebase para próxima vez (formato correto)
+            if (window.firebaseDatabase && window.firebaseStorage && window.firebaseStorage.isOnline) {
                 try {
-                    const episodiosRef = window.firebaseRef(window.firebaseDatabase, 'episodios');
-                    await window.firebaseSet(episodiosRef, this.episodesData);
-                    console.log('💾 Episódios salvos no Firebase para cache');
+                    const episodiosRef = firebase.database().ref('episodios');
+                    await episodiosRef.set(this.episodesData);
+                    console.log('💾 Episódios salvos no Firebase no formato correto');
                 } catch (error) {
-                    console.log('⚠️ Não foi possível salvar episódios no Firebase (não é crítico)');
+                    console.log('⚠️ Não foi possível salvar episódios no Firebase (não é crítico)', error);
                 }
             }
 
@@ -681,25 +705,36 @@ class App {
 
 // Iniciar a aplicação quando o DOM estiver pronto
 document.addEventListener('DOMContentLoaded', async () => {
-    // Aguardar Firebase carregar
+    console.log('📱 DOM carregado, iniciando app...');
+    
+    // Aguardar Firebase carregar (máximo 10 segundos)
+    let attempts = 0;
     await new Promise(resolve => {
-        if (window.firebaseStorage) {
-            resolve();
-        } else {
-            const checkFirebase = setInterval(() => {
-                if (window.firebaseStorage) {
-                    clearInterval(checkFirebase);
-                    resolve();
-                }
-            }, 100);
-        }
+        const checkFirebase = setInterval(() => {
+            attempts++;
+            if (window.firebaseStorage) {
+                clearInterval(checkFirebase);
+                console.log('✅ Firebase Storage disponível');
+                resolve();
+            } else if (attempts > 100) { // 10 segundos
+                clearInterval(checkFirebase);
+                console.warn('⚠️ Firebase não carregou, usando fallback localStorage');
+                resolve();
+            }
+        }, 100);
     });
 
-    // Usar o storage global do Firebase
-    window.storage = window.firebaseStorage;
+    // Definir storage global
+    if (window.firebaseStorage) {
+        window.storage = window.firebaseStorage;
+    } else {
+        // Fallback: usar localStorage diretamente
+        console.warn('⚠️ Usando localStorage como fallback');
+        // Importar storage.js antigo se necessário
+    }
     
     const app = new App();
     window.app = app; // Tornar acessível globalmente para debug
     
-    console.log('✅ App inicializado com Firebase');
+    console.log('✅ App inicializado');
 });

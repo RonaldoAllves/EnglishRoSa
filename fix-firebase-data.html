@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Corrigir Dados Firebase</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+            background: #0f172a;
+            color: #f1f5f9;
+        }
+        .btn {
+            padding: 1rem 2rem;
+            margin: 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .btn-primary { background: #6366f1; color: white; }
+        .btn-danger { background: #ef4444; color: white; }
+        .status {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+            border: 2px solid #334155;
+        }
+        .success { border-color: #10b981; background: rgba(16, 185, 129, 0.1); }
+        .error { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+    </style>
+</head>
+<body>
+    <h1>🔧 Corrigir Dados do Firebase</h1>
+    <p>Este script vai limpar dados incorretos e recarregar do arquivo local.</p>
+    
+    <button class="btn btn-danger" onclick="clearFirebase()">🗑️ Limpar Dados do Firebase</button>
+    <button class="btn btn-primary" onclick="uploadCorrectData()">📤 Upload Dados Corretos</button>
+    
+    <div id="status"></div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+
+        // Inicializar Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyB68ABMAJJ1uFgPU5-rnJrU_Mt5CUJ_2z8",
+            authDomain: "englishrosa-a3e97.firebaseapp.com",
+            databaseURL: "https://englishrosa-a3e97-default-rtdb.firebaseio.com",
+            projectId: "englishrosa-a3e97",
+            storageBucket: "englishrosa-a3e97.firebasestorage.app",
+            messagingSenderId: "968363251419",
+            appId: "1:968363251419:web:585eb3baffa2589ad61efe"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        function log(message, isError = false) {
+            const div = document.createElement('div');
+            div.className = `status ${isError ? 'error' : 'success'}`;
+            div.textContent = message;
+            statusDiv.appendChild(div);
+            console.log(message);
+        }
+
+        async function clearFirebase() {
+            try {
+                log('🗑️ Limpando dados do Firebase...');
+                const episodiosRef = firebase.database().ref('episodios');
+                await episodiosRef.remove();
+                log('✅ Dados do Firebase removidos!');
+            } catch (error) {
+                log(`❌ Erro: ${error.message}`, true);
+            }
+        }
+
+        async function uploadCorrectData() {
+            try {
+                log('📥 Carregando episodios.json...');
+                const response = await fetch('episodios.json');
+                const data = await response.json();
+                
+                log(`✅ Dados carregados: ${data.episodios?.length || 0} episódios`);
+                
+                log('📤 Enviando para Firebase...');
+                const episodiosRef = firebase.database().ref('episodios');
+                await episodiosRef.set(data);
+                
+                log('✅ Dados enviados com sucesso!');
+                log(`📊 Estrutura: serie="${data.serie}", total_episodios=${data.total_episodios}`);
+                
+            } catch (error) {
+                log(`❌ Erro: ${error.message}`, true);
+            }
+        }
+
+        log('🔥 Firebase conectado e pronto!');
+    </script>
+</body>
+</html>

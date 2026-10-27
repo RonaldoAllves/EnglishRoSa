@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Simples - Episódios</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            padding: 2rem;
+            background: #0f172a;
+            color: #f1f5f9;
+        }
+        .status {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0.5rem;
+            border: 2px solid #334155;
+        }
+        .success { border-color: #10b981; background: rgba(16, 185, 129, 0.1); }
+        .error { border-color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+    </style>
+</head>
+<body>
+    <h1>📺 Teste Simples - Carregamento de Episódios</h1>
+    <div id="status"></div>
+    <div id="episodes"></div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        const episodesDiv = document.getElementById('episodes');
+
+        function log(message, isError = false) {
+            const div = document.createElement('div');
+            div.className = `status ${isError ? 'error' : 'success'}`;
+            div.textContent = message;
+            statusDiv.appendChild(div);
+            console.log(message);
+        }
+
+        async function testEpisodes() {
+            try {
+                log('📥 Carregando episodios.json...');
+                
+                const response = await fetch('episodios.json');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                log(`✅ Episódios carregados com sucesso!`);
+                log(`📊 Total de episódios: ${data.episodios?.length || 0}`);
+                log(`📺 Série: ${data.serie}`);
+                log(`🎬 Temporada: ${data.temporada}`);
+                
+                // Mostrar estrutura
+                if (data.episodios && data.episodios.length > 0) {
+                    const ep = data.episodios[0];
+                    log(`📝 Primeiro episódio: ${ep.episodio}`);
+                    log(`   - Adjetivos: ${ep.adjetivos?.length || 0}`);
+                    log(`   - Substantivos: ${ep.substantivos?.length || 0}`);
+                    log(`   - Verbos: ${ep.verbos?.length || 0}`);
+                    log(`   - Expressões: ${ep.expressoes?.length || 0}`);
+                    
+                    episodesDiv.innerHTML = `<h3>Preview dos dados:</h3><pre>${JSON.stringify(data, null, 2).substring(0, 1000)}...</pre>`;
+                }
+
+            } catch (error) {
+                log(`❌ Erro ao carregar: ${error.message}`, true);
+                console.error('Erro completo:', error);
+                
+                log('', true);
+                log('Possíveis causas:', true);
+                log('1. Você está abrindo o arquivo diretamente (file://)?', true);
+                log('   → Precisa usar servidor HTTP: python -m http.server 8000', true);
+                log('2. Arquivo episodios.json não existe?', true);
+                log('3. JSON inválido?', true);
+            }
+        }
+
+        testEpisodes();
+    </script>
+</body>
+</html>

@@ -25,8 +25,8 @@ class FirebaseStorageManager {
     setupConnectionMonitoring() {
         if (!this.database) return;
 
-        const connectedRef = window.firebaseRef(this.database, '.info/connected');
-        window.firebaseOnValue(connectedRef, (snapshot) => {
+        const connectedRef = firebase.database().ref('.info/connected');
+        connectedRef.on('value', (snapshot) => {
             this.isOnline = snapshot.val() === true;
             console.log(this.isOnline ? '🟢 Firebase Online' : '🔴 Firebase Offline');
             
@@ -98,8 +98,8 @@ class FirebaseStorageManager {
         }
 
         try {
-            const profileRef = window.firebaseRef(this.database, `profiles/${profileName}`);
-            const snapshot = await window.firebaseGet(profileRef);
+            const profileRef = firebase.database().ref(`profiles/${profileName}`);
+            const snapshot = await profileRef.once('value');
             
             if (snapshot.exists()) {
                 return snapshot.val();
@@ -128,8 +128,8 @@ class FirebaseStorageManager {
         }
 
         try {
-            const profileRef = window.firebaseRef(this.database, `profiles/${profileName}`);
-            await window.firebaseSet(profileRef, profileData);
+            const profileRef = firebase.database().ref(`profiles/${profileName}`);
+            await profileRef.set(profileData);
             console.log(`💾 Perfil ${profileName} salvo no Firebase`);
         } catch (error) {
             console.error('Erro ao salvar perfil no Firebase:', error);
