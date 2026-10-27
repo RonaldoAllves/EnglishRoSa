@@ -866,6 +866,10 @@ class App {
      * Mostra uma tela específica
      */
     showScreen(screenId) {
+        if (screenId === 'profile-screen') {
+            this.updateProfileStats();
+        }
+
         document.querySelectorAll('.screen').forEach(screen => {
             screen.classList.remove('active');
         });

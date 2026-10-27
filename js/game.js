@@ -421,9 +421,11 @@ class GameManager {
     generateOptions(wordData) {
         const options = [wordData.translation];
         
-        // Coletar todas as traduções do episódio
+        // Expressões devem usar apenas outras expressões como alternativas.
         const allTranslations = [];
-        const categories = ['adjetivos', 'substantivos', 'verbos', 'expressoes'];
+        const categories = wordData.category === 'expressoes'
+            ? ['expressoes']
+            : ['adjetivos', 'substantivos', 'verbos', 'expressoes'];
         
         categories.forEach(category => {
             if (this.episodeData[category]) {
@@ -443,13 +445,13 @@ class GameManager {
             options.push(allTranslations[i]);
         }
 
-        // Se não tiver opções suficientes, adicionar traduções genéricas
+        // Para outras categorias, completar com opções genéricas se necessário.
         const genericOptions = [
             'fazer', 'ter', 'ser', 'estar', 'ir', 'ver', 'dar', 'poder',
             'dizer', 'saber', 'querer', 'vir', 'pensar', 'olhar', 'falar'
         ];
 
-        while (options.length < 4) {
+        while (wordData.category !== 'expressoes' && options.length < 4) {
             const random = genericOptions[Math.floor(Math.random() * genericOptions.length)];
             if (!options.includes(random)) {
                 options.push(random);
