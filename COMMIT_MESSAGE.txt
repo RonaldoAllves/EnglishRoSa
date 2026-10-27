@@ -1,0 +1,63 @@
+feat: Integração com Firebase para sincronização em nuvem
+
+🔥 GRANDE ATUALIZAÇÃO: Sincronização automática entre dispositivos!
+
+NOVOS RECURSOS:
+- Integração com Firebase Realtime Database
+- Sincronização automática em tempo real entre dispositivos
+- Funciona offline com fila de sincronização inteligente
+- Migração automática de dados do localStorage para Firebase
+- Indicador visual de status de conexão (online/offline)
+- Loading ao carregar dados do Firebase
+- Fallback para localStorage se Firebase falhar
+- Carregamento de episodios.json do Firebase (opcional)
+
+ARQUIVOS NOVOS:
+- js/firebase-config.js - Configuração e inicialização do Firebase
+- js/firebase-storage.js - Sistema de armazenamento com Firebase
+- FIREBASE_SETUP.md - Documentação completa da integração
+- firebase-rules.json - Regras de segurança do Firebase Realtime Database
+- COMMIT_MESSAGE.txt - Esta mensagem
+
+ARQUIVOS MODIFICADOS:
+- index.html - Imports dos módulos Firebase, status de conexão
+- js/app.js - Aguarda Firebase, migração automática, loading
+- js/game.js - Exportação para uso global
+- css/style.css - Estilos para status Firebase e loading overlay
+- README.md - Atualizado com instruções Firebase
+
+COMO FUNCIONA:
+1. App inicializa e conecta ao Firebase
+2. Migra dados antigos do localStorage automaticamente
+3. Carrega progresso do Firebase ao selecionar perfil
+4. Salva cada ação tanto localmente quanto no Firebase
+5. Se offline, adiciona à fila e sincroniza quando voltar online
+6. Permite acesso de qualquer dispositivo com mesmo perfil
+
+BENEFÍCIOS:
+✅ Progresso sincronizado entre computador, celular, tablet
+✅ Backup automático na nuvem
+✅ Não perde dados ao limpar cache do navegador
+✅ Funciona offline com sincronização posterior
+✅ Migração transparente dos dados existentes
+✅ Fallback inteligente para localStorage
+
+FIREBASE CONFIG:
+- Projeto: englishrosa-a3e97
+- Database: Realtime Database
+- Regras: profiles (read/write), episodios (read-only)
+
+COMPATIBILIDADE:
+- Totalmente retrocompatível com dados existentes
+- localStorage usado como cache local
+- Funciona sem Firebase (modo fallback)
+- Migração automática sem perda de dados
+
+TESTADO:
+✅ Sincronização entre múltiplos dispositivos
+✅ Modo offline com sincronização posterior
+✅ Migração de dados do localStorage
+✅ Fallback para localStorage quando Firebase falha
+✅ Loading states e feedback visual
+
+Resolve #issue sobre progresso zerado entre dispositivos

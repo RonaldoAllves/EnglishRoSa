@@ -16,10 +16,69 @@ class App {
      * Inicializa a aplicação
      */
     async init() {
+        // Atualizar status do Firebase
+        this.updateFirebaseStatus();
+        
+        // Carregar dados dos episódios
         await this.loadEpisodesData();
+        
+        // Verificar se há dados locais antigos para migrar
+        await this.checkAndMigrateLocalData();
+        
+        // Configurar listeners
         this.setupEventListeners();
+        
+        // Atualizar estatísticas dos perfis
         this.updateProfileStats();
+        
+        // Mostrar tela inicial
         this.showScreen('profile-screen');
+    }
+
+    /**
+     * Atualiza o indicador de status do Firebase
+     */
+    updateFirebaseStatus() {
+        const statusEl = document.getElementById('firebase-status');
+        
+        if (window.firebaseStorage && window.firebaseStorage.isOnline) {
+            statusEl.textContent = '🟢 Conectado ao Firebase';
+            statusEl.className = 'firebase-status online';
+        } else {
+            statusEl.textContent = '🔴 Modo Offline (usando cache local)';
+            statusEl.className = 'firebase-status offline';
+        }
+
+        // Atualizar a cada 5 segundos
+        setTimeout(() => this.updateFirebaseStatus(), 5000);
+    }
+
+    /**
+     * Verifica se há dados locais antigos e oferece migração
+     */
+    async checkAndMigrateLocalData() {
+        const profiles = ['ronaldo', 'sarah'];
+        
+        for (const profileName of profiles) {
+            const localData = localStorage.getItem(profileName);
+            
+            if (localData) {
+                try {
+                    const profile = JSON.parse(localData);
+                    
+                    // Verificar se tem progresso significativo
+                    if (profile.totalWords > 0) {
+                        console.log(`📦 Dados locais encontrados para ${profileName} (${profile.totalWords} palavras)`);
+                        
+                        // Sincronizar automaticamente com Firebase
+                        await window.firebaseStorage.syncLocalToFirebase(profileName);
+                        console.log(`✅ Dados de ${profileName} migrados para Firebase`);
+                    }
+                } catch (error) {
+                    console.error(`Erro ao migrar dados de ${profileName}:`, error);
+                }
+            }
+        }
     }
 
     /**
@@ -27,6 +86,26 @@ class App {
      */
     async loadEpisodesData() {
         try {
+            // Tentar carregar do Firebase primeiro
+            if (window.firebaseDatabase) {
+                try {
+                    console.log('📥 Tentando carregar episódios do Firebase...');
+                    const episodiosRef = window.firebaseRef(window.firebaseDatabase, 'episodios');
+                    const snapshot = await window.firebaseGet(episodiosRef);
+                    
+                    if (snapshot.exists()) {
+                        this.episodesData = snapshot.val();
+                        console.log('✅ Episódios carregados do Firebase:', this.episodesData);
+                        return;
+                    } else {
+                        console.log('⚠️ Nenhum dado de episódios no Firebase, carregando do arquivo local...');
+                    }
+                } catch (firebaseError) {
+                    console.log('⚠️ Erro ao carregar do Firebase, tentando arquivo local...', firebaseError);
+                }
+            }
+
+            // Fallback: carregar do arquivo local
             const response = await fetch('episodios.json');
             
             if (!response.ok) {
@@ -34,11 +113,22 @@ class App {
             }
             
             this.episodesData = await response.json();
-            console.log('✅ Episódios carregados:', this.episodesData);
+            console.log('✅ Episódios carregados do arquivo local:', this.episodesData);
+
+            // Opcional: Salvar no Firebase para próxima vez
+            if (window.firebaseDatabase && window.firebaseStorage.isOnline) {
+                try {
+                    const episodiosRef = window.firebaseRef(window.firebaseDatabase, 'episodios');
+                    await window.firebaseSet(episodiosRef, this.episodesData);
+                    console.log('💾 Episódios salvos no Firebase para cache');
+                } catch (error) {
+                    console.log('⚠️ Não foi possível salvar episódios no Firebase (não é crítico)');
+                }
+            }
+
         } catch (error) {
             console.error('❌ Erro ao carregar episódios:', error);
             
-            // Mostrar erro mais detalhado
             const errorMsg = `
                 ❌ Erro ao carregar dados dos episódios!
                 
@@ -48,7 +138,6 @@ class App {
                 Use um servidor HTTP local ao invés de abrir o arquivo diretamente.
                 
                 Execute no terminal:
-                cd D:\\English\\APP
                 python -m http.server 8000
                 
                 Depois acesse: http://localhost:8000
@@ -56,7 +145,6 @@ class App {
             
             alert(errorMsg);
             
-            // Mostrar na tela também
             document.body.innerHTML = `
                 <div style="padding: 2rem; max-width: 600px; margin: 0 auto; font-family: sans-serif; background: #0f172a; color: #f1f5f9; min-height: 100vh;">
                     <h1 style="color: #ef4444;">❌ Erro ao Carregar Dados</h1>
@@ -68,24 +156,13 @@ class App {
                     <p>Você precisa usar um <strong>servidor HTTP local</strong> para o app funcionar.</p>
                     
                     <h3>Opção 1: Python (Recomendado)</h3>
-                    <pre style="background: #1e293b; padding: 1rem; border-radius: 0.5rem; overflow-x: auto;">cd D:\\English\\APP
-python -m http.server 8000</pre>
+                    <pre style="background: #1e293b; padding: 1rem; border-radius: 0.5rem; overflow-x: auto;">python -m http.server 8000</pre>
                     <p>Depois acesse: <a href="http://localhost:8000" style="color: #6366f1;">http://localhost:8000</a></p>
                     
-                    <h3>Opção 2: Node.js</h3>
-                    <pre style="background: #1e293b; padding: 1rem; border-radius: 0.5rem; overflow-x: auto;">cd D:\\English\\APP
-npx http-server</pre>
-                    
-                    <h3>Opção 3: VS Code</h3>
-                    <p>1. Instale a extensão "Live Server"<br>
-                    2. Clique com botão direito em index.html<br>
-                    3. Escolha "Open with Live Server"</p>
-                    
-                    <h3 style="margin-top: 2rem;">📖 Por que preciso disso?</h3>
-                    <p style="background: #1e293b; padding: 1rem; border-radius: 0.5rem;">
-                        Por segurança, navegadores bloqueiam o carregamento de arquivos JSON quando você abre um HTML diretamente (protocolo file://).
-                        Um servidor HTTP local resolve isso.
-                    </p>
+                    <h3>Opção 2: Usar Firebase Hosting</h3>
+                    <p>1. Instale Firebase CLI: <code>npm install -g firebase-tools</code><br>
+                    2. Execute: <code>firebase init hosting</code><br>
+                    3. Execute: <code>firebase deploy</code></p>
                     
                     <button onclick="location.reload()" style="background: #6366f1; color: white; border: none; padding: 1rem 2rem; border-radius: 0.5rem; cursor: pointer; font-size: 1rem; margin-top: 2rem;">
                         🔄 Tentar Novamente
@@ -133,28 +210,73 @@ npx http-server</pre>
     /**
      * Seleciona um perfil
      */
-    selectProfile(profileName) {
+    async selectProfile(profileName) {
         this.currentProfile = profileName;
         console.log('Perfil selecionado:', profileName);
         
-        // Atualizar UI
-        document.getElementById('current-profile-name').textContent = 
-            profileName.charAt(0).toUpperCase() + profileName.slice(1);
+        // Mostrar loading
+        const loadingMsg = this.showLoading('Carregando dados do Firebase...');
         
-        // Configurar botão de reset de perfil
-        const btnResetProfile = document.getElementById('btn-reset-profile');
-        if (btnResetProfile) {
-            btnResetProfile.onclick = () => {
-                if (confirm(`⚠️ ATENÇÃO!\n\nIsso irá APAGAR TODO O PROGRESSO de ${profileName}!\n\nTodas as palavras aprendidas, pontos e estatísticas serão perdidos.\n\nTem certeza absoluta?`)) {
-                    storage.resetProfile(profileName);
-                    this.updateEpisodeScreen();
-                    alert('✅ Perfil resetado com sucesso!');
-                }
-            };
+        try {
+            // Carregar dados do Firebase
+            await window.firebaseStorage.loadFromFirebase(profileName);
+            
+            // Atualizar UI
+            document.getElementById('current-profile-name').textContent = 
+                profileName.charAt(0).toUpperCase() + profileName.slice(1);
+            
+            // Configurar botão de reset de perfil
+            const btnResetProfile = document.getElementById('btn-reset-profile');
+            if (btnResetProfile) {
+                btnResetProfile.onclick = () => {
+                    if (confirm(`⚠️ ATENÇÃO!\n\nIsso irá APAGAR TODO O PROGRESSO de ${profileName}!\n\nTodas as palavras aprendidas, pontos e estatísticas serão perdidos.\n\nTem certeza absoluta?`)) {
+                        storage.resetProfile(profileName);
+                        this.updateEpisodeScreen();
+                        alert('✅ Perfil resetado com sucesso!');
+                    }
+                };
+            }
+            
+            this.updateEpisodeScreen();
+            this.showScreen('episode-screen');
+            
+        } catch (error) {
+            console.error('Erro ao carregar perfil:', error);
+            alert('Erro ao carregar dados. Usando dados locais.');
+            
+            document.getElementById('current-profile-name').textContent = 
+                profileName.charAt(0).toUpperCase() + profileName.slice(1);
+            
+            this.updateEpisodeScreen();
+            this.showScreen('episode-screen');
+        } finally {
+            this.hideLoading(loadingMsg);
         }
-        
-        this.updateEpisodeScreen();
-        this.showScreen('episode-screen');
+    }
+
+    /**
+     * Mostra mensagem de loading
+     */
+    showLoading(message) {
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'loading-overlay';
+        loadingDiv.innerHTML = `
+            <div class="loading-content">
+                <div class="loading-spinner"></div>
+                <p>${message}</p>
+            </div>
+        `;
+        document.body.appendChild(loadingDiv);
+        return loadingDiv;
+    }
+
+    /**
+     * Remove mensagem de loading
+     */
+    hideLoading(loadingDiv) {
+        if (loadingDiv && loadingDiv.parentNode) {
+            loadingDiv.parentNode.removeChild(loadingDiv);
+        }
     }
 
     /**
@@ -558,7 +680,26 @@ npx http-server</pre>
 }
 
 // Iniciar a aplicação quando o DOM estiver pronto
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Aguardar Firebase carregar
+    await new Promise(resolve => {
+        if (window.firebaseStorage) {
+            resolve();
+        } else {
+            const checkFirebase = setInterval(() => {
+                if (window.firebaseStorage) {
+                    clearInterval(checkFirebase);
+                    resolve();
+                }
+            }, 100);
+        }
+    });
+
+    // Usar o storage global do Firebase
+    window.storage = window.firebaseStorage;
+    
     const app = new App();
     window.app = app; // Tornar acessível globalmente para debug
+    
+    console.log('✅ App inicializado com Firebase');
 });

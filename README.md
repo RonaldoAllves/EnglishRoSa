@@ -1,238 +1,209 @@
 # 📺 English Learning - The Big Bang Theory
 
-App mobile-first para aprender inglês assistindo The Big Bang Theory!
+Aplicativo web para aprender inglês assistindo The Big Bang Theory! 🎓✨
 
-## 🎯 Funcionalidades
+## 🔥 **NOVO: Sincronização com Firebase!**
 
-### ✨ Principais Features
+Seu progresso agora é salvo na nuvem e sincroniza automaticamente entre dispositivos! 🚀☁️
 
-- **Perfis Individuais**: Ronaldo e Sarah com progresso separado
-- **Sistema de Pontuação**: Ganhe pontos e desbloqueie conquistas
-- **Modo Revisão**: Foque nas palavras que você mais erra
-- **Progresso Automático**: Salva automaticamente a cada resposta
-- **Estatísticas Detalhadas**: Acompanhe seu progresso por episódio e categoria
-- **Mobile First**: Interface otimizada para celular
-- **Offline**: Funciona sem internet após carregar os dados
+## ✨ Funcionalidades
 
-### 📊 Estatísticas Rastreadas
+### 🎮 Sistema de Aprendizado
+- ✅ Exercícios interativos de vocabulário
+- ✅ Tradução de palavras e frases completas
+- ✅ 4 categorias: Verbos, Adjetivos, Substantivos e Expressões
+- ✅ Exemplos reais das séries de TV
 
-- Total de palavras aprendidas
-- Taxa de acertos/erros
-- Pontuação total
-- Melhor sequência de acertos (streak)
-- Progresso por categoria (verbos, substantivos, adjetivos, expressões)
-- Progresso por episódio
-- Histórico de cada palavra
+### 📊 Sistema de Progresso
+- ✅ **Sincronização em nuvem** - Progresso salvo no Firebase
+- ✅ **Multi-dispositivo** - Acesse de qualquer lugar
+- ✅ Sistema de tentativas (salva as 5 melhores)
+- ✅ Continuar de onde parou
+- ✅ Modo de revisão de erros
+- ✅ Estatísticas detalhadas por categoria
+- ✅ Sistema de pontuação com bônus de streak
+
+### 🎯 Modos de Jogo
+- **Continuar Progresso**: Apenas palavras que você precisa praticar
+- **Nova Tentativa**: Todas as palavras para melhorar pontuação
+- **Revisar Erros**: Foco nas palavras mais difíceis
+- **Filtros**: Escolha tipo de exercício (verbos, adjetivos, etc.)
+- **Com/Sem Frases**: Inclua ou exclua exercícios de frases
+
+### 👥 Multi-perfil
+- Dois perfis independentes (Ronaldo e Sarah)
+- Estatísticas separadas
+- Progresso individual sincronizado
 
 ## 🚀 Como Usar
 
-### Acesso Local
+### Opção 1: Servidor Local (Desenvolvimento)
 
-1. Abra o arquivo `index.html` em um navegador
-2. Ou use um servidor local:
-   ```bash
-   # Python
-   python -m http.server 8000
-   
-   # Node.js
-   npx http-server
-   ```
-3. Acesse `http://localhost:8000`
+```bash
+# Python
+python -m http.server 8000
 
-### GitHub Pages
+# Ou Node.js
+npx http-server
 
-1. Faça upload dos arquivos para um repositório GitHub
-2. Vá em Settings → Pages
-3. Escolha a branch main e pasta raiz
-4. Acesse via `https://seu-usuario.github.io/seu-repo`
-
-## 📁 Estrutura do Projeto
-
-```
-D:\English\APP\
-├── index.html              # Página principal
-├── manifest.json           # PWA manifest
-├── episodios.json          # Dados dos episódios
-├── css/
-│   └── style.css          # Estilos
-├── js/
-│   ├── app.js             # Lógica principal
-│   ├── game.js            # Gerenciamento do jogo
-│   └── storage.js         # Sistema de armazenamento
-└── README.md
+# Depois acesse
+http://localhost:8000
 ```
 
-## 🎮 Como Jogar
+### Opção 2: Firebase Hosting (Produção)
 
-### 1. Seleção de Perfil
-- Escolha entre Ronaldo ou Sarah
-- Veja suas estatísticas acumuladas
+```bash
+npm install -g firebase-tools
+firebase login
+firebase init hosting
+firebase deploy
+```
 
-### 2. Seleção de Episódio
-- Escolha qual episódio quer estudar
-- Veja seu progresso em cada episódio
+## 🔥 Configuração do Firebase
 
-### 3. Jogo
-- Veja uma palavra em inglês
-- Escolha a tradução correta entre 4 opções
-- Ganhe pontos por acerto (com bônus por streak!)
-- Aprenda com os exemplos
+O app usa Firebase Realtime Database para sincronização. Já está configurado!
 
-### 4. Resultado
-- Veja seu desempenho
-- Analise estatísticas por categoria
-- Jogue novamente ou revise seus erros
+### Verificar Dados no Firebase Console
+1. Acesse: https://console.firebase.google.com/
+2. Projeto: `englishrosa-a3e97`
+3. Realtime Database → Ver dados em tempo real
 
-## 📈 Sistema de Pontuação
-
-- **Acerto simples**: 10 pontos
-- **Bônus por streak**: +2 pontos por acerto consecutivo
-  - Exemplo: 3º acerto seguido = 10 + (3 × 2) = 16 pontos
-- **Erro**: 0 pontos e reseta o streak
-
-## 🔄 Modo Revisão
-
-O modo revisão prioriza as palavras que você mais errou:
-
-1. Clique em "📖 Revisar Erros" após completar um episódio
-2. O app mostra até 20 palavras com maior taxa de erro
-3. Foque no que precisa melhorar!
-
-## 💾 Armazenamento de Dados
-
-### localStorage
-- Todos os dados são salvos localmente no navegador
-- Não precisa de servidor ou banco de dados
-- Progresso é salvo automaticamente após cada resposta
-
-### Estrutura de Dados
-
-```javascript
+### Configurar Regras de Segurança
+No Firebase Console → Realtime Database → Regras:
+```json
 {
-  "name": "ronaldo",
-  "totalPoints": 1250,
-  "totalWords": 120,
-  "totalCorrect": 95,
-  "totalWrong": 25,
-  "episodes": {
-    "s01e01": {
-      "completed": true,
-      "points": 350,
-      "correctAnswers": 30,
-      "wrongAnswers": 10,
-      "categories": { ... },
-      "words": { ... }
+  "rules": {
+    "profiles": {
+      "$profileId": {
+        ".read": true,
+        ".write": true
+      }
+    },
+    "episodios": {
+      ".read": true,
+      ".write": false
     }
   }
 }
 ```
 
-## 🎨 Categorias
+Ver `firebase-rules.json` para regras mais detalhadas.
 
-- 🎨 **Adjetivos**: Palavras descritivas
-- 📦 **Substantivos**: Pessoas, lugares, coisas
-- 🎯 **Verbos**: Ações
-- 💬 **Expressões**: Frases idiomáticas
+## 📁 Estrutura do Projeto
 
-## 🔧 Personalização
-
-### Adicionar Novos Episódios
-
-1. Edite `episodios.json`
-2. Adicione um novo objeto no array `episodios`:
-
-```json
-{
-  "episodio": "s01e08",
-  "adjetivos": [...],
-  "substantivos": [...],
-  "verbos": [...],
-  "expressoes": [...]
-}
+```
+EnglishRoSa/
+├── index.html              # Interface principal
+├── episodios.json          # Dados dos episódios
+├── css/
+│   └── style.css          # Estilos
+├── js/
+│   ├── firebase-config.js      # 🔥 Configuração Firebase
+│   ├── firebase-storage.js     # 🔥 Sistema de sincronização
+│   ├── game.js                 # Lógica do jogo
+│   └── app.js                  # Controle da aplicação
+├── FIREBASE_SETUP.md           # 🔥 Documentação Firebase
+├── firebase-rules.json         # 🔥 Regras de segurança
+├── GUIA_RAPIDO.md             # Como usar o app
+├── SINCRONIZACAO.md           # Info sobre sincronização
+└── README.md                  # Este arquivo
 ```
 
-### Modificar Cores
+## 💡 Recursos Técnicos
 
-Edite as variáveis CSS em `css/style.css`:
+### Firebase Realtime Database
+- Sincronização automática em tempo real
+- Funciona offline com fila de sincronização
+- Migração automática de dados locais
+- Fallback para localStorage se Firebase falhar
 
-```css
-:root {
-    --primary: #6366f1;
-    --secondary: #8b5cf6;
-    --success: #10b981;
-    --error: #ef4444;
-    ...
-}
-```
+### Progressive Web App (PWA)
+- Funciona como app nativo
+- Instalável no celular/desktop
+- Funciona offline (após primeira carga)
 
-## 📱 PWA (Progressive Web App)
+### Design Responsivo
+- Interface otimizada para mobile e desktop
+- Dark mode elegante
+- Animações suaves
 
-O app pode ser instalado no celular como um aplicativo:
+## 🎮 Como Jogar
 
-1. Abra no navegador mobile
-2. No menu, escolha "Adicionar à tela inicial"
-3. Use como um app nativo!
+1. **Escolha seu perfil** (Ronaldo ou Sarah)
+2. **Selecione um episódio** da lista
+3. **Configure suas opções**:
+   - Continuar progresso ou nova tentativa
+   - Filtrar por categoria
+   - Incluir/excluir exercícios de frases
+4. **Responda as questões** clicando nas opções
+5. **Veja seus resultados** e estatísticas ao final
 
-## 🐛 Resolução de Problemas
+## 📊 Sistema de Pontuação
 
-### Dados não salvam
-- Verifique se o localStorage está habilitado
-- Não use modo anônimo/privado
+- **Acerto**: 10 pontos
+- **Bônus de Streak**: +2 pontos por acerto consecutivo
+- **Completar episódio**: 70% ou mais para marcar como completo
+- **Top 5 Tentativas**: As 5 melhores tentativas são salvas
 
-### Episódios não carregam
-- Verifique se `episodios.json` está na pasta raiz
-- Verifique o console do navegador (F12)
+## 🔄 Sincronização Entre Dispositivos
 
-### Layout quebrado
-- Limpe o cache do navegador
-- Verifique se todos os arquivos CSS foram carregados
+### Como funciona:
+1. **Primeiro dispositivo**: Jogue normalmente
+2. **Segundo dispositivo**: Abra o site, escolha o mesmo perfil
+3. **Automático**: Seu progresso já está lá! 🎉
 
-## 🔄 Backup e Restauração
+### Indicadores:
+- 🟢 **Verde**: Conectado e sincronizando
+- 🔴 **Vermelho**: Offline (sincroniza quando voltar online)
 
-### Exportar Progresso
+## 🐛 Solução de Problemas
 
-```javascript
-// No console do navegador
-storage.exportProfile('ronaldo');
-```
+### Firebase não conecta
+1. Verifique sua internet
+2. Veja o console do navegador (F12) para erros
+3. App funciona offline usando cache local
 
-### Importar Progresso
+### Progresso não sincroniza
+1. Verifique status de conexão (verde = ok)
+2. Veja logs no console (F12)
+3. Dados locais são backup automático
 
-```javascript
-// No console do navegador
-const jsonData = '...'; // Cole os dados JSON
-storage.importProfile('ronaldo', jsonData);
-```
+### Dados antigos não aparecem
+- Migração é automática na primeira vez
+- Pode exportar/importar manualmente se necessário
 
-## 🚀 Melhorias Futuras
+## 📚 Documentação
 
-- [ ] Sistema de conquistas/badges
-- [ ] Gráficos de progresso
-- [ ] Comparação entre perfis
-- [ ] Ranking de palavras mais difíceis
-- [ ] Timer para desafios
-- [ ] Sons e animações
-- [ ] Modo escuro/claro
-- [ ] Mais episódios e séries
+- **GUIA_RAPIDO.md**: Como usar todas as funcionalidades
+- **FIREBASE_SETUP.md**: Detalhes técnicos do Firebase
+- **SINCRONIZACAO.md**: Como funciona a sincronização
+- **firebase-rules.json**: Regras de segurança do Firebase
 
-## 💡 Dicas de Estudo
+## 🔮 Próximas Funcionalidades
 
-1. **Consistência**: Jogue um pouco todo dia
-2. **Revisão**: Use o modo revisão regularmente
-3. **Variedade**: Alterne entre episódios
-4. **Contexto**: Preste atenção nos exemplos
-5. **Prática**: Tente usar as palavras no dia a dia
+- [ ] Sistema de autenticação (login individual)
+- [ ] Mais episódios e temporadas
+- [ ] Modo de desafio com cronômetro
+- [ ] Ranking entre usuários
+- [ ] Estatísticas avançadas
+- [ ] Exportar relatório de progresso
 
-## 📞 Suporte
+## 🛠️ Tecnologias Utilizadas
 
-Se encontrar bugs ou tiver sugestões:
-- Abra uma issue no GitHub
-- Ou me mande um email
+- HTML5, CSS3, JavaScript (ES6+)
+- Firebase Realtime Database
+- Firebase Hosting (opcional)
+- LocalStorage (fallback)
+- Progressive Web App (PWA)
 
-## 📄 Licença
+## 📝 Licença
 
 Projeto pessoal para uso educacional.
 
+## 👥 Autores
+
+- Ronaldo & Sarah
+
 ---
 
-**Bons estudos! 🚀📚**
+**Bons estudos! 🚀📚✨**

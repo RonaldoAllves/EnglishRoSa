@@ -15,3 +15,14 @@ npm-debug.log*
 # Backup files
 *.bak
 *~
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+
+# Firebase
+.firebase/
+.firebaserc
+firebase-debug.log
+firebase-debug.*.log

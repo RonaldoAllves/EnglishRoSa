@@ -806,3 +806,82 @@ body {
         padding: 0.75rem;
     }
 }
+
+/* Firebase Status */
+.firebase-status {
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    background: var(--bg-card);
+}
+
+.firebase-status.online {
+    color: var(--success);
+}
+
+.firebase-status.offline {
+    color: var(--warning);
+}
+
+/* Sync Info */
+.sync-info {
+    margin-top: 2rem;
+    text-align: center;
+    padding: 1rem;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 92, 246, 0.1));
+    border: 2px solid var(--primary);
+    border-radius: 1rem;
+}
+
+.sync-info p {
+    margin: 0.25rem 0;
+}
+
+.sync-info p:first-child {
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.sync-detail {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Loading Overlay */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+}
+
+.loading-content {
+    text-align: center;
+    padding: 2rem;
+}
+
+.loading-spinner {
+    width: 60px;
+    height: 60px;
+    border: 4px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-content p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}

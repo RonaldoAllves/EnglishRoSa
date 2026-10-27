@@ -493,3 +493,6 @@ class GameManager {
 
 // Instanciar o gerenciador do jogo
 const game = new GameManager();
+
+// Exportar para uso global
+window.game = game;
