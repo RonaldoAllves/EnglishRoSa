@@ -295,35 +295,72 @@ class FirebaseStorageManager {
     }
 
     /**
-     * Obtém palavras que ainda não foram aprendidas ou com mais erros
+     * Obtém palavras que ainda não foram dominadas (precisa praticar)
      */
-    getWordsForPractice(profileName, episodeId) {
+    getWordsNeedingPractice(profileName, episodeId) {
         const episode = this.getEpisodeProgress(profileName, episodeId);
+        
+        if (!episode.words || Object.keys(episode.words).length === 0) {
+            // Se não tem histórico, todas as palavras precisam de prática
+            return [];
+        }
+        
         const wordsList = Object.values(episode.words);
         
+        // Palavras que precisam de prática:
+        // - Nunca tentadas (attempts === 0) - não deveriam estar aqui
+        // - Taxa de erro > 30%
+        // - Tentativas insuficientes (< 2)
         const needsPractice = wordsList.filter(word => {
-            if (word.attempts === 0) return true;
+            if (word.attempts === 0) return false; // Já foi filtrada antes
+            if (word.attempts < 2) return true; // Precisa praticar mais
             const errorRate = word.wrong / word.attempts;
-            return errorRate > 0.3;
+            return errorRate > 0.3; // Taxa de erro alta
         });
 
+        // Retornar apenas os nomes das palavras que precisam praticar
         return needsPractice.map(w => w.word);
     }
 
     /**
-     * Obtém frases que ainda não foram praticadas ou com mais erros
+     * Obtém palavras que já foram dominadas (não precisa praticar mais)
      */
-    getSentencesForPractice(profileName, episodeId) {
+    getWordsMastered(profileName, episodeId) {
         const episode = this.getEpisodeProgress(profileName, episodeId);
         
-        if (!episode.sentences) {
-            episode.sentences = {};
+        if (!episode.words || Object.keys(episode.words).length === 0) {
+            return [];
+        }
+        
+        const wordsList = Object.values(episode.words);
+        
+        // Palavras dominadas:
+        // - Pelo menos 2 tentativas
+        // - Taxa de erro <= 30%
+        const mastered = wordsList.filter(word => {
+            if (word.attempts < 2) return false;
+            const errorRate = word.wrong / word.attempts;
+            return errorRate <= 0.3;
+        });
+
+        return mastered.map(w => w.word);
+    }
+
+    /**
+     * Obtém frases que ainda não foram dominadas
+     */
+    getSentencesNeedingPractice(profileName, episodeId) {
+        const episode = this.getEpisodeProgress(profileName, episodeId);
+        
+        if (!episode.sentences || Object.keys(episode.sentences).length === 0) {
+            return [];
         }
         
         const sentencesList = Object.values(episode.sentences);
         
         const needsPractice = sentencesList.filter(sentence => {
-            if (sentence.attempts === 0) return true;
+            if (sentence.attempts === 0) return false;
+            if (sentence.attempts < 2) return true;
             const errorRate = sentence.wrong / sentence.attempts;
             return errorRate > 0.3;
         });

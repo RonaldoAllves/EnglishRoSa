@@ -127,18 +127,21 @@ class GameManager {
         const words = [];
         const sentences = [];
 
-        const wordsToSkip = storage.getWordsForPractice(this.currentProfile, this.currentEpisode);
-        const sentencesToSkip = storage.getSentencesForPractice(this.currentProfile, this.currentEpisode);
+        // Obter palavras já dominadas (não mostrar elas)
+        const wordsMastered = storage.getWordsMastered(this.currentProfile, this.currentEpisode);
+        const wordsNeedingPractice = storage.getWordsNeedingPractice(this.currentProfile, this.currentEpisode);
+        const sentencesNeedingPractice = storage.getSentencesNeedingPractice(this.currentProfile, this.currentEpisode);
         
         const categories = this.getCategoriesForFilter();
         
         categories.forEach(category => {
             if (this.episodeData[category] && Array.isArray(this.episodeData[category])) {
                 this.episodeData[category].forEach(item => {
-                    // Verificar se a palavra precisa de prática
-                    const needsPractice = wordsToSkip.length === 0 || wordsToSkip.includes(item.palavra);
+                    // Verificar se a palavra JÁ foi dominada
+                    const isMastered = wordsMastered.includes(item.palavra);
                     
-                    if (needsPractice) {
+                    // Se não foi dominada, ou se precisa praticar, incluir
+                    if (!isMastered) {
                         // Adicionar exercício de palavra
                         words.push({
                             word: item.palavra,
@@ -159,10 +162,16 @@ class GameManager {
 
                         exampleSentences.forEach(sentence => {
                             const sentenceKey = `${item.palavra}_${sentence}`;
-                            const needsSentencePractice = sentencesToSkip.length === 0 || 
-                                                         sentencesToSkip.includes(sentenceKey);
                             
-                            if (needsSentencePractice) {
+                            // Verificar se a frase foi dominada
+                            // Se não tem no histórico, incluir
+                            // Se tem e precisa praticar, incluir
+                            const shouldInclude = !sentencesNeedingPractice.length || 
+                                                 sentencesNeedingPractice.includes(sentenceKey) ||
+                                                 !storage.getEpisodeProgress(this.currentProfile, this.currentEpisode).sentences ||
+                                                 !storage.getEpisodeProgress(this.currentProfile, this.currentEpisode).sentences[sentenceKey];
+                            
+                            if (shouldInclude) {
                                 sentences.push({
                                     word: item.palavra,
                                     sentence: sentence,
@@ -177,11 +186,14 @@ class GameManager {
             }
         });
 
-        // Se não houver palavras para praticar, usar todas
+        // Se não houver palavras para praticar (todas dominadas), usar todas
         if (words.length === 0 && sentences.length === 0) {
+            console.log('✅ Todas as palavras dominadas! Mostrando todas novamente.');
             this.prepareAllWords();
             return;
         }
+
+        console.log(`📝 Continuar: ${words.length} palavras + ${sentences.length} frases para praticar`);
 
         // Embaralhar palavras e frases separadamente
         this.shuffleArray(words);
