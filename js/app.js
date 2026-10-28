@@ -306,6 +306,12 @@ class App {
             this.showScreen('episode-screen');
         });
 
+        document.getElementById('btn-back-to-episodes').addEventListener('click', () => {
+            document.getElementById('game-options-modal').classList.remove('active');
+            this.updateEpisodeScreen();
+            this.showScreen('episode-screen');
+        });
+
         // Botões de resultado
         document.getElementById('btn-play-again').addEventListener('click', () => {
             this.showEpisodeOptions(this.currentEpisodeId, storage.getEpisodeProgress(this.currentProfile, this.currentEpisodeId));
