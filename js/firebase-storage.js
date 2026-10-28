@@ -489,19 +489,10 @@ class FirebaseStorageManager {
         
         const completedEpisodes = profile.episodes ? 
             Object.values(profile.episodes).filter(ep => ep.completed).length : 0;
-        const totalSentences = Object.values(profile.episodes || {}).reduce(
-            (total, episode) => total + Object.values(episode.sentences || {}).reduce(
-                (sentenceTotal, sentenceProgress) =>
-                    sentenceTotal + (Number(sentenceProgress.attempts) || 0),
-                0
-            ),
-            0
-        );
         
         return {
             totalPoints: profile.totalPoints || 0,
             totalWords: profile.totalWords || 0,
-            totalSentences: totalSentences,
             totalCorrect: profile.totalCorrect || 0,
             totalWrong: profile.totalWrong || 0,
             accuracy: accuracy,

@@ -405,12 +405,7 @@ class App {
     updateEpisodeScreen() {
         const stats = storage.getGlobalStats(this.currentProfile);
         
-        // Atualizar estatísticas globais
         document.getElementById('profile-total-points').textContent = stats.totalPoints;
-        document.getElementById('total-words').textContent = stats.totalWords;
-        document.getElementById('total-sentences').textContent = stats.totalSentences;
-        document.getElementById('total-correct').textContent = stats.totalCorrect;
-        document.getElementById('accuracy').textContent = stats.accuracy + '%';
 
         // Renderizar lista de episódios
         const episodesList = document.getElementById('episodes-list');
@@ -880,12 +875,13 @@ class App {
     updateProfileStats() {
         const ronaldoStats = storage.getGlobalStats('ronaldo');
         const sarahStats = storage.getGlobalStats('sarah');
+        const totalEpisodes = this.episodesData?.episodios?.length || 0;
 
-        document.getElementById('ronaldo-words').textContent = ronaldoStats.totalWords;
-        document.getElementById('ronaldo-episodes').textContent = ronaldoStats.completedEpisodes;
+        document.getElementById('ronaldo-episodes').textContent =
+            `${ronaldoStats.completedEpisodes}/${totalEpisodes}`;
         
-        document.getElementById('sarah-words').textContent = sarahStats.totalWords;
-        document.getElementById('sarah-episodes').textContent = sarahStats.completedEpisodes;
+        document.getElementById('sarah-episodes').textContent =
+            `${sarahStats.completedEpisodes}/${totalEpisodes}`;
     }
 
     /**
