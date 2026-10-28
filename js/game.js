@@ -2,6 +2,12 @@
  * Lógica do Jogo
  * Gerencia as questões, respostas e pontuação
  */
+const {
+    WordExercise,
+    SentenceExercise: SentenceExerciseModel,
+    ExerciseQuestion,
+    ReviewSession
+} = window.DomainModels;
 
 class GameManager {
     constructor() {
@@ -27,6 +33,7 @@ class GameManager {
         this.isReviewMode = false;
         this.categoryFilter = 'all'; // 'all', 'adjetivos', 'substantivos', 'verbos', 'expressoes'
         this.isNewAttempt = false; // Se é uma nova tentativa (reiniciar progresso)
+        this.reviewSession = null;
         // includeSentences removido - sempre será true
     }
 
@@ -40,6 +47,7 @@ class GameManager {
         this.isReviewMode = options.reviewMode || false;
         this.categoryFilter = options.categoryFilter || 'all';
         this.isNewAttempt = options.isNewAttempt || false;
+        this.reviewSession = null;
         
         // Reset das estatísticas
         this.currentQuestionIndex = 0;
@@ -85,9 +93,7 @@ class GameManager {
         let total = 0;
         let completed = 0;
 
-        const isCompleted = itemProgress => typeof itemProgress?.lastCorrect === 'boolean'
-            ? itemProgress.lastCorrect
-            : Boolean(itemProgress?.correct);
+        const isCompleted = itemProgress => Boolean(itemProgress?.isCompleted);
 
         this.getCategoriesForFilter().forEach(category => {
             (this.episodeData[category] || []).forEach(item => {
@@ -129,15 +135,7 @@ class GameManager {
             if (this.episodeData[category] && Array.isArray(this.episodeData[category])) {
                 this.episodeData[category].forEach(item => {
                     // Adicionar exercício de palavra
-                    words.push({
-                        word: item.palavra,
-                        translation: item.traducao,
-                        exampleDiff: item.exemplo_diferente,
-                        exampleEpisode: item.exemplo_episodio,
-                        exampleAdditional: item.exemplo_adicional,
-                        category: category,
-                        isSentence: false
-                    });
+                    words.push(WordExercise.fromContent(item, category));
 
                     // Adicionar exercícios de frases (sempre, mas em array separado)
                     const exampleSentences = [
@@ -147,13 +145,7 @@ class GameManager {
                     ].filter(s => s && s.trim());
 
                     exampleSentences.forEach(sentence => {
-                        sentences.push({
-                            word: item.palavra,
-                            sentence: sentence,
-                            translation: item.traducao,
-                            category: category,
-                            isSentence: true
-                        });
+                        sentences.push(SentenceExerciseModel.fromContent(item, category, sentence));
                     });
                 });
             }
@@ -174,18 +166,7 @@ class GameManager {
         const words = [];
         const sentences = [];
         const progress = storage.getEpisodeProgress(this.currentProfile, this.currentEpisode);
-        const shouldPractice = itemProgress => {
-            if (!itemProgress || itemProgress.attempts === 0) {
-                return true;
-            }
-
-            if (typeof itemProgress.lastCorrect === 'boolean') {
-                return !itemProgress.lastCorrect;
-            }
-
-            // Older progress records do not contain the result of the last attempt.
-            return !itemProgress.correct;
-        };
+        const shouldPractice = itemProgress => !itemProgress || itemProgress.needsPractice();
         
         const categories = this.getCategoriesForFilter();
         
@@ -193,15 +174,7 @@ class GameManager {
             if (this.episodeData[category] && Array.isArray(this.episodeData[category])) {
                 this.episodeData[category].forEach(item => {
                     if (shouldPractice(progress.words?.[item.palavra])) {
-                        words.push({
-                            word: item.palavra,
-                            translation: item.traducao,
-                            exampleDiff: item.exemplo_diferente,
-                            exampleEpisode: item.exemplo_episodio,
-                            exampleAdditional: item.exemplo_adicional,
-                            category: category,
-                            isSentence: false
-                        });
+                        words.push(WordExercise.fromContent(item, category));
                     }
 
                     const exampleSentences = [
@@ -213,13 +186,7 @@ class GameManager {
                     exampleSentences.forEach(sentence => {
                         const sentenceKey = storage.getSentenceProgressKey(item.palavra, sentence);
                         if (shouldPractice(progress.sentences?.[sentenceKey])) {
-                            sentences.push({
-                                word: item.palavra,
-                                sentence: sentence,
-                                translation: item.traducao,
-                                category: category,
-                                isSentence: true
-                            });
+                            sentences.push(SentenceExerciseModel.fromContent(item, category, sentence));
                         }
                     });
                 });
@@ -251,9 +218,7 @@ class GameManager {
      */
     prepareReviewWords() {
         const wordsToReview = storage.getWordsForReview(this.currentProfile, this.currentEpisode, 20);
-        
-        this.allWords = [];
-        const categories = ['adjetivos', 'substantivos', 'verbos', 'expressoes'];
+        const reviewExercises = [];
         
         wordsToReview.forEach(wordData => {
             const category = wordData.category;
@@ -262,21 +227,18 @@ class GameManager {
             const fullWord = categoryWords.find(w => w.palavra === wordData.word);
             
             if (fullWord) {
-                this.allWords.push({
-                    word: fullWord.palavra,
-                    translation: fullWord.traducao,
-                    exampleDiff: fullWord.exemplo_diferente,
-                    exampleEpisode: fullWord.exemplo_episodio,
-                    exampleAdditional: fullWord.exemplo_adicional,
-                    category: category
-                });
+                reviewExercises.push(WordExercise.fromContent(fullWord, category));
             }
         });
 
         // Se não houver palavras para revisar, usar todas
-        if (this.allWords.length === 0) {
+        if (reviewExercises.length === 0) {
             this.prepareAllWords();
+            return;
         }
+
+        this.reviewSession = new ReviewSession(this.currentEpisode, reviewExercises);
+        this.allWords = this.reviewSession.exercises;
     }
 
     /**
@@ -304,16 +266,18 @@ class GameManager {
     createWordQuestion(wordData) {
         const options = this.generateOptions(wordData);
 
-        this.currentQuestion = {
+        this.currentQuestion = new ExerciseQuestion({
             word: wordData.word,
             correctTranslation: wordData.translation,
             category: wordData.category,
             options: options,
-            exampleDiff: wordData.exampleDiff,
-            exampleEpisode: wordData.exampleEpisode,
-            exampleAdditional: wordData.exampleAdditional,
-            isSentence: false
-        };
+            isSentence: false,
+            examples: {
+                exampleDiff: wordData.exampleDiff,
+                exampleEpisode: wordData.exampleEpisode,
+                exampleAdditional: wordData.exampleAdditional
+            }
+        });
 
         return this.currentQuestion;
     }
@@ -322,29 +286,17 @@ class GameManager {
      * Cria questão de tradução de frase
      */
     createSentenceQuestion(wordData) {
-        // Extrair a frase em inglês e português
-        const sentence = wordData.sentence;
-        const parts = sentence.match(/^(.*?)\s*\((.*?)\)\s*$/);
-        
-        let englishSentence = sentence;
-        let portugueseSentence = wordData.translation;
-        
-        if (parts) {
-            englishSentence = parts[1].trim();
-            portugueseSentence = parts[2].trim();
-        }
-
         // Gerar opções de tradução de frases
-        const options = this.generateSentenceOptions(portugueseSentence, wordData.category);
+        const options = this.generateSentenceOptions(wordData.translation, wordData.category);
 
-        this.currentQuestion = {
+        this.currentQuestion = new ExerciseQuestion({
             word: wordData.word, // palavra relacionada
-            sentence: englishSentence,
-            correctTranslation: portugueseSentence,
+            sentence: wordData.sentence,
+            correctTranslation: wordData.translation,
             category: wordData.category,
             options: options,
             isSentence: true
-        };
+        });
 
         return this.currentQuestion;
     }
@@ -485,7 +437,7 @@ class GameManager {
 
         // Preparar dados para salvar
         const wordKey = this.currentQuestion.isSentence 
-            ? storage.getSentenceProgressKey(this.currentQuestion.word, this.currentQuestion.sentence)
+            ? SentenceExerciseModel.progressKey(this.currentQuestion.word, this.currentQuestion.sentence)
             : this.currentQuestion.word;
 
         // Salvar progresso imediatamente

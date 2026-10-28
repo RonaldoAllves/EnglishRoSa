@@ -27,11 +27,14 @@ O app exige conexão com o Firebase para iniciar. O progresso associado a um per
 - `index.html`: interface e carregamento dos scripts do Firebase.
 - `css/style.css`: estilos.
 - `js/app.js`: inicialização, navegação e interação com a interface.
-- `js/game.js`: lógica dos exercícios e pontuação.
+- `js/domain-models.js`: modelos orientados a objetos de perfil, progresso, tentativas, exercícios, questões e revisão.
+- `js/game.js`: lógica da sessão, seleção de exercícios e pontuação.
 - `js/firebase-config.js` e `js/firebase-storage.js`: configuração e persistência no Firebase.
-- `js/storage.js`: estrutura e operações locais de dados dos perfis.
+- `js/storage.js`: implementação legada de armazenamento local usando os modelos de domínio; a página usa atualmente `js/firebase-storage.js`.
 - `episodios.json`: conteúdo dos episódios.
 - `firebase-rules.json`: regras de exemplo para o Realtime Database.
+
+Os modelos são serializados no formato atual do Firebase; nesta etapa, o formato dos dados não foi alterado.
 
 ## Firebase
 

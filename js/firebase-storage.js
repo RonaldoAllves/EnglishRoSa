@@ -2,6 +2,7 @@
  * Sistema de Armazenamento com Firebase
  * Gerencia o progresso dos usuários usando Firebase Realtime Database
  */
+const { Profile, SentenceExercise } = window.DomainModels;
 
 class FirebaseStorageManager {
     constructor() {
@@ -86,16 +87,7 @@ class FirebaseStorageManager {
      * Cria um perfil padrão
      */
     createDefaultProfile(name) {
-        return {
-            name: name,
-            totalPoints: 0,
-            totalWords: 0,
-            totalCorrect: 0,
-            totalWrong: 0,
-            episodes: {},
-            lastPlayed: null,
-            createdAt: new Date().toISOString()
-        };
+        return Profile.create(name);
     }
 
     /**
@@ -111,7 +103,7 @@ class FirebaseStorageManager {
             const snapshot = await profileRef.once('value');
             
             if (snapshot.exists()) {
-                return snapshot.val();
+                return new Profile(snapshot.val());
             } else {
                 return this.createDefaultProfile(profileName);
             }
@@ -125,10 +117,13 @@ class FirebaseStorageManager {
      * Salva os dados de um perfil no Firebase
      */
     async saveProfile(profileName, profileData) {
-        this.normalizeSentenceKeys(profileData);
+        const serializedProfile = profileData instanceof Profile
+            ? profileData.toJSON()
+            : new Profile(profileData).toJSON();
+        this.normalizeSentenceKeys(serializedProfile);
 
         // Sempre salvar no localStorage como backup
-        localStorage.setItem(profileName, JSON.stringify(profileData));
+        localStorage.setItem(profileName, JSON.stringify(serializedProfile));
 
         if (!this.database) {
             throw new Error('Firebase não está disponível');
@@ -138,24 +133,17 @@ class FirebaseStorageManager {
 
         try {
             const profileRef = firebase.database().ref(`profiles/${profileName}`);
-            await profileRef.set(profileData);
+            await profileRef.set(serializedProfile);
             console.log(`💾 Perfil ${profileName} salvo no Firebase`);
         } catch (error) {
             console.error('Erro ao salvar perfil no Firebase:', error);
-            this.syncQueue.set(profileName, profileData);
+            this.syncQueue.set(profileName, serializedProfile);
             throw error;
         }
     }
 
     getSentenceProgressKey(word, sentence) {
-        const match = sentence.match(/^(.*?)\s*\((.*?)\)\s*$/);
-        const englishSentence = match ? match[1].trim() : sentence.trim();
-        const rawKey = `${word}_${englishSentence}`;
-        const encodedKey = Array.from(rawKey, character =>
-            character.codePointAt(0).toString(16).padStart(6, '0')
-        ).join('');
-
-        return `sentence_${encodedKey}`;
+        return SentenceExercise.progressKey(word, sentence);
     }
 
     normalizeSentenceKeys(profile) {
@@ -204,38 +192,13 @@ class FirebaseStorageManager {
      */
     getEpisodeProgress(profileName, episodeId) {
         // Usar cache local (deve estar sincronizado com Firebase)
-        const profileData = JSON.parse(localStorage.getItem(profileName) || '{}');
-        
-        if (!profileData.episodes) {
-            profileData.episodes = {};
+        const profile = new Profile(JSON.parse(localStorage.getItem(profileName) || '{}'));
+        const hasEpisode = Boolean(profile.episodes[episodeId]);
+        const episode = profile.getEpisodeProgress(episodeId);
+        if (!hasEpisode) {
+            localStorage.setItem(profileName, JSON.stringify(profile.toJSON()));
         }
-
-        if (!profileData.episodes[episodeId]) {
-            profileData.episodes[episodeId] = {
-                episodeId: episodeId,
-                completed: false,
-                totalQuestions: 0,
-                correctAnswers: 0,
-                wrongAnswers: 0,
-                points: 0,
-                bestStreak: 0,
-                attempts: 0,
-                attemptHistory: [],
-                categories: {
-                    adjetivos: { correct: 0, wrong: 0, total: 0 },
-                    substantivos: { correct: 0, wrong: 0, total: 0 },
-                    verbos: { correct: 0, wrong: 0, total: 0 },
-                    expressoes: { correct: 0, wrong: 0, total: 0 }
-                },
-                words: {},
-                sentences: {},
-                lastPlayed: null,
-                canReview: false
-            };
-            localStorage.setItem(profileName, JSON.stringify(profileData));
-        }
-
-        return profileData.episodes[episodeId];
+        return episode;
     }
 
     /**
@@ -253,7 +216,7 @@ class FirebaseStorageManager {
             const profile = await this.getProfile(profileName);
             
             // Atualizar localStorage com dados do Firebase
-            localStorage.setItem(profileName, JSON.stringify(profile));
+            localStorage.setItem(profileName, JSON.stringify(profile.toJSON()));
             console.log(`✅ Perfil ${profileName} sincronizado do Firebase`);
             
             return profile;
@@ -267,72 +230,13 @@ class FirebaseStorageManager {
      * Salva o progresso de uma questão (palavra ou frase)
      */
     async saveQuestionProgress(profileName, episodeId, questionData) {
-        // Obter profile do cache local
         const profileStr = localStorage.getItem(profileName);
-        const profile = profileStr ? JSON.parse(profileStr) : this.createDefaultProfile(profileName);
-        
-        if (!profile.episodes) {
-            profile.episodes = {};
-        }
+        const profile = profileStr
+            ? new Profile(JSON.parse(profileStr))
+            : this.createDefaultProfile(profileName);
+        profile.recordAnswer(episodeId, questionData);
 
-        const episode = profile.episodes[episodeId] || this.getEpisodeProgress(profileName, episodeId);
-
-        const { word, category, correct, points, isSentence } = questionData;
-
-        // Atualizar estatísticas do episódio
-        episode.totalQuestions++;
-        if (correct) {
-            episode.correctAnswers++;
-            episode.categories[category].correct++;
-        } else {
-            episode.wrongAnswers++;
-            episode.categories[category].wrong++;
-        }
-        episode.categories[category].total++;
-        episode.points += points;
-        episode.lastPlayed = new Date().toISOString();
-
-        // Escolher o armazenamento correto (palavra ou frase)
-        const storage = isSentence ? episode.sentences : episode.words;
-        
-        if (!storage[word]) {
-            storage[word] = {
-                word: word,
-                category: category,
-                attempts: 0,
-                correct: 0,
-                wrong: 0,
-                lastAttempt: null,
-                lastCorrect: null,
-                isSentence: isSentence || false
-            };
-        }
-        
-        const itemData = storage[word];
-        itemData.attempts++;
-        if (correct) {
-            itemData.correct++;
-        } else {
-            itemData.wrong++;
-        }
-        itemData.lastAttempt = new Date().toISOString();
-        itemData.lastCorrect = correct;
-
-        // Atualizar estatísticas globais do perfil
-        // totalWords só incrementa para palavras, não para frases
-        if (!isSentence) {
-            profile.totalWords++;
-        }
-        if (correct) {
-            profile.totalCorrect++;
-        } else {
-            profile.totalWrong++;
-        }
-        profile.totalPoints += points;
-        profile.lastPlayed = new Date().toISOString();
-
-        // Salvar
-        profile.episodes[episodeId] = episode;
+        // Save serialized model in the existing Firebase/JSON schema.
         await this.saveProfile(profileName, profile);
 
         return profile;
@@ -343,45 +247,10 @@ class FirebaseStorageManager {
      */
     async saveGameResult(profileName, episodeId, result) {
         const profileStr = localStorage.getItem(profileName);
-        const profile = profileStr ? JSON.parse(profileStr) : this.createDefaultProfile(profileName);
-        const episode = this.getEpisodeProgress(profileName, episodeId);
-
-        // Atualizar melhor sequência
-        if (result.bestStreak > episode.bestStreak) {
-            episode.bestStreak = result.bestStreak;
-        }
-
-        // Incrementar tentativas
-        episode.attempts++;
-
-        // Marcar como completo se passou de 70%
-        const accuracy = (result.correct / result.total) * 100;
-        if (accuracy >= 70) {
-            episode.completed = true;
-            episode.canReview = true;
-        }
-
-        // Salvar no histórico de tentativas (mantém as 5 melhores)
-        const attemptData = {
-            date: new Date().toISOString(),
-            accuracy: accuracy,
-            points: result.points,
-            correct: result.correct,
-            wrong: result.wrong,
-            total: result.total,
-            bestStreak: result.bestStreak,
-            categoryStats: result.categoryStats
-        };
-
-        if (!episode.attemptHistory) {
-            episode.attemptHistory = [];
-        }
-
-        episode.attemptHistory.push(attemptData);
-        episode.attemptHistory.sort((a, b) => b.points - a.points);
-        episode.attemptHistory = episode.attemptHistory.slice(0, 5);
-
-        profile.episodes[episodeId] = episode;
+        const profile = profileStr
+            ? new Profile(JSON.parse(profileStr))
+            : this.createDefaultProfile(profileName);
+        profile.addAttempt(episodeId, result);
         await this.saveProfile(profileName, profile);
 
         return profile;
@@ -466,15 +335,7 @@ class FirebaseStorageManager {
      */
     getWordsForReview(profileName, episodeId, limit = 10) {
         const episode = this.getEpisodeProgress(profileName, episodeId);
-        const wordsList = Object.values(episode.words);
-        
-        wordsList.sort((a, b) => {
-            const errorRateA = a.attempts > 0 ? a.wrong / a.attempts : 0;
-            const errorRateB = b.attempts > 0 ? b.wrong / b.attempts : 0;
-            return errorRateB - errorRateA;
-        });
-
-        return wordsList.slice(0, limit);
+        return episode.getItemsForReview(limit);
     }
 
     /**
@@ -482,23 +343,10 @@ class FirebaseStorageManager {
      */
     getGlobalStats(profileName) {
         const profileStr = localStorage.getItem(profileName);
-        const profile = profileStr ? JSON.parse(profileStr) : this.createDefaultProfile(profileName);
-        
-        const totalAttempts = profile.totalCorrect + profile.totalWrong;
-        const accuracy = totalAttempts > 0 ? (profile.totalCorrect / totalAttempts * 100).toFixed(1) : 0;
-        
-        const completedEpisodes = profile.episodes ? 
-            Object.values(profile.episodes).filter(ep => ep.completed).length : 0;
-        
-        return {
-            totalPoints: profile.totalPoints || 0,
-            totalWords: profile.totalWords || 0,
-            totalCorrect: profile.totalCorrect || 0,
-            totalWrong: profile.totalWrong || 0,
-            accuracy: accuracy,
-            completedEpisodes: completedEpisodes,
-            totalEpisodes: profile.episodes ? Object.keys(profile.episodes).length : 0
-        };
+        const profile = profileStr
+            ? new Profile(JSON.parse(profileStr))
+            : this.createDefaultProfile(profileName);
+        return profile.getGlobalStats();
     }
 
     /**
@@ -506,21 +354,11 @@ class FirebaseStorageManager {
      */
     async resetEpisode(profileName, episodeId) {
         const profileStr = localStorage.getItem(profileName);
-        const profile = profileStr ? JSON.parse(profileStr) : this.createDefaultProfile(profileName);
+        const profile = profileStr
+            ? new Profile(JSON.parse(profileStr))
+            : this.createDefaultProfile(profileName);
 
-        const episode = profile.episodes?.[episodeId];
-        if (episode) {
-            const episodeWordAttempts = Object.values(episode.words || {}).reduce(
-                (total, wordProgress) => total + (Number(wordProgress.attempts) || 0),
-                0
-            );
-
-            profile.totalWords = Math.max(0, (Number(profile.totalWords) || 0) - episodeWordAttempts);
-            profile.totalCorrect = Math.max(0, (Number(profile.totalCorrect) || 0) - (Number(episode.correctAnswers) || 0));
-            profile.totalWrong = Math.max(0, (Number(profile.totalWrong) || 0) - (Number(episode.wrongAnswers) || 0));
-            profile.totalPoints = Math.max(0, (Number(profile.totalPoints) || 0) - (Number(episode.points) || 0));
-
-            delete profile.episodes[episodeId];
+        if (profile.resetEpisode(episodeId)) {
             await this.saveProfile(profileName, profile);
         }
     }
@@ -529,8 +367,7 @@ class FirebaseStorageManager {
      * Reseta todo o perfil
      */
     async resetProfile(profileName) {
-        const newProfile = this.createDefaultProfile(profileName);
-        await this.saveProfile(profileName, newProfile);
+        await this.saveProfile(profileName, this.createDefaultProfile(profileName));
     }
 
     /**
@@ -545,7 +382,7 @@ class FirebaseStorageManager {
             return;
         }
 
-        const localProfile = JSON.parse(localData);
+        const localProfile = new Profile(JSON.parse(localData));
         const remoteProfile = await this.getProfile(profileName);
         const remoteEpisodes = Object.values(remoteProfile.episodes || {});
         const remoteHasProgress = (remoteProfile.totalCorrect || 0) > 0 ||
@@ -557,7 +394,7 @@ class FirebaseStorageManager {
             );
 
         if (remoteHasProgress) {
-            localStorage.setItem(profileName, JSON.stringify(remoteProfile));
+            localStorage.setItem(profileName, JSON.stringify(remoteProfile.toJSON()));
             console.log(`☁️ Perfil ${profileName} já tem progresso no Firebase; dados locais substituídos pelos dados sincronizados`);
             return;
         }
@@ -580,7 +417,7 @@ class FirebaseStorageManager {
         console.log(`📥 Carregando dados de ${profileName} do Firebase...`);
         
         const profile = await this.getProfile(profileName);
-        localStorage.setItem(profileName, JSON.stringify(profile));
+        localStorage.setItem(profileName, JSON.stringify(profile.toJSON()));
         
         console.log(`✅ Dados de ${profileName} carregados do Firebase!`);
         return profile;
@@ -591,9 +428,11 @@ class FirebaseStorageManager {
      */
     exportProfile(profileName) {
         const profileStr = localStorage.getItem(profileName);
-        const profile = profileStr ? JSON.parse(profileStr) : this.createDefaultProfile(profileName);
+        const profile = profileStr
+            ? new Profile(JSON.parse(profileStr))
+            : this.createDefaultProfile(profileName);
         
-        const dataStr = JSON.stringify(profile, null, 2);
+        const dataStr = JSON.stringify(profile.toJSON(), null, 2);
         const dataBlob = new Blob([dataStr], { type: 'application/json' });
         
         const url = URL.createObjectURL(dataBlob);
@@ -608,10 +447,10 @@ class FirebaseStorageManager {
     /**
      * Importa dados do perfil de um backup
      */
-    importProfile(profileName, jsonData) {
+    async importProfile(profileName, jsonData) {
         try {
-            const profileData = JSON.parse(jsonData);
-            this.saveProfile(profileName, profileData);
+            const profileData = new Profile(JSON.parse(jsonData));
+            await this.saveProfile(profileName, profileData);
             return true;
         } catch (error) {
             console.error('Erro ao importar perfil:', error);
