@@ -71,6 +71,9 @@ button { color: inherit; }
 .brand-name { font: 700 16px 'Manrope', sans-serif; letter-spacing: -.5px; }
 .brand-name strong { color: var(--purple); }
 .topbar-actions { display: flex; align-items: center; gap: 18px; }
+.version-status { padding: 7px 10px; border: 1px solid var(--border); border-radius: 20px; background: var(--surface); color: var(--muted); cursor: pointer; font-size: 10px; font-weight: 700; white-space: nowrap; }
+.version-status[data-state="current"] { color: var(--green); }
+.version-status[data-state="update"] { border-color: #e8c77d; background: #fff8e9; color: #966318; }
 .sync-status { max-width: 440px; margin: 0; color: var(--muted); font-size: 12px; text-align: right; }
 .sync-status[data-state="synced"] { color: var(--green); }
 .sync-status[data-state="local"] { color: #a56b20; }
@@ -239,7 +242,8 @@ button { color: inherit; }
 @media (max-width: 720px) {
     .topbar, .screen { width: min(100% - 36px, 560px); }
     .topbar { min-height: 69px; }
-    .sync-status { max-width: 190px; font-size: 10px; }
+    .sync-status { max-width: 150px; font-size: 10px; }
+    .version-status { padding: 7px 8px; font-size: 9px; }
     .profile-chip { padding: 8px 10px; font-size: 10px; }
     .screen { padding-top: 29px; }
     .profile-screen { min-height: calc(100vh - 69px); padding-bottom: 50px; }
@@ -267,8 +271,9 @@ button { color: inherit; }
     .topbar, .screen { width: calc(100% - 28px); }
     .brand { gap: 8px; }
     .brand-name { font-size: 14px; }
-    .sync-status { max-width: 112px; overflow-wrap: anywhere; font-size: 9px; }
-    .topbar-actions { gap: 8px; }
+    .sync-status { display: none; }
+    .topbar-actions { gap: 6px; }
+    .version-status { max-width: 125px; overflow: hidden; padding: 7px; font-size: 9px; text-overflow: ellipsis; }
     .profile-list { gap: 8px; }
     .profile-card { min-height: 94px; gap: 8px; padding: 11px 8px; }
     .profile-avatar { width: 37px; height: 37px; border-radius: 12px; font-size: 16px; }

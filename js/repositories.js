@@ -1,4 +1,4 @@
-import { createEmptyProfile, mergeProfiles } from './domain.js';
+import { createEmptyProfile, mergeProfiles } from './domain.js?v=__BUILD_VERSION__';
 
 export class ProfileRepository {
     constructor(storage = window.localStorage, firebaseReady = window.firebaseDatabase) {

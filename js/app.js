@@ -6,8 +6,8 @@ import {
     getEpisodeSummary,
     getProfileSummary,
     mergeProfiles
-} from './domain.js';
-import { ProfileRepository } from './repositories.js';
+} from './domain.js?v=__BUILD_VERSION__';
+import { ProfileRepository } from './repositories.js?v=__BUILD_VERSION__';
 
 const PROFILES = [
     { id: 'ronaldo', name: 'Ronaldo', icon: 'R', color: 'coral', phrase: 'Seu inglês, do seu jeito.' },
@@ -26,10 +26,21 @@ class EnglishRoSaApp {
         this.pendingAnswer = null;
         this.advanceTimer = null;
         this.dialogEpisodeId = null;
+        const loadedVersion = new URL(import.meta.url).searchParams.get('v');
+        this.siteVersion = {
+            version: !loadedVersion || loadedVersion === '__BUILD_VERSION__' ? 'development' : loadedVersion
+        };
+        this.versionCheckInProgress = false;
     }
 
     async init() {
         this.bindEvents();
+        document.querySelector('#version-status').addEventListener('click', () => this.reloadLatestVersion());
+        await this.checkSiteVersion();
+        window.setInterval(() => this.checkSiteVersion(), 60_000);
+        document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'visible') this.checkSiteVersion();
+        });
         this.renderProfiles();
         try {
             const response = await fetch('dados/episodios.json');
@@ -128,6 +139,54 @@ class EnglishRoSaApp {
         const status = document.querySelector('#sync-status');
         status.textContent = message;
         status.dataset.state = state;
+    }
+
+    async checkSiteVersion() {
+        if (this.versionCheckInProgress) return;
+        this.versionCheckInProgress = true;
+        try {
+            const versionUrl = new URL('version.json', document.baseURI);
+            versionUrl.searchParams.set('check', Date.now().toString());
+            const response = await fetch(versionUrl, { cache: 'no-store' });
+            if (!response.ok) throw new Error(`Verificação indisponível (${response.status}).`);
+            const version = await response.json();
+            if (!version.version || (version.version !== 'development' && !version.builtAt)) {
+                throw new Error('Informações de versão indisponíveis.');
+            }
+
+            const versionButton = document.querySelector('#version-status');
+            if (version.version !== this.siteVersion.version) {
+                versionButton.textContent = `Atualização disponível · ${version.version} · recarregar`;
+                versionButton.title = `Nova versão publicada em ${new Date(version.builtAt).toLocaleString('pt-BR')}. Clique para atualizar.`;
+                versionButton.dataset.state = 'update';
+                versionButton.dataset.targetVersion = version.version;
+                return;
+            }
+
+            versionButton.textContent = this.siteVersion.version === 'development'
+                ? 'Versão desenvolvimento'
+                : `Versão ${this.siteVersion.version}`;
+            versionButton.title = version.builtAt
+                ? `Versão publicada em ${new Date(version.builtAt).toLocaleString('pt-BR')}`
+                : 'Esta cópia está sendo executada em ambiente de desenvolvimento.';
+            versionButton.dataset.state = 'current';
+            delete versionButton.dataset.targetVersion;
+        } catch (error) {
+            console.warn('Não foi possível verificar a versão publicada:', error);
+            const versionButton = document.querySelector('#version-status');
+            if (!this.siteVersion) versionButton.textContent = 'Versão indisponível';
+            versionButton.title = 'Não foi possível verificar se há uma atualização publicada.';
+        } finally {
+            this.versionCheckInProgress = false;
+        }
+    }
+
+    reloadLatestVersion() {
+        const targetVersion = document.querySelector('#version-status').dataset.targetVersion;
+        if (!targetVersion) return;
+        const refreshUrl = new URL(window.location.href);
+        refreshUrl.searchParams.set('refresh', targetVersion);
+        window.location.replace(refreshUrl);
     }
 
     showScreen(id) {
