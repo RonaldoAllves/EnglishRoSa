@@ -443,7 +443,9 @@ class EnglishRoSaApp {
             const attempt = {
                 id: this.session.toJSON().id,
                 episodeId: this.dialogEpisodeId,
-                filterCategory: this.session.toJSON().filterCategory || this.session.toJSON().category || 'all',
+                scope: 'episode',
+                filterCategory: 'all',
+                priorityCategory: this.session.toJSON().filterCategory || this.session.toJSON().category || 'all',
                 answered: summary.total,
                 total: this.session.toJSON().questions.length,
                 correct: summary.correct,
@@ -526,7 +528,9 @@ class EnglishRoSaApp {
 
     openHistory() {
         const attempts = Object.entries(this.profile.episodes || {}).flatMap(([episodeId, state]) =>
-            (state.attempts || []).map((attempt) => ({ episodeId, ...attempt }))
+            (state.attempts || [])
+                .filter((attempt) => attempt.scope === 'episode' || (attempt.scope == null && (attempt.filterCategory || attempt.category || 'all') === 'all'))
+                .map((attempt) => ({ episodeId, ...attempt }))
         ).sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
         document.querySelector('#history-list').innerHTML = attempts.length
             ? attempts.map((attempt) => `<article class="history-card"><div><strong>${this.episodeLabel(attempt.episodeId || episodeId)}</strong><span>${CATEGORY_LABELS[attempt.filterCategory || attempt.category] || 'Todas as categorias'} · ${new Date(attempt.completedAt).toLocaleDateString('pt-BR')}</span></div><strong>${attempt.accuracy}% <span>· ✦ ${attempt.points}</span></strong></article>`).join('')

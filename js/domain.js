@@ -74,9 +74,13 @@ function createQuestions(episode, episodeId, selectedCategory) {
             });
         });
 
-        const sentenceIndex = Math.floor(Math.random() * entries.length);
-        const sentence = sentences[sentenceIndex];
-        if (sentence.english && sentence.portuguese) {
+        const sentenceIndices = sentences.reduce((indices, sentence, index) => {
+            if (sentence.english && sentence.portuguese) indices.push(index);
+            return indices;
+        }, []);
+        if (sentenceIndices.length) {
+            const sentenceIndex = sentenceIndices[Math.floor(Math.random() * sentenceIndices.length)];
+            const sentence = sentences[sentenceIndex];
             sentenceQuestions.push({
                 id: `${episodeId}:${category.key}:${sentenceIndex}:sentence`,
                 kind: 'sentence',
@@ -100,19 +104,24 @@ export class PracticeSession {
     }
 
     static create(episode, episodeId, category) {
-        const questions = createQuestions(episode, episodeId, category);
+        if (category !== 'all' && !CATEGORIES.some((item) => item.key === category)) {
+            throw new Error('A categoria selecionada não é válida.');
+        }
+        const questions = createQuestions(episode, episodeId, 'all');
         if (questions.length === 0) {
             throw new Error('Não há exercícios disponíveis para esta categoria neste episódio.');
         }
-        return new PracticeSession({
+        const session = new PracticeSession({
             id: `attempt-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
             episodeId,
-            filterCategory: category,
+            filterCategory: 'all',
             questions,
             answers: [],
             startedAt: Date.now(),
             updatedAt: Date.now()
         });
+        if (category !== 'all') session.setFilter(episode, category);
+        return session;
     }
 
     static restore(data) {
@@ -123,25 +132,43 @@ export class PracticeSession {
         if (category !== 'all' && !CATEGORIES.some((item) => item.key === category)) {
             throw new Error('A categoria selecionada não é válida.');
         }
-        if (this.data.filterCategory === category) return false;
-
         const answeredQuestionIds = new Set(this.data.answers.map((answer) => answer.questionId));
-        const questionsById = new Map(this.data.questions.map((question) => [question.id, question]));
+        const questionKey = (question) => question.kind === 'sentence'
+            ? `${question.category}:sentence`
+            : question.id;
+        const completeQuestions = [];
+        const seenQuestionKeys = new Set();
+        for (const question of [...this.data.questions, ...createQuestions(episode, this.data.episodeId, 'all')]) {
+            const key = questionKey(question);
+            if (seenQuestionKeys.has(key)) continue;
+            seenQuestionKeys.add(key);
+            completeQuestions.push(question);
+        }
+
+        const questionsById = new Map(completeQuestions.map((question) => [question.id, question]));
         const answeredQuestions = this.data.answers.map((answer) => questionsById.get(answer.questionId));
         if (answeredQuestions.some((question) => !question)) {
             throw new Error('Não foi possível preservar as respostas desta tentativa.');
         }
 
-        const remainingQuestions = createQuestions(episode, this.data.episodeId, category)
-            .filter((question) => !answeredQuestionIds.has(question.id));
-        if (!remainingQuestions.length && !answeredQuestions.length) {
+        if (!completeQuestions.length) {
             throw new Error('Não há exercícios disponíveis para esta categoria neste episódio.');
         }
 
-        this.data.questions = [...answeredQuestions, ...remainingQuestions];
+        const remainingQuestions = completeQuestions.filter((question) => !answeredQuestionIds.has(question.id));
+        if (category !== 'all') {
+            remainingQuestions.sort((left, right) =>
+                Number(right.category === category) - Number(left.category === category)
+            );
+        }
+        const questions = [...answeredQuestions, ...remainingQuestions];
+        const changed = this.data.filterCategory !== category ||
+            questions.some((question, index) => question.id !== this.data.questions[index]?.id) ||
+            questions.length !== this.data.questions.length;
+        this.data.questions = questions;
         this.data.filterCategory = category;
-        this.data.updatedAt = Date.now();
-        return true;
+        if (changed) this.data.updatedAt = Date.now();
+        return changed;
     }
 
     get currentQuestion() {
@@ -243,7 +270,7 @@ export function mergeProfiles(local, remote, profileId) {
 
 export function getEpisodeSummary(profile, episodeId) {
     const state = profile?.episodes?.[episodeId];
-    const attempts = state?.attempts || [];
+    const attempts = (state?.attempts || []).filter(isFullEpisodeAttempt);
     const bestAttempt = [...attempts].sort((a, b) =>
         (b.accuracy || 0) - (a.accuracy || 0) ||
         (b.points || 0) - (a.points || 0) ||
@@ -265,7 +292,9 @@ export function getEpisodeSummary(profile, episodeId) {
 }
 
 export function getProfileSummary(profile) {
-    const attempts = Object.values(profile?.episodes || {}).flatMap((episode) => episode.attempts || []);
+    const attempts = Object.values(profile?.episodes || {}).flatMap((episode) =>
+        (episode.attempts || []).filter(isFullEpisodeAttempt)
+    );
     const points = attempts.reduce((total, attempt) => total + (attempt.points || 0), 0);
     const accuracy = attempts.length
         ? Math.max(...attempts.map((attempt) => attempt.accuracy || 0))
@@ -275,4 +304,9 @@ export function getProfileSummary(profile) {
         .filter(Boolean)
         .sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0))[0] || null;
     return { attempts: attempts.length, points, accuracy, activeAttempt };
+}
+
+function isFullEpisodeAttempt(attempt) {
+    if (attempt.scope === 'episode') return true;
+    return attempt.scope == null && (attempt.filterCategory || attempt.category || 'all') === 'all';
 }
