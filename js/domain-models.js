@@ -76,10 +76,15 @@
     class ExerciseAttempt {
         constructor(data = {}) {
             this.additionalFields = getAdditionalFields(data, [
-                'date', 'accuracy', 'points', 'correct', 'wrong',
-                'total', 'bestStreak', 'categoryStats'
+                'id', 'status', 'startedAt', 'completedAt', 'date',
+                'accuracy', 'points', 'correct', 'wrong', 'total',
+                'bestStreak', 'categoryStats'
             ]);
-            this.date = data.date || new Date().toISOString();
+            this.id = data.id || null;
+            this.status = data.status || 'completed';
+            this.startedAt = data.startedAt || data.date || new Date().toISOString();
+            this.completedAt = data.completedAt || data.date || null;
+            this.date = data.date || this.startedAt;
             this.accuracy = Number(data.accuracy) || 0;
             this.points = Number(data.points) || 0;
             this.correct = Number(data.correct) || 0;
@@ -92,14 +97,58 @@
         static fromResult(result) {
             return new ExerciseAttempt({
                 ...result,
+                status: 'completed',
                 date: new Date().toISOString(),
                 accuracy: result.total > 0 ? (result.correct / result.total) * 100 : 0
             });
         }
 
+        static start() {
+            const startedAt = new Date().toISOString();
+            return new ExerciseAttempt({
+                id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+                status: 'in_progress',
+                startedAt,
+                date: startedAt
+            });
+        }
+
+        recordAnswer({ category, correct, points, bestStreak = 0 }) {
+            this.total++;
+            if (correct) {
+                this.correct++;
+            } else {
+                this.wrong++;
+            }
+            this.points += Number(points) || 0;
+            this.bestStreak = Math.max(this.bestStreak, Number(bestStreak) || 0);
+
+            if (!this.categoryStats[category]) {
+                this.categoryStats[category] = { correct: 0, wrong: 0 };
+            }
+            if (correct) {
+                this.categoryStats[category].correct++;
+            } else {
+                this.categoryStats[category].wrong++;
+            }
+            this.accuracy = this.total > 0 ? (this.correct / this.total) * 100 : 0;
+        }
+
+        complete(result) {
+            this.status = 'completed';
+            this.completedAt = new Date().toISOString();
+            this.date = this.completedAt;
+            this.bestStreak = Math.max(this.bestStreak, Number(result.bestStreak) || 0);
+            this.accuracy = this.total > 0 ? (this.correct / this.total) * 100 : 0;
+        }
+
         toJSON() {
             return {
                 ...this.additionalFields,
+                id: this.id,
+                status: this.status,
+                startedAt: this.startedAt,
+                completedAt: this.completedAt,
                 date: this.date,
                 accuracy: this.accuracy,
                 points: this.points,
@@ -117,7 +166,7 @@
             this.additionalFields = getAdditionalFields(data, [
                 'episodeId', 'completed', 'totalQuestions', 'correctAnswers',
                 'wrongAnswers', 'points', 'bestStreak', 'attempts',
-                'attemptHistory', 'categories', 'words', 'sentences',
+                'attemptHistory', 'activeAttempt', 'categories', 'words', 'sentences',
                 'lastPlayed', 'canReview'
             ]);
             this.episodeId = episodeId;
@@ -131,6 +180,9 @@
             this.attemptHistory = (data.attemptHistory || []).map(attempt =>
                 new ExerciseAttempt(attempt)
             );
+            this.activeAttempt = data.activeAttempt
+                ? new ExerciseAttempt(data.activeAttempt)
+                : null;
             this.categories = createCategoryStats(data.categories, true);
             this.words = this.hydrateExerciseProgress(data.words);
             this.sentences = this.hydrateExerciseProgress(data.sentences);
@@ -160,6 +212,13 @@
                 .slice(0, limit);
         }
 
+        startAttempt(forceNew = false) {
+            if (forceNew || !this.activeAttempt || this.activeAttempt.status !== 'in_progress') {
+                this.activeAttempt = ExerciseAttempt.start();
+            }
+            return this.activeAttempt;
+        }
+
         recordAnswer(questionData) {
             const { word, category, correct, points, isSentence } = questionData;
             const attemptedAt = new Date().toISOString();
@@ -185,10 +244,19 @@
             }
             this.points += Number(points) || 0;
             this.lastPlayed = attemptedAt;
+
+            if (questionData.attemptId &&
+                this.activeAttempt?.id === questionData.attemptId &&
+                this.activeAttempt.status === 'in_progress') {
+                this.activeAttempt.recordAnswer(questionData);
+            }
         }
 
-        addAttempt(result) {
-            const attempt = ExerciseAttempt.fromResult(result);
+        addAttempt(result, attemptId = null) {
+            const attempt = this.activeAttempt?.id === attemptId
+                ? this.activeAttempt
+                : ExerciseAttempt.fromResult(result);
+            attempt.complete(result);
             this.attempts++;
             this.bestStreak = Math.max(this.bestStreak, attempt.bestStreak);
             if (attempt.accuracy >= 70) {
@@ -199,6 +267,9 @@
             this.attemptHistory.push(attempt);
             this.attemptHistory.sort((left, right) => right.points - left.points);
             this.attemptHistory = this.attemptHistory.slice(0, 5);
+            if (this.activeAttempt?.id === attempt.id) {
+                this.activeAttempt = null;
+            }
             return attempt;
         }
 
@@ -214,6 +285,7 @@
                 bestStreak: this.bestStreak,
                 attempts: this.attempts,
                 attemptHistory: this.attemptHistory.map(attempt => attempt.toJSON()),
+                activeAttempt: this.activeAttempt ? this.activeAttempt.toJSON() : null,
                 categories: this.categories,
                 words: Object.fromEntries(Object.entries(this.words).map(([key, progress]) =>
                     [key, progress.toJSON()]
@@ -256,6 +328,10 @@
             return this.episodes[episodeId];
         }
 
+        startAttempt(episodeId, forceNew = false) {
+            return this.getEpisodeProgress(episodeId).startAttempt(forceNew);
+        }
+
         recordAnswer(episodeId, questionData) {
             this.getEpisodeProgress(episodeId).recordAnswer(questionData);
             if (!questionData.isSentence) {
@@ -270,8 +346,8 @@
             this.lastPlayed = new Date().toISOString();
         }
 
-        addAttempt(episodeId, result) {
-            return this.getEpisodeProgress(episodeId).addAttempt(result);
+        addAttempt(episodeId, result, attemptId = null) {
+            return this.getEpisodeProgress(episodeId).addAttempt(result, attemptId);
         }
 
         resetEpisode(episodeId) {

@@ -34,6 +34,7 @@ class GameManager {
         this.categoryFilter = 'all'; // 'all', 'adjetivos', 'substantivos', 'verbos', 'expressoes'
         this.isNewAttempt = false; // Se é uma nova tentativa (reiniciar progresso)
         this.reviewSession = null;
+        this.currentAttemptId = null;
         // includeSentences removido - sempre será true
     }
 
@@ -48,6 +49,7 @@ class GameManager {
         this.categoryFilter = options.categoryFilter || 'all';
         this.isNewAttempt = options.isNewAttempt || false;
         this.reviewSession = null;
+        this.currentAttemptId = null;
         
         // Reset das estatísticas
         this.currentQuestionIndex = 0;
@@ -84,6 +86,11 @@ class GameManager {
         } else {
             this.progressOffset = 0;
             this.progressTotal = this.allWords.length;
+        }
+
+        if (!this.isReviewMode && this.categoryFilter === 'all' && this.allWords.length > 0) {
+            const attempt = await storage.startAttempt(profile, episodeId, this.isNewAttempt);
+            this.currentAttemptId = attempt.id;
         }
 
         return this.allWords.length;
@@ -450,7 +457,9 @@ class GameManager {
                 category: this.currentQuestion.category,
                 correct: isCorrect,
                 points: points,
-                isSentence: this.currentQuestion.isSentence || false
+                isSentence: this.currentQuestion.isSentence || false,
+                attemptId: this.currentAttemptId,
+                bestStreak: this.bestStreak
             });
         } catch (error) {
             persistenceError = error;
@@ -479,7 +488,8 @@ class GameManager {
             accuracy: accuracy,
             points: this.score,
             bestStreak: this.bestStreak,
-            categoryStats: this.categoryStats
+            categoryStats: this.categoryStats,
+            attemptId: this.currentAttemptId
         };
 
         // Salvar resultado final

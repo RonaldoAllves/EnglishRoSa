@@ -34,7 +34,7 @@ O app exige conexão com o Firebase para iniciar. O progresso associado a um per
 - `episodios.json`: conteúdo dos episódios.
 - `firebase-rules.json`: regras de exemplo para o Realtime Database.
 
-Os modelos são serializados no formato atual do Firebase; nesta etapa, o formato dos dados não foi alterado.
+O conteúdo de `episodios.json` permanece inalterado. O progresso salvo no Firebase agora inclui a tentativa ativa do episódio; tentativas concluídas continuam no histórico existente.
 
 ## Firebase
 

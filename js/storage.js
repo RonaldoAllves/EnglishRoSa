@@ -74,12 +74,19 @@ class StorageManager {
         return profile;
     }
 
+    startAttempt(profileName, episodeId, forceNew = false) {
+        const profile = this.getProfile(profileName);
+        const attempt = profile.startAttempt(episodeId, forceNew);
+        this.saveProfile(profileName, profile);
+        return attempt;
+    }
+
     /**
      * Salva o resultado final de uma sessão de jogo
      */
     saveGameResult(profileName, episodeId, result) {
         const profile = this.getProfile(profileName);
-        profile.addAttempt(episodeId, result);
+        profile.addAttempt(episodeId, result, result.attemptId);
         this.saveProfile(profileName, profile);
 
         return profile;

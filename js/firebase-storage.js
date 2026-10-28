@@ -242,6 +242,16 @@ class FirebaseStorageManager {
         return profile;
     }
 
+    async startAttempt(profileName, episodeId, forceNew = false) {
+        const profileStr = localStorage.getItem(profileName);
+        const profile = profileStr
+            ? new Profile(JSON.parse(profileStr))
+            : this.createDefaultProfile(profileName);
+        const attempt = profile.startAttempt(episodeId, forceNew);
+        await this.saveProfile(profileName, profile);
+        return attempt;
+    }
+
     /**
      * Salva o resultado final de uma sessão de jogo
      */
@@ -250,7 +260,7 @@ class FirebaseStorageManager {
         const profile = profileStr
             ? new Profile(JSON.parse(profileStr))
             : this.createDefaultProfile(profileName);
-        profile.addAttempt(episodeId, result);
+        profile.addAttempt(episodeId, result, result.attemptId);
         await this.saveProfile(profileName, profile);
 
         return profile;
