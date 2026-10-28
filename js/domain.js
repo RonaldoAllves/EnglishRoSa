@@ -107,7 +107,7 @@ export class PracticeSession {
         return new PracticeSession({
             id: `attempt-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
             episodeId,
-            category,
+            filterCategory: category,
             questions,
             answers: [],
             startedAt: Date.now(),

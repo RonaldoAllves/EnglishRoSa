@@ -178,7 +178,6 @@ button { color: inherit; }
 .answer-feedback { margin-top: 12px; padding: 12px 14px; border-radius: 11px; font-size: 12px; line-height: 1.5; }
 .answer-feedback.is-correct { background: #edfaf4; color: #247452; }
 .answer-feedback.is-incorrect { background: #fff4f4; color: #ad4b52; }
-.next-button { width: 100%; margin-top: 15px; }
 .practice-footer { display: flex; justify-content: center; gap: 25px; margin-top: 35px; color: var(--muted); font-size: 11px; }
 .practice-footer span:first-child { color: var(--green); }
 .practice-footer span:last-child { color: var(--red); }

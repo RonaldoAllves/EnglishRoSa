@@ -24,6 +24,7 @@ class EnglishRoSaApp {
         this.activeEpisode = null;
         this.session = null;
         this.pendingAnswer = null;
+        this.advanceTimer = null;
         this.dialogEpisodeId = null;
     }
 
@@ -68,7 +69,6 @@ class EnglishRoSaApp {
             const button = event.target.closest('[data-answer]');
             if (button && !this.pendingAnswer) this.submitAnswer(button.dataset.answer);
         });
-        document.querySelector('#next-question').addEventListener('click', () => this.advanceQuestion());
         document.querySelector('#quit-button').addEventListener('click', () => this.quitPractice());
         document.querySelector('#close-result').addEventListener('click', () => document.querySelector('#result-dialog').close());
         document.querySelector('#result-dialog').addEventListener('close', () => {
@@ -204,14 +204,22 @@ class EnglishRoSaApp {
         const episode = this.episodes[episodeIndex];
         const categories = CATEGORIES.filter((category) => Array.isArray(episode[category.key]) && episode[category.key].length);
         const summary = getEpisodeSummary(this.profile, episodeId);
+        const phraseCount = (items) => items.filter((item) => {
+            const example = item.exemplo_episodio || '';
+            return /\s+\(.+\)\s*$/.test(example);
+        }).length ? 1 : 0;
+        const totalWords = categories.reduce((total, category) => total + episode[category.key].length, 0);
+        const totalPhrases = categories.reduce((total, category) => total + phraseCount(episode[category.key]), 0);
         const inputs = [
-            { key: 'all', label: 'Todas as categorias', icon: '✳', count: categories.reduce((total, category) => total + episode[category.key].length, 0) },
-            ...categories.map((category) => ({ key: category.key, label: category.label, icon: category.icon, count: episode[category.key].length }))
+            { key: 'all', label: 'Episódio completo', icon: '✳', words: totalWords, phrases: totalPhrases },
+            ...categories.map((category) => ({ key: category.key, label: category.label, icon: category.icon, words: episode[category.key].length, phrases: phraseCount(episode[category.key]) }))
         ];
         document.querySelector('#category-options').innerHTML = `<legend>Conteúdo para praticar</legend>${inputs.map((option, index) => {
             const answered = summary.latestAttempt?.byCategory?.[option.key];
             const result = answered ? ` · ${answered.correct} acertos, ${answered.wrong} erros` : '';
-            return `<label class="category-option"><input type="radio" name="category" value="${option.key}" ${index === 0 ? 'checked' : ''}><span class="category-option-icon">${option.icon}</span><span class="category-option-copy"><strong>${option.label}</strong><span>${option.count} palavras${this.escape(result)}</span></span><span class="category-option-arrow" aria-hidden="true">→</span></label>`;
+            const exercises = option.words + option.phrases;
+            const content = `${exercises} exercícios · ${option.words} ${option.words === 1 ? 'palavra' : 'palavras'} + ${option.phrases} ${option.phrases === 1 ? 'frase' : 'frases'}`;
+            return `<label class="category-option"><input type="radio" name="category" value="${option.key}" ${index === 0 ? 'checked' : ''}><span class="category-option-icon">${option.icon}</span><span class="category-option-copy"><strong>${option.label}</strong><span>${this.escape(content + result)}</span></span><span class="category-option-arrow" aria-hidden="true">→</span></label>`;
         }).join('')}`;
     }
 
@@ -225,6 +233,11 @@ class EnglishRoSaApp {
     }
 
     startNewAttempt() {
+        const activeAttempt = this.profile.episodes[this.dialogEpisodeId]?.activeAttempt;
+        if (activeAttempt && !window.confirm('Já existe uma tentativa deste episódio em andamento. Se começar uma nova, o progresso desta tentativa será perdido. Deseja continuar?')) {
+            return;
+        }
+
         const category = document.querySelector('input[name="category"]:checked')?.value || 'all';
         try {
             this.session = PracticeSession.create(this.activeEpisode, this.dialogEpisodeId, category);
@@ -282,7 +295,8 @@ class EnglishRoSaApp {
         example.textContent = question.example;
         example.hidden = !question.example;
         document.querySelector('#answer-feedback').hidden = true;
-        document.querySelector('#next-question').hidden = true;
+        window.clearTimeout(this.advanceTimer);
+        this.advanceTimer = null;
         this.pendingAnswer = null;
         document.querySelector('#answer-options').innerHTML = question.choices.map((choice, index) =>
             `<button class="answer-option" type="button" data-answer="${this.escape(choice)}"><span class="answer-letter">${String.fromCharCode(65 + index)}</span><span>${this.escape(choice)}</span></button>`
@@ -301,8 +315,8 @@ class EnglishRoSaApp {
         const feedback = document.querySelector('#answer-feedback');
         feedback.className = `answer-feedback ${result.correct ? 'is-correct' : 'is-incorrect'}`;
         feedback.textContent = result.correct
-            ? 'Isso mesmo! Você está indo muito bem.'
-            : `Quase! A resposta certa é: ${result.question.answer}`;
+            ? `Isso mesmo! Você está indo muito bem. ${this.session.isComplete ? 'Seu resultado aparecerá em instantes.' : 'A próxima pergunta vem em instantes.'}`
+            : `Quase! A resposta certa é: ${result.question.answer} ${this.session.isComplete ? 'Seu resultado aparecerá em instantes.' : 'A próxima pergunta vem em instantes.'}`;
         feedback.hidden = false;
 
         const episodeState = this.profile.episodes[this.dialogEpisodeId];
@@ -321,9 +335,11 @@ class EnglishRoSaApp {
         document.querySelector('#practice-wrong').textContent = `✕ ${sessionSummary.wrong}`;
         document.querySelector('#practice-progress-label').textContent = `Exercício ${this.session.toJSON().answers.length} de ${this.session.toJSON().questions.length}`;
         document.querySelector('#practice-progress-fill').style.width = `${(this.session.toJSON().answers.length / this.session.toJSON().questions.length) * 100}%`;
-        document.querySelector('#next-question').hidden = false;
-        document.querySelector('#next-question').textContent = this.session.isComplete ? 'Ver meu resultado' : 'Próxima pergunta →';
         this.persistProgress();
+        this.advanceTimer = window.setTimeout(() => {
+            this.advanceTimer = null;
+            this.advanceQuestion();
+        }, 1200);
     }
 
     advanceQuestion() {
@@ -338,7 +354,8 @@ class EnglishRoSaApp {
             const summary = this.session.summary;
             const attempt = {
                 id: this.session.toJSON().id,
-                category: this.session.toJSON().category,
+                episodeId: this.dialogEpisodeId,
+                filterCategory: this.session.toJSON().filterCategory || this.session.toJSON().category || 'all',
                 answered: summary.total,
                 total: this.session.toJSON().questions.length,
                 correct: summary.correct,
@@ -392,6 +409,9 @@ class EnglishRoSaApp {
 
     quitPractice() {
         if (this.session?.data.answers.length && !window.confirm('Sua tentativa será salva para continuar depois. Quer sair?')) return;
+        window.clearTimeout(this.advanceTimer);
+        this.advanceTimer = null;
+        this.pendingAnswer = null;
         this.showScreen('dashboard-screen');
         this.renderDashboard();
     }
@@ -421,7 +441,7 @@ class EnglishRoSaApp {
             (state.attempts || []).map((attempt) => ({ episodeId, ...attempt }))
         ).sort((a, b) => (b.completedAt || 0) - (a.completedAt || 0));
         document.querySelector('#history-list').innerHTML = attempts.length
-            ? attempts.map((attempt) => `<article class="history-card"><div><strong>${this.episodeLabel(attempt.episodeId)}</strong><span>${CATEGORY_LABELS[attempt.category] || 'Todas as categorias'} · ${new Date(attempt.completedAt).toLocaleDateString('pt-BR')}</span></div><strong>${attempt.accuracy}% <span>· ✦ ${attempt.points}</span></strong></article>`).join('')
+            ? attempts.map((attempt) => `<article class="history-card"><div><strong>${this.episodeLabel(attempt.episodeId || episodeId)}</strong><span>${CATEGORY_LABELS[attempt.filterCategory || attempt.category] || 'Todas as categorias'} · ${new Date(attempt.completedAt).toLocaleDateString('pt-BR')}</span></div><strong>${attempt.accuracy}% <span>· ✦ ${attempt.points}</span></strong></article>`).join('')
             : '<p class="empty-state">Suas tentativas concluídas vão aparecer aqui.</p>';
         document.querySelector('#history-dialog').showModal();
     }
