@@ -408,6 +408,7 @@ class App {
         // Atualizar estatísticas globais
         document.getElementById('profile-total-points').textContent = stats.totalPoints;
         document.getElementById('total-words').textContent = stats.totalWords;
+        document.getElementById('total-sentences').textContent = stats.totalSentences;
         document.getElementById('total-correct').textContent = stats.totalCorrect;
         document.getElementById('accuracy').textContent = stats.accuracy + '%';
 
