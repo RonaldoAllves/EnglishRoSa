@@ -1,0 +1,22 @@
+Seleção entre os perfis Ronaldo e Sarah.
+Lista de episódios com progresso, percentual de conclusão, pontos e tentativas.
+Exercícios de vocabulário por episódio, organizados em adjetivos, substantivos, verbos e expressões.
+Exercícios de tradução de frases baseadas nos exemplos dos episódios.
+Alternativas de resposta; em exercícios de expressões, as alternativas são outras expressões.
+Filtros para praticar todas as categorias ou uma categoria específica.
+Opção de continuar o progresso pendente.
+Opção de iniciar uma nova tentativa, começando com o progresso da sessão zerado.
+Salvamento da tentativa ativa e das respostas conforme o exercício avança.
+Histórico das melhores tentativas concluídas.
+Revisão de palavras com mais erros.
+Progresso por episódio, categoria e exercício.
+Tela de resultado com acertos, erros, precisão, pontos e maior sequência de acertos.
+Persistência e sincronização do progresso com o Firebase, com armazenamento local como apoio.
+Exportação e importação de backup dos dados do perfil.
+Opção de zerar o progresso de um episódio.
+
+Sobre a questão de arquitetura do site:
+
+- Deve ser orientado a objetos
+- Deve seguir arquitetura limpa
+- Deve seguir os padrões de desenvolvimento
