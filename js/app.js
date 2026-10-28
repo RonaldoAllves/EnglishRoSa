@@ -520,6 +520,12 @@ class App {
         const optionsAttemptHistory = document.getElementById('options-attempt-history');
 
         title.textContent = episodeId.toUpperCase();
+        const episodeData = this.episodesData.episodios.find(ep => ep.episodio === episodeId);
+        const exerciseProgress = episodeData
+            ? this.getExerciseProgress(episodeData, progress).all
+            : { completed: 0, total: 0 };
+        const hasExercisesToContinue = exerciseProgress.completed < exerciseProgress.total;
+        btnContinue.style.display = hasExercisesToContinue ? 'block' : 'none';
 
         // Mostrar histórico de tentativas
         if (progress.attemptHistory && progress.attemptHistory.length > 0) {
