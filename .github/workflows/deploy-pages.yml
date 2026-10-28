@@ -28,7 +28,7 @@ jobs:
           mkdir _site
           cp -R index.html css js dados _site/
           short_sha="${GITHUB_SHA:0:7}"
-          sed -i "s/__BUILD_VERSION__/${short_sha}/g" _site/index.html
+          sed -i "s/__BUILD_VERSION__/${short_sha}/g" _site/index.html _site/js/*.js _site/css/*.css
           built_at="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           printf '{"version":"%s","commit":"%s","builtAt":"%s"}\n' "$short_sha" "$GITHUB_SHA" "$built_at" > _site/version.json
 

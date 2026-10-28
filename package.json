@@ -1,4 +1,8 @@
 {
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
   "dependencies": {
     "firebase": "^13.1.0"
   }
