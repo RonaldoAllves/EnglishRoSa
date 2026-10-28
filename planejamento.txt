@@ -11,12 +11,30 @@ Funcionalidades:
 - Salvamento da tentativa ativa e das respostas conforme o exercício avança.
 - Histórico das melhores tentativas concluídas.
 - Revisão de palavras com mais erros.
-- Progresso por episódio, categoria e exercício.
+- Progresso por episódio e categoria.
 - Tela de resultado com acertos, erros, precisão, pontos e maior sequência de acertos.
 - Persistência e sincronização do progresso com o Firebase, com armazenamento local como apoio.
 - Exportação e importação de backup dos dados do perfil.
 - Opção de zerar o progresso de um episódio.
 - Deve contabilizar corretamente os acertos e erros por categoria
+
+Detalhes de algumas telas:
+
+- Deve ter uma tela inicial mostrando como opções o "Ronaldo" ou "Sarah".
+- Ao escolher o perfil, deve abrir uma nova tela e mostrar uma lista de espisódios disponíveis.
+- Ao selecionar o episódio deve mostrar uma nova tela com as categorias do episodio (adjetivos, substantivos, verbos, expressões, adverbios, preposições).
+- Deve ter uma opção para selecionar todas as categorias, ou seja, os exercicios vão vir de forma aleatória independente da categoria.
+- O progresso deve ser salvo em cada categoria, ou seja, se eu escolher todas as categorias e sair um exercicio de verbo, deve contabilizar na categoria de verbos.
+- Ao escolher o tipo de exercicio que quer, deve ter um botão indicando que irá realizar uma tentativa
+- se o usuário sair antes de terminar a tentativa, deve ficar salvo o progresso
+- uma tentativa só é dita concluída quando tiver passado por todos os exercícios de todas as categorias
+- A tentativa não é por categoria, ela é por episódio (isso é muito importante).
+- Ao terminar uma tentativa deve ficar salva e deve permitir realizar uma nova tentativa do zero.
+- Deve mostrar a lista de tentativas, para que o usuário veja o seu progresso.
+- Deve permitir realizar a revisão somente após concluir pelo menos uma tentativa.
+- As revisões não contabilizam para a tentativa.
+- Evite ficar usando emoge em tudo, quero uma tela moderna, mas limpa.
+- todas as telas devem ter um botão ou algo que permita voltar para a tela anterior/menu.
 
 Sobre a questão de arquitetura do site:
 
@@ -24,6 +42,9 @@ Sobre a questão de arquitetura do site:
 - Deve seguir arquitetura limpa
 - Deve seguir os padrões de desenvolvimento
 - Deve ser feito usando html, css e javascript pois esse site irá rodar usando o github.
+- Deve ser pensado para ser usado principalmente no mobile
+- Deve usar o versionamento do pages do github
+- Por favor separe bem cada etapa para que não fique confuso e que seja fácil corrigir os bugs depois.
 
 Estrutura inicial
 
