@@ -1,4 +1,5 @@
-import { createEmptyProfile, mergeProfiles } from './domain.js?v=__BUILD_VERSION__';
+const loadedVersion = new URL(import.meta.url).searchParams.get('v') || 'development';
+const { createEmptyProfile, mergeProfiles } = await import(`./domain.js?v=${encodeURIComponent(loadedVersion)}`);
 
 export class ProfileRepository {
     constructor(storage = window.localStorage, firebaseReady = window.firebaseDatabase) {

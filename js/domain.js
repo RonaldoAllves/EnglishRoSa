@@ -119,6 +119,31 @@ export class PracticeSession {
         return new PracticeSession(data);
     }
 
+    setFilter(episode, category) {
+        if (category !== 'all' && !CATEGORIES.some((item) => item.key === category)) {
+            throw new Error('A categoria selecionada não é válida.');
+        }
+        if (this.data.filterCategory === category) return false;
+
+        const answeredQuestionIds = new Set(this.data.answers.map((answer) => answer.questionId));
+        const questionsById = new Map(this.data.questions.map((question) => [question.id, question]));
+        const answeredQuestions = this.data.answers.map((answer) => questionsById.get(answer.questionId));
+        if (answeredQuestions.some((question) => !question)) {
+            throw new Error('Não foi possível preservar as respostas desta tentativa.');
+        }
+
+        const remainingQuestions = createQuestions(episode, this.data.episodeId, category)
+            .filter((question) => !answeredQuestionIds.has(question.id));
+        if (!remainingQuestions.length && !answeredQuestions.length) {
+            throw new Error('Não há exercícios disponíveis para esta categoria neste episódio.');
+        }
+
+        this.data.questions = [...answeredQuestions, ...remainingQuestions];
+        this.data.filterCategory = category;
+        this.data.updatedAt = Date.now();
+        return true;
+    }
+
     get currentQuestion() {
         return this.data.questions[this.data.answers.length] || null;
     }

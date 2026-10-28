@@ -1,13 +1,9 @@
-import {
-    CATEGORIES,
-    EPISODE_TITLES,
-    PracticeSession,
-    getEpisodeId,
-    getEpisodeSummary,
-    getProfileSummary,
-    mergeProfiles
-} from './domain.js?v=__BUILD_VERSION__';
-import { ProfileRepository } from './repositories.js?v=__BUILD_VERSION__';
+const loadedVersion = new URL(import.meta.url).searchParams.get('v');
+const currentVersion = !loadedVersion || loadedVersion === '__BUILD_VERSION__' ? 'development' : loadedVersion;
+const [{ CATEGORIES, EPISODE_TITLES, PracticeSession, getEpisodeId, getEpisodeSummary, getProfileSummary, mergeProfiles }, { ProfileRepository }] = await Promise.all([
+    import(`./domain.js?v=${encodeURIComponent(currentVersion)}`),
+    import(`./repositories.js?v=${encodeURIComponent(currentVersion)}`)
+]);
 
 const PROFILES = [
     { id: 'ronaldo', name: 'Ronaldo', icon: 'R', color: 'coral', phrase: 'Seu inglês, do seu jeito.' },
@@ -26,9 +22,8 @@ class EnglishRoSaApp {
         this.pendingAnswer = null;
         this.advanceTimer = null;
         this.dialogEpisodeId = null;
-        const loadedVersion = new URL(import.meta.url).searchParams.get('v');
         this.siteVersion = {
-            version: !loadedVersion || loadedVersion === '__BUILD_VERSION__' ? 'development' : loadedVersion
+            version: currentVersion
         };
         this.versionCheckInProgress = false;
     }
@@ -74,7 +69,11 @@ class EnglishRoSaApp {
             if (summary.activeAttempt) this.resumeAttempt(summary.activeAttempt.episodeId);
         });
         document.querySelector('#start-button').addEventListener('click', () => this.startNewAttempt());
-        document.querySelector('#resume-button').addEventListener('click', () => this.resumeAttempt(this.dialogEpisodeId));
+        document.querySelector('#resume-button').addEventListener('click', () => {
+            const category = document.querySelector('input[name="category"]:checked')?.value || 'all';
+            this.resumeAttempt(this.dialogEpisodeId, category);
+        });
+        document.querySelector('#category-options').addEventListener('change', () => this.updateResumeButton(this.dialogEpisodeId));
         document.querySelector('#reset-episode').addEventListener('click', () => this.resetEpisode());
         document.querySelector('#answer-options').addEventListener('click', (event) => {
             const button = event.target.closest('[data-answer]');
@@ -186,6 +185,7 @@ class EnglishRoSaApp {
         if (!targetVersion) return;
         const refreshUrl = new URL(window.location.href);
         refreshUrl.searchParams.set('refresh', targetVersion);
+        refreshUrl.searchParams.set('reload', Date.now().toString());
         window.location.replace(refreshUrl);
     }
 
@@ -250,12 +250,26 @@ class EnglishRoSaApp {
         const active = this.profile.episodes[episodeId]?.activeAttempt;
         const resumeButton = document.querySelector('#resume-button');
         if (active) {
-            resumeButton.textContent = `Continuar tentativa · ${active.answers.length}/${active.questions.length}`;
             resumeButton.hidden = false;
+            const activeCategory = active.filterCategory || active.category || 'all';
+            const selectedCategory = document.querySelector('input[name="category"]:checked')?.value || activeCategory;
+            resumeButton.textContent = selectedCategory === activeCategory
+                ? `Continuar tentativa · ${active.answers.length}/${active.questions.length}`
+                : `Continuar tentativa · ${CATEGORY_LABELS[selectedCategory] || 'Episódio completo'}`;
         } else {
             resumeButton.hidden = true;
         }
         document.querySelector('#episode-dialog').showModal();
+    }
+
+    updateResumeButton(episodeId) {
+        const active = this.profile.episodes[episodeId]?.activeAttempt;
+        if (!active) return;
+        const selectedCategory = document.querySelector('input[name="category"]:checked')?.value || 'all';
+        const activeCategory = active.filterCategory || active.category || 'all';
+        document.querySelector('#resume-button').textContent = selectedCategory === activeCategory
+            ? `Continuar tentativa · ${active.answers.length}/${active.questions.length}`
+            : `Continuar tentativa · ${CATEGORY_LABELS[selectedCategory] || 'Episódio completo'}`;
     }
 
     renderCategoryOptions(episodeId) {
@@ -273,13 +287,16 @@ class EnglishRoSaApp {
             { key: 'all', label: 'Episódio completo', icon: '✳', words: totalWords, phrases: totalPhrases },
             ...categories.map((category) => ({ key: category.key, label: category.label, icon: category.icon, words: episode[category.key].length, phrases: phraseCount(episode[category.key]) }))
         ];
+        const activeCategory = this.profile.episodes[episodeId]?.activeAttempt?.filterCategory || 'all';
         document.querySelector('#category-options').innerHTML = `<legend>Conteúdo para praticar</legend>${inputs.map((option, index) => {
             const answered = summary.latestAttempt?.byCategory?.[option.key];
             const result = answered ? ` · ${answered.correct} acertos, ${answered.wrong} erros` : '';
             const exercises = option.words + option.phrases;
             const content = `${exercises} exercícios · ${option.words} ${option.words === 1 ? 'palavra' : 'palavras'} + ${option.phrases} ${option.phrases === 1 ? 'frase' : 'frases'}`;
-            return `<label class="category-option"><input type="radio" name="category" value="${option.key}" ${index === 0 ? 'checked' : ''}><span class="category-option-icon">${option.icon}</span><span class="category-option-copy"><strong>${option.label}</strong><span>${this.escape(content + result)}</span></span><span class="category-option-arrow" aria-hidden="true">→</span></label>`;
+            const checked = option.key === activeCategory || (!inputs.some((item) => item.key === activeCategory) && index === 0);
+            return `<label class="category-option"><input type="radio" name="category" value="${option.key}" ${checked ? 'checked' : ''}><span class="category-option-icon">${option.icon}</span><span class="category-option-copy"><strong>${option.label}</strong><span>${this.escape(content + result)}</span></span><span class="category-option-arrow" aria-hidden="true">→</span></label>`;
         }).join('')}`;
+        this.updateResumeButton(episodeId);
     }
 
     renderAttemptHistory(episodeId) {
@@ -314,7 +331,7 @@ class EnglishRoSaApp {
         this.renderQuestion();
     }
 
-    resumeAttempt(episodeId) {
+    resumeAttempt(episodeId, selectedCategory) {
         const active = this.profile.episodes[episodeId]?.activeAttempt;
         if (!active) return;
         const episodeIndex = this.episodes.findIndex((episode, index) => getEpisodeId(episode, index) === episodeId);
@@ -325,6 +342,18 @@ class EnglishRoSaApp {
         this.dialogEpisodeId = episodeId;
         this.activeEpisode = this.episodes[episodeIndex];
         this.session = PracticeSession.restore(active);
+        try {
+            if (selectedCategory && this.session.setFilter(this.activeEpisode, selectedCategory)) {
+                const episodeState = this.profile.episodes[episodeId];
+                episodeState.activeAttempt = this.session.toJSON();
+                episodeState.updatedAt = Date.now();
+                this.profile.updatedAt = Date.now();
+                this.persistProgress();
+            }
+        } catch (error) {
+            this.setSyncStatus(error.message, 'local');
+            return;
+        }
         document.querySelector('#episode-dialog').close();
         this.showScreen('practice-screen');
         if (this.session.isComplete) this.completeAttempt();
