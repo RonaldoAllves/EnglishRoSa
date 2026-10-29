@@ -48,6 +48,7 @@ class EnglishRoSaApp {
         this.isReviewResult = false;
         this.syncError = null;
         this.noticeTimer = null;
+        this.autoAdvanceTimer = null;
         const buildVersion = document.documentElement.dataset.buildVersion || 'development';
         this.buildVersion = buildVersion === '__BUILD_VERSION__' ? 'development' : buildVersion;
         this.latestVersion = null;
@@ -254,10 +255,18 @@ class EnglishRoSaApp {
 
         this.render();
         if (this.sessionMode === 'attempt') await this.persistProfile();
+        if (this.screen === 'quiz' && this.feedback === answer) {
+            this.autoAdvanceTimer = window.setTimeout(() => {
+                this.autoAdvanceTimer = null;
+                this.advanceSession().catch((error) => this.showError(error));
+            }, 900);
+        }
     }
 
     async advanceSession() {
         if (!this.session || !this.feedback) return;
+        window.clearTimeout(this.autoAdvanceTimer);
+        this.autoAdvanceTimer = null;
         if (this.session.isComplete) {
             if (this.sessionMode === 'review') {
                 this.resultAttempt = {
@@ -397,6 +406,8 @@ class EnglishRoSaApp {
     }
 
     goBack() {
+        window.clearTimeout(this.autoAdvanceTimer);
+        this.autoAdvanceTimer = null;
         switch (this.screen) {
             case 'dashboard':
                 this.profile = null;
@@ -721,13 +732,13 @@ class EnglishRoSaApp {
                     : `A tradução correta é: <strong>${escapeHtml(question.answer)}</strong>.`}
             </div>
             <div class="practice-next">
-                <button class="button button-primary" type="button" data-action="next">
+                <span role="status">
                     ${this.session.isComplete
-                        ? 'Ver resultado'
+                        ? 'Exibindo resultado...'
                         : this.sessionMode === 'attempt' && this.session.isAtFocusedCategoryBoundary
-                            ? 'Escolher outra categoria'
-                            : 'Próximo exercício'}
-                </button>
+                            ? 'Voltando à escolha de categoria...'
+                            : 'Próximo exercício...'}
+                </span>
             </div>` : '';
         const modeLabel = this.sessionMode === 'review'
             ? 'Revisão · não contabiliza na tentativa'
