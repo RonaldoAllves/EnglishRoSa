@@ -662,9 +662,7 @@ class EnglishRoSaApp {
             <section>
                 <header class="view-header">
                     <div>
-                        <span class="eyebrow">Temporada 1 · Episódio ${episodeNumber(episode.episodio)}</span>
-                        <h1>${escapeHtml(episode.episodio.toUpperCase())}</h1>
-                        <p>${escapeHtml(this.catalog.serie)} · Temporada ${this.catalog.temporada}</p>
+                        <h1 class="episode-series-heading">${escapeHtml(this.catalog.serie)} · Temporada ${this.catalog.temporada}</h1>
                     </div>
                     <button class="back-button" type="button" data-action="back">← Episódios</button>
                 </header>
