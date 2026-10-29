@@ -176,6 +176,15 @@ export class PracticeAttempt {
             nextQuestion.category !== this.data.filterCategory;
     }
 
+    isCategoryComplete(category) {
+        if (!CATEGORIES.some((item) => item.key === category)) {
+            throw new Error('Categoria inválida.');
+        }
+        return !this.data.questions
+            .slice(this.data.answers.length)
+            .some((question) => question.category === category);
+    }
+
     answer(choice, answeredAt = Date.now()) {
         const question = this.currentQuestion;
         if (!question) throw new Error('Esta sessão já foi concluída.');

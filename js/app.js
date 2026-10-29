@@ -192,6 +192,19 @@ class EnglishRoSaApp {
             if (!state.activeAttempt) throw new Error('Não há tentativa pendente para continuar.');
             this.session = new PracticeAttempt(state.activeAttempt);
             const addedQuestions = this.session.reconcile(episode);
+            if (this.focusCategory !== 'all' &&
+                this.session.isCategoryComplete(this.focusCategory)) {
+                if (addedQuestions) {
+                    state.activeAttempt = this.session.toJSON();
+                    state.updatedAt = Date.now();
+                    await this.persistProfile();
+                }
+                const categoryLabel = CATEGORIES.find((category) =>
+                    category.key === this.focusCategory
+                )?.label || this.focusCategory;
+                this.showNotice(`${categoryLabel} já está concluída nesta tentativa.`);
+                return;
+            }
             const reorderedQuestions = this.session.prioritizeRemaining(this.focusCategory);
             this.sessionMode = 'attempt';
             state.activeAttempt = this.session.toJSON();

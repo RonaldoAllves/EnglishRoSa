@@ -148,6 +148,22 @@ test('focused category completion stops at its boundary without completing the e
     assert.notEqual(attempt.currentQuestion.category, category);
 });
 
+test('a category is complete only when it has no unanswered questions', () => {
+    const category = 'adjetivos';
+    const attempt = PracticeAttempt.create(sampleEpisode(), category, () => 0, 600);
+
+    assert.equal(attempt.isCategoryComplete(category), false);
+
+    while (!attempt.isCategoryComplete(category)) {
+        const question = attempt.currentQuestion;
+        attempt.answer(question.answer, 601 + attempt.data.answers.length);
+    }
+
+    assert.equal(attempt.isCategoryComplete(category), true);
+    assert.equal(attempt.isComplete, false);
+    assert.throws(() => attempt.isCategoryComplete('invalid'), /Categoria inválida/);
+});
+
 test('review questions are available only for recorded mistakes and episode progress honors completion', () => {
     const episode = sampleEpisode();
     const mistakes = {
