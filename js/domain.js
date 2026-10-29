@@ -167,6 +167,15 @@ export class PracticeAttempt {
             : 0;
     }
 
+    get isAtFocusedCategoryBoundary() {
+        const lastAnswer = this.data.answers[this.data.answers.length - 1];
+        const nextQuestion = this.currentQuestion;
+        return this.data.filterCategory !== 'all' &&
+            lastAnswer?.category === this.data.filterCategory &&
+            nextQuestion !== null &&
+            nextQuestion.category !== this.data.filterCategory;
+    }
+
     answer(choice, answeredAt = Date.now()) {
         const question = this.currentQuestion;
         if (!question) throw new Error('Esta sessão já foi concluída.');

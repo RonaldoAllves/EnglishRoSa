@@ -130,6 +130,24 @@ test('switching a resumed attempt back to all randomizes the remaining categorie
     )).size, 2);
 });
 
+test('focused category completion stops at its boundary without completing the episode attempt', () => {
+    const category = 'adjetivos';
+    const attempt = PracticeAttempt.create(sampleEpisode(), category, () => 0, 500);
+    const focusedQuestions = attempt.data.questions.filter((question) =>
+        question.category === category
+    );
+
+    for (let index = 0; index < focusedQuestions.length; index += 1) {
+        const question = attempt.currentQuestion;
+        assert.equal(question.category, category);
+        attempt.answer(question.answer, 501 + index);
+        assert.equal(attempt.isAtFocusedCategoryBoundary, index === focusedQuestions.length - 1);
+    }
+
+    assert.equal(attempt.isComplete, false);
+    assert.notEqual(attempt.currentQuestion.category, category);
+});
+
 test('review questions are available only for recorded mistakes and episode progress honors completion', () => {
     const episode = sampleEpisode();
     const mistakes = {

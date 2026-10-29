@@ -260,6 +260,12 @@ class EnglishRoSaApp {
             }
             return;
         }
+        if (this.sessionMode === 'attempt' && this.session.isAtFocusedCategoryBoundary) {
+            this.feedback = null;
+            this.screen = 'episode';
+            this.render();
+            return;
+        }
         this.feedback = null;
         this.render();
     }
@@ -703,7 +709,11 @@ class EnglishRoSaApp {
             </div>
             <div class="practice-next">
                 <button class="button button-primary" type="button" data-action="next">
-                    ${this.session.isComplete ? 'Ver resultado' : 'Próximo exercício'}
+                    ${this.session.isComplete
+                        ? 'Ver resultado'
+                        : this.sessionMode === 'attempt' && this.session.isAtFocusedCategoryBoundary
+                            ? 'Escolher outra categoria'
+                            : 'Próximo exercício'}
                 </button>
             </div>` : '';
         const modeLabel = this.sessionMode === 'review'
