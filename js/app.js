@@ -161,7 +161,9 @@ class EnglishRoSaApp {
                 break;
             case 'check-version':
                 if (this.latestVersion && this.latestVersion !== this.buildVersion) {
-                    window.location.reload();
+                    const refreshUrl = new URL(window.location.href);
+                    refreshUrl.searchParams.set('refresh', Date.now().toString());
+                    window.location.replace(refreshUrl.href);
                 } else {
                     await this.checkVersion();
                 }
