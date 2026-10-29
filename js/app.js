@@ -104,7 +104,12 @@ class EnglishRoSaApp {
                 break;
             case 'select-episode':
                 this.currentEpisodeId = button.dataset.episode;
-                this.focusCategory = 'all';
+                const activeAttempt = this.profile?.episodes?.[this.currentEpisodeId]?.activeAttempt;
+                const savedCategory = activeAttempt?.filterCategory;
+                this.focusCategory = savedCategory === 'all' ||
+                    CATEGORIES.some((category) => category.key === savedCategory)
+                    ? savedCategory
+                    : 'all';
                 this.screen = 'episode';
                 this.render();
                 break;
@@ -187,10 +192,11 @@ class EnglishRoSaApp {
             if (!state.activeAttempt) throw new Error('Não há tentativa pendente para continuar.');
             this.session = new PracticeAttempt(state.activeAttempt);
             const addedQuestions = this.session.reconcile(episode);
+            const reorderedQuestions = this.session.prioritizeRemaining(this.focusCategory);
             this.sessionMode = 'attempt';
             state.activeAttempt = this.session.toJSON();
             state.updatedAt = Date.now();
-            if (addedQuestions) await this.persistProfile();
+            if (addedQuestions || reorderedQuestions) await this.persistProfile();
         } else {
             if (state.activeAttempt &&
                 !window.confirm('Começar uma nova tentativa? O progresso pendente deste episódio será substituído.')) {

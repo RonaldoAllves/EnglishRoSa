@@ -199,6 +199,32 @@ export class PracticeAttempt {
         return additions.length;
     }
 
+    prioritizeRemaining(category) {
+        if (category !== 'all' && !CATEGORIES.some((item) => item.key === category)) {
+            throw new Error('Categoria inicial inválida.');
+        }
+
+        const answeredCount = this.data.answers.length;
+        const answeredQuestions = this.data.questions.slice(0, answeredCount);
+        const remainingQuestions = this.data.questions.slice(answeredCount);
+        const orderedRemaining = category === 'all'
+            ? remainingQuestions
+            : [
+                ...remainingQuestions.filter((question) => question.category === category),
+                ...remainingQuestions.filter((question) => question.category !== category)
+            ];
+        const reordered = [...answeredQuestions, ...orderedRemaining];
+        const changed = this.data.filterCategory !== category ||
+            reordered.some((question, index) => question.id !== this.data.questions[index]?.id);
+
+        if (changed) {
+            this.data.filterCategory = category;
+            this.data.questions = reordered;
+            this.data.updatedAt = Date.now();
+        }
+        return changed;
+    }
+
     summary() {
         const breakdown = {};
         for (const question of this.data.questions) {

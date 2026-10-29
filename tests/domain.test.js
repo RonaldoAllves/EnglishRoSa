@@ -86,6 +86,26 @@ test('resuming an attempt adds newly filled vocabulary without discarding answer
     ).length, 1);
 });
 
+test('resuming an attempt prioritizes the selected category among unanswered questions', () => {
+    const attempt = PracticeAttempt.create(sampleEpisode(), 'all', () => 0, 300);
+    const answeredQuestion = attempt.currentQuestion;
+    attempt.answer(answeredQuestion.answer, 301);
+    const answeredQuestionIds = attempt.data.answers.map((answer) => answer.questionId);
+    const selectedCategory = answeredQuestion.category === 'adjetivos'
+        ? 'expressoes'
+        : 'adjetivos';
+
+    assert.equal(attempt.prioritizeRemaining(selectedCategory), true);
+
+    assert.deepEqual(
+        attempt.data.answers.map((answer) => answer.questionId),
+        answeredQuestionIds
+    );
+    assert.equal(attempt.currentQuestion.category, selectedCategory);
+    assert.equal(attempt.data.filterCategory, selectedCategory);
+    assert.equal(attempt.data.questions.length, 6);
+});
+
 test('review questions are available only for recorded mistakes and episode progress honors completion', () => {
     const episode = sampleEpisode();
     const mistakes = {
