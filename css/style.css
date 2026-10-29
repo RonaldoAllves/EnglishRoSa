@@ -61,7 +61,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .sync-status[data-state="error"] { color: var(--red); }
 .version-status, .profile-chip { padding: 8px 11px; border: 1px solid var(--border); border-radius: 22px; background: var(--surface); color: var(--muted); cursor: pointer; font-size: 10px; font-weight: 700; white-space: nowrap; }
 .version-status[data-state="current"] { color: var(--green); }
-.version-status[data-state="update"] { border-color: #e8c77d; background: #fff8e9; color: #966318; }
+.version-status[data-state="update"] { border-color: #5b43bd; background: var(--purple); color: #fff; box-shadow: 0 3px 12px rgb(91 67 189 / 28%); }
 .profile-chip { color: var(--ink); }
 
 .screen { width: min(1040px, calc(100% - 64px)); min-height: calc(100vh - 78px); margin: 0 auto; padding: 42px 0 55px; }

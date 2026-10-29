@@ -579,7 +579,6 @@ class EnglishRoSaApp {
                     <div class="episodes-grid">${episodeCards}</div>
                 </section>
                 <footer class="dashboard-footer">
-                    <span class="privacy-note">Progresso sincronizado quando o Firebase está disponível.</span>
                     <div>
                         <button class="text-button" type="button" data-action="export-backup">Exportar backup</button>
                         <button class="text-button" type="button" data-action="import-backup">Importar backup</button>
@@ -908,8 +907,8 @@ class EnglishRoSaApp {
     }
 
     async checkVersion() {
+        this.versionButton.hidden = true;
         this.versionButton.dataset.state = 'loading';
-        this.versionButton.textContent = 'Verificando versão...';
         try {
             const response = await fetch(`./version.json?check=${Date.now()}`, { cache: 'no-store' });
             if (!response.ok) throw new Error(`Resposta ${response.status}`);
@@ -919,15 +918,14 @@ class EnglishRoSaApp {
                 this.versionButton.dataset.state = 'update';
                 this.versionButton.textContent = 'Atualizar aplicativo';
                 this.versionButton.title = `Versão atual: ${this.buildVersion}. Nova versão: ${this.latestVersion}.`;
+                this.versionButton.hidden = false;
             } else {
                 this.versionButton.dataset.state = 'current';
-                this.versionButton.textContent = `Versão ${this.buildVersion}`;
                 this.versionButton.title = 'O aplicativo está atualizado.';
             }
         } catch (error) {
             this.latestVersion = null;
             this.versionButton.dataset.state = 'unknown';
-            this.versionButton.textContent = 'Versão não verificada';
             this.versionButton.title = error.message;
         }
     }
