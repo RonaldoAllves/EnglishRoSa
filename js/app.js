@@ -479,6 +479,7 @@ class EnglishRoSaApp {
             review: () => this.renderReview(),
             result: () => this.renderResult()
         };
+        this.main.classList.toggle('profile-selection', this.screen === 'profiles');
         this.main.innerHTML = renderers[this.screen]();
         this.updateHeader();
     }

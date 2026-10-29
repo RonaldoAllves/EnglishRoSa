@@ -65,7 +65,8 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .profile-chip { color: var(--ink); }
 
 .screen { width: min(1040px, calc(100% - 64px)); min-height: calc(100vh - 78px); margin: 0 auto; padding: 42px 0 55px; }
-.profile-screen { display: grid; min-height: calc(100vh - 78px); align-content: center; justify-items: center; }
+.screen.profile-selection { padding-top: 14px; }
+.profile-screen { display: grid; justify-items: center; }
 .eyebrow { color: var(--purple); font-size: 10px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; }
 .hero-copy h1, .page-title { margin: 12px 0 10px; font: 800 clamp(35px, 5vw, 55px)/1.12 'Manrope', sans-serif; letter-spacing: -2px; }
 .hero-copy > p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
@@ -216,7 +217,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
     .version-status { padding: 7px 8px; font-size: 9px; }
     .profile-chip { padding: 7px 9px; font-size: 9px; }
     .screen { padding-top: 29px; }
-    .profile-screen { min-height: calc(100vh - 68px); }
+    .screen.profile-selection { padding-top: 12px; }
     .dashboard-hero { min-height: 195px; padding: 26px 23px; }
     .hero-copy h1 { font-size: 30px; }
     .hero-copy > p { max-width: 250px; line-height: 1.6; }
