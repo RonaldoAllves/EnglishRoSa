@@ -129,7 +129,8 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .view-header p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
 .back-button { display: inline-flex; min-height: 38px; align-items: center; gap: 7px; padding: 0 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); cursor: pointer; font-size: 11px; font-weight: 700; white-space: nowrap; }
 .back-button:hover { border-color: #c9c0eb; }
-.action-row { display: flex; flex-wrap: wrap; gap: 9px; margin: 17px 0 29px; }
+.action-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 17px 0 29px; }
+.action-row .button { min-height: 48px; padding: 0 16px; font-size: 13px; }
 .category-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
 .category-card { display: block; width: 100%; min-height: 142px; padding: 19px; border: 1px solid var(--border); border-radius: 15px; background: var(--surface); cursor: pointer; text-align: left; transition: border-color .15s, background .15s, box-shadow .15s; }
 .category-card:hover { border-color: #b8a9f4; background: #fcfbff; }
@@ -254,7 +255,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
     .category-card h3 { font-size: 17px; }
     .category-card p { font-size: 14px; }
     .category-card .category-progress-label { font-size: 12px; }
-    .action-row .button { flex: 1 1 44%; padding: 0 9px; font-size: 10px; }
+    .action-row .button { flex: 1 1 44%; min-height: 48px; padding: 8px 11px; font-size: 12px; line-height: 1.35; }
     .practice-topbar { grid-template-columns: 37px minmax(0, 1fr) auto; gap: 9px; }
     .icon-button { width: 36px; height: 36px; }
     .practice-points { font-size: 9px; }
