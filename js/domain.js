@@ -199,7 +199,7 @@ export class PracticeAttempt {
         return additions.length;
     }
 
-    prioritizeRemaining(category) {
+    prioritizeRemaining(category, random = Math.random) {
         if (category !== 'all' && !CATEGORIES.some((item) => item.key === category)) {
             throw new Error('Categoria inicial inválida.');
         }
@@ -208,7 +208,9 @@ export class PracticeAttempt {
         const answeredQuestions = this.data.questions.slice(0, answeredCount);
         const remainingQuestions = this.data.questions.slice(answeredCount);
         const orderedRemaining = category === 'all'
-            ? remainingQuestions
+            ? this.data.filterCategory === 'all'
+                ? remainingQuestions
+                : shuffle(remainingQuestions, random)
             : [
                 ...remainingQuestions.filter((question) => question.category === category),
                 ...remainingQuestions.filter((question) => question.category !== category)

@@ -106,6 +106,30 @@ test('resuming an attempt prioritizes the selected category among unanswered que
     assert.equal(attempt.data.questions.length, 6);
 });
 
+test('switching a resumed attempt back to all randomizes the remaining categories', () => {
+    const attempt = PracticeAttempt.create(sampleEpisode(), 'all', () => 0, 400);
+    const answeredQuestion = attempt.currentQuestion;
+    attempt.answer(answeredQuestion.answer, 401);
+    const selectedCategory = answeredQuestion.category === 'adjetivos'
+        ? 'expressoes'
+        : 'adjetivos';
+
+    attempt.prioritizeRemaining(selectedCategory);
+    assert.equal(attempt.currentQuestion.category, selectedCategory);
+    const categoryFirstOrder = attempt.data.questions.map((question) => question.id);
+
+    assert.equal(attempt.prioritizeRemaining('all', () => 0), true);
+
+    assert.equal(attempt.data.filterCategory, 'all');
+    assert.notDeepEqual(
+        attempt.data.questions.map((question) => question.id),
+        categoryFirstOrder
+    );
+    assert.equal(new Set(attempt.data.questions.slice(1).map((question) =>
+        question.category
+    )).size, 2);
+});
+
 test('review questions are available only for recorded mistakes and episode progress honors completion', () => {
     const episode = sampleEpisode();
     const mistakes = {
