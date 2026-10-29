@@ -638,16 +638,6 @@ class EnglishRoSaApp {
                     </div>
                     <button class="back-button" type="button" data-action="back">← Episódios</button>
                 </header>
-                <div class="episode-banner">
-                    <div>
-                        <h2>Uma tentativa, o episódio inteiro.</h2>
-                        <p>A tentativa percorre todos os exercícios disponíveis nas categorias preenchidas. Você pode escolher uma categoria para começar por ela; o restante do episódio vem em seguida.</p>
-                    </div>
-                    <div class="episode-banner-stats">
-                        <strong>${summary.progress}%</strong>
-                        <span>${summary.attempts.length} ${summary.attempts.length === 1 ? 'tentativa concluída' : 'tentativas concluídas'}</span>
-                    </div>
-                </div>
                 ${incomplete ? `
                     <p class="incomplete-note">Este episódio ainda está sendo preenchido. As categorias sem conteúdo aparecerão aqui quando forem adicionadas.</p>` : ''}
                 <div class="focus-panel">
