@@ -127,14 +127,12 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .view-header p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.6; }
 .back-button { display: inline-flex; min-height: 38px; align-items: center; gap: 7px; padding: 0 12px; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); cursor: pointer; font-size: 11px; font-weight: 700; white-space: nowrap; }
 .back-button:hover { border-color: #c9c0eb; }
-.focus-panel { display: grid; grid-template-columns: minmax(0, 1fr) minmax(210px, 300px); align-items: end; gap: 20px; margin: 17px 0; padding: 19px 21px; border: 1px solid #e8e2ff; border-radius: 15px; background: #fbfaff; }
-.focus-panel h3 { margin: 0 0 5px; font: 700 14px 'Manrope', sans-serif; }
-.focus-panel p { margin: 0; color: var(--muted); font-size: 10px; line-height: 1.6; }
-.field-label { display: grid; gap: 7px; color: var(--ink); font-size: 10px; font-weight: 700; }
-.field-label select { min-height: 41px; padding: 0 11px; border: 1px solid var(--border); border-radius: 9px; background: var(--surface); color: var(--ink); }
-.action-row { display: flex; flex-wrap: wrap; gap: 9px; margin: 13px 0 29px; }
+.action-row { display: flex; flex-wrap: wrap; gap: 9px; margin: 17px 0 29px; }
 .category-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.category-card { min-height: 117px; padding: 15px; border: 1px solid var(--border); border-radius: 13px; background: var(--surface); }
+.category-card { display: block; width: 100%; min-height: 117px; padding: 15px; border: 1px solid var(--border); border-radius: 13px; background: var(--surface); cursor: pointer; text-align: left; transition: border-color .15s, background .15s, box-shadow .15s; }
+.category-card:hover { border-color: #b8a9f4; background: #fcfbff; }
+.category-card.is-selected { border-color: var(--purple); background: #f7f4ff; box-shadow: 0 0 0 2px rgb(112 89 208 / 12%); }
+.category-card:focus-visible { outline: 3px solid #c8bbff; outline-offset: 2px; }
 .category-card h3 { margin: 0 0 6px; font: 700 12px 'Manrope', sans-serif; }
 .category-card p { margin: 0; color: var(--muted); font-size: 10px; }
 .category-card .progress-track { margin: 12px 0 6px; }
@@ -224,7 +222,6 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
     .hero-decoration { right: -105px; opacity: .7; }
     .episodes-grid { grid-template-columns: 1fr; }
     .category-grid { grid-template-columns: repeat(2, 1fr); }
-    .focus-panel { grid-template-columns: 1fr; gap: 13px; }
     .practice-content { margin-top: 43px; }
 }
 

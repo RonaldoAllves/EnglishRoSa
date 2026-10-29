@@ -78,9 +78,6 @@ class EnglishRoSaApp {
         });
 
         document.body.addEventListener('change', (event) => {
-            if (event.target.id === 'focus-category') {
-                this.focusCategory = event.target.value;
-            }
             if (event.target === this.backupInput) {
                 this.importBackup().catch((error) => this.showError(error));
             }
@@ -119,6 +116,14 @@ class EnglishRoSaApp {
                 break;
             case 'continue-attempt':
                 await this.beginAttempt(true);
+                break;
+            case 'select-category':
+                if (button.dataset.category !== 'all' &&
+                    !CATEGORIES.some((category) => category.key === button.dataset.category)) {
+                    throw new Error('Categoria inicial inválida.');
+                }
+                this.focusCategory = button.dataset.category;
+                this.render();
                 break;
             case 'new-attempt':
                 await this.beginAttempt(false);
@@ -594,9 +599,32 @@ class EnglishRoSaApp {
             category.key,
             questions.filter((question) => question.category === category.key).length
         ]));
-        const breakdown = summary.active
-            ? new PracticeAttempt(summary.active).summary().breakdown
-            : summary.bestAttempt?.breakdown || {};
+        const activeAttemptSummary = summary.active
+            ? new PracticeAttempt(summary.active).summary()
+            : null;
+        const breakdown = activeAttemptSummary?.breakdown || summary.bestAttempt?.breakdown || {};
+        const allSummary = activeAttemptSummary || summary.bestAttempt;
+        const allPercentage = allSummary?.total
+            ? Math.round(((activeAttemptSummary
+                ? allSummary.answered
+                : allSummary.correct) / allSummary.total) * 100)
+            : 0;
+        const allProgressLabel = activeAttemptSummary
+            ? `${allSummary.answered}/${allSummary.total} concluídos · ${allSummary.correct} acertos nesta tentativa`
+            : summary.bestAttempt
+                ? `${allSummary.correct}/${allSummary.total} acertos na melhor tentativa`
+                : 'Ainda sem resultado';
+        const allCategoryCard = `
+            <button class="category-card ${this.focusCategory === 'all' ? 'is-selected' : ''}"
+                type="button" data-action="select-category" data-category="all"
+                aria-pressed="${this.focusCategory === 'all'}">
+                <h3>Todas</h3>
+                <p>${questions.length} exercícios · ordem aleatória</p>
+                <div class="progress-track" aria-label="${allPercentage}% da tentativa respondidos">
+                    <span style="width:${allPercentage}%"></span>
+                </div>
+                <span class="category-progress-label">${allProgressLabel}</span>
+            </button>`;
         const categoryCards = availableCategories.map((category) => {
             const categorySummary = breakdown[category.key];
             const percentage = categorySummary?.total
@@ -609,19 +637,18 @@ class EnglishRoSaApp {
                     : `${categorySummary.correct}/${categorySummary.total} acertos na melhor tentativa`
                 : 'Ainda sem resultado';
             return `
-                <article class="category-card">
+                <button class="category-card ${this.focusCategory === category.key ? 'is-selected' : ''}"
+                    type="button" data-action="select-category" data-category="${category.key}"
+                    aria-pressed="${this.focusCategory === category.key}">
                     <h3>${category.label}</h3>
                     <p>${questionCounts[category.key]} exercícios · ${episode[category.key].length} itens</p>
                     <div class="progress-track" aria-label="${percentage}% ${summary.active ? 'da categoria respondidos' : 'de acerto na melhor tentativa'}">
                         <span style="width:${percentage}%"></span>
                     </div>
                     <span class="category-progress-label">${progressLabel}</span>
-                </article>`;
+                </button>`;
         }).join('');
         const attempts = summary.attempts;
-        const categoryOptions = availableCategories.map((category) =>
-            `<option value="${category.key}" ${this.focusCategory === category.key ? 'selected' : ''}>${category.label}</option>`
-        ).join('');
         const incomplete = availableCategories.length < CATEGORIES.length;
         const actions = summary.active
             ? `<button class="button button-primary" type="button" data-action="continue-attempt">Continuar tentativa · ${summary.activeProgress}%</button>
@@ -640,19 +667,15 @@ class EnglishRoSaApp {
                 </header>
                 ${incomplete ? `
                     <p class="incomplete-note">Este episódio ainda está sendo preenchido. As categorias sem conteúdo aparecerão aqui quando forem adicionadas.</p>` : ''}
-                <div class="focus-panel">
-                    <div>
-                        <h3>Como quer começar?</h3>
-                        <p>A categoria escolhida aparece primeiro. Todas as demais categorias disponíveis continuam fazendo parte da tentativa.</p>
+                <section class="section-block" aria-labelledby="categories-title">
+                    <div class="section-heading">
+                        <div>
+                            <span class="eyebrow">Categoria inicial</span>
+                            <h2 id="categories-title">Escolha por onde começar</h2>
+                        </div>
                     </div>
-                    <label class="field-label" for="focus-category">
-                        Categoria inicial
-                        <select id="focus-category">
-                            <option value="all" ${this.focusCategory === 'all' ? 'selected' : ''}>Todas (ordem aleatória)</option>
-                            ${categoryOptions}
-                        </select>
-                    </label>
-                </div>
+                    <div class="category-grid">${allCategoryCard}${categoryCards}</div>
+                </section>
                 <div class="action-row">
                     ${actions}
                     <button class="button button-quiet" type="button" data-action="show-history" ${attempts.length ? '' : 'disabled'}>
@@ -666,15 +689,6 @@ class EnglishRoSaApp {
                         Zerar episódio
                     </button>
                 </div>
-                <section class="section-block" aria-labelledby="categories-title">
-                    <div class="section-heading">
-                        <div>
-                            <span class="eyebrow">Seu desempenho</span>
-                            <h2 id="categories-title">Progresso por categoria</h2>
-                        </div>
-                    </div>
-                    <div class="category-grid">${categoryCards}</div>
-                </section>
             </section>`;
     }
 
