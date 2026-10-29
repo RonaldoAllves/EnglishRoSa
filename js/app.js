@@ -49,8 +49,10 @@ class EnglishRoSaApp {
         this.syncError = null;
         this.noticeTimer = null;
         this.autoAdvanceTimer = null;
-        const buildVersion = document.documentElement.dataset.buildVersion || 'development';
-        this.buildVersion = buildVersion === '__BUILD_VERSION__' ? 'development' : buildVersion;
+        const buildVersion = document.documentElement.dataset.buildVersion;
+        this.buildVersion = buildVersion && !/^__[A-Z_]+__$/.test(buildVersion)
+            ? buildVersion
+            : 'development';
         this.latestVersion = null;
     }
 
