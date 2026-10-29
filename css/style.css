@@ -65,21 +65,21 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .profile-chip { color: var(--ink); }
 
 .screen { width: min(1040px, calc(100% - 64px)); min-height: calc(100vh - 78px); margin: 0 auto; padding: 42px 0 55px; }
-.profile-screen { display: grid; min-height: calc(100vh - 78px); align-content: center; justify-items: center; padding-bottom: 80px; }
+.profile-screen { display: grid; min-height: calc(100vh - 78px); align-content: center; justify-items: center; }
 .eyebrow { color: var(--purple); font-size: 10px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; }
 .hero-copy h1, .page-title { margin: 12px 0 10px; font: 800 clamp(35px, 5vw, 55px)/1.12 'Manrope', sans-serif; letter-spacing: -2px; }
 .hero-copy > p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
-.profile-section { width: min(590px, 100%); }
+.profile-section { width: min(540px, 100%); }
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 15px; }
 .section-heading h2, .view-header h2 { margin: 5px 0 0; font: 750 23px 'Manrope', sans-serif; letter-spacing: -.7px; }
-.profile-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
-.profile-card { display: flex; min-height: 94px; align-items: center; gap: 13px; padding: 16px; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); box-shadow: var(--shadow); cursor: pointer; text-align: left; transition: transform .18s, border-color .18s, box-shadow .18s; }
+.profile-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
+.profile-card { display: flex; min-height: 128px; align-items: center; gap: 20px; padding: 24px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); cursor: pointer; text-align: left; transition: transform .18s, border-color .18s, box-shadow .18s; }
 .profile-card:hover { transform: translateY(-2px); border-color: #d7cdfd; box-shadow: 0 18px 34px rgb(70 52 140 / 10%); }
-.profile-avatar { display: grid; width: 44px; height: 44px; flex: 0 0 auto; place-items: center; border-radius: 14px; background: #fff0ed; color: #c76e5c; font: 800 19px 'Manrope', sans-serif; }
+.profile-avatar { display: grid; width: 56px; height: 56px; flex: 0 0 auto; place-items: center; border-radius: 17px; background: #fff0ed; color: #c76e5c; font: 800 23px 'Manrope', sans-serif; }
 .profile-card.lavender .profile-avatar { background: var(--purple-pale); color: var(--purple); }
 .profile-copy { display: grid; gap: 4px; }
-.profile-copy strong { font: 750 15px 'Manrope', sans-serif; }
-.profile-copy span, .privacy-note { color: var(--muted); font-size: 11px; }
+.profile-copy strong { font: 750 18px 'Manrope', sans-serif; }
+.profile-copy span, .privacy-note { color: var(--muted); font-size: 12px; }
 .privacy-note { margin: 15px 0 0; text-align: center; }
 
 .dashboard-hero { position: relative; display: flex; min-height: 218px; align-items: center; overflow: hidden; padding: 32px 40px; border-radius: 22px; background: #211e3b; color: #fff; }
@@ -216,7 +216,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
     .version-status { padding: 7px 8px; font-size: 9px; }
     .profile-chip { padding: 7px 9px; font-size: 9px; }
     .screen { padding-top: 29px; }
-    .profile-screen { min-height: calc(100vh - 68px); padding-bottom: 50px; }
+    .profile-screen { min-height: calc(100vh - 68px); }
     .dashboard-hero { min-height: 195px; padding: 26px 23px; }
     .hero-copy h1 { font-size: 30px; }
     .hero-copy > p { max-width: 250px; line-height: 1.6; }
@@ -235,11 +235,6 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
     .topbar-actions { gap: 6px; }
     .sync-status { display: none; }
     .version-status { max-width: 103px; overflow: hidden; padding: 7px; text-overflow: ellipsis; }
-    .profile-grid { gap: 8px; }
-    .profile-card { min-height: 82px; gap: 8px; padding: 10px; }
-    .profile-avatar { width: 36px; height: 36px; border-radius: 11px; font-size: 15px; }
-    .profile-copy strong { font-size: 13px; }
-    .profile-copy span { font-size: 9px; }
     .stats-grid { gap: 7px; margin: 12px 0 28px; }
     .stat-card { min-height: 76px; padding: 10px; }
     .stat-value { font-size: 16px; }
