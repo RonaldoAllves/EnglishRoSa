@@ -477,11 +477,6 @@ class EnglishRoSaApp {
     renderProfiles() {
         return `
             <section class="profile-screen">
-                <div class="welcome-copy">
-                    <span class="eyebrow">Aprender no seu ritmo</span>
-                    <h1>Inglês, episódio <span>por episódio.</span></h1>
-                    <p>Pratique vocabulário e frases de The Big Bang Theory e acompanhe sua evolução.</p>
-                </div>
                 <section class="profile-section" aria-labelledby="profile-title">
                     <div class="section-heading">
                         <div>

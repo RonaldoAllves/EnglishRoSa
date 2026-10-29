@@ -66,12 +66,10 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 
 .screen { width: min(1040px, calc(100% - 64px)); min-height: calc(100vh - 78px); margin: 0 auto; padding: 42px 0 55px; }
 .profile-screen { display: grid; min-height: calc(100vh - 78px); align-content: center; justify-items: center; padding-bottom: 80px; }
-.welcome-copy { max-width: 650px; text-align: center; }
 .eyebrow { color: var(--purple); font-size: 10px; font-weight: 700; letter-spacing: 1.6px; text-transform: uppercase; }
-.welcome-copy h1, .hero-copy h1, .page-title { margin: 12px 0 10px; font: 800 clamp(35px, 5vw, 55px)/1.12 'Manrope', sans-serif; letter-spacing: -2px; }
-.welcome-copy h1 span { color: var(--purple); }
-.welcome-copy > p, .hero-copy > p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
-.profile-section { width: min(590px, 100%); margin-top: 37px; }
+.hero-copy h1, .page-title { margin: 12px 0 10px; font: 800 clamp(35px, 5vw, 55px)/1.12 'Manrope', sans-serif; letter-spacing: -2px; }
+.hero-copy > p { margin: 0; color: var(--muted); font-size: 15px; line-height: 1.65; }
+.profile-section { width: min(590px, 100%); }
 .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin-bottom: 15px; }
 .section-heading h2, .view-header h2 { margin: 5px 0 0; font: 750 23px 'Manrope', sans-serif; letter-spacing: -.7px; }
 .profile-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
@@ -250,8 +248,6 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
     .profile-avatar { width: 36px; height: 36px; border-radius: 11px; font-size: 15px; }
     .profile-copy strong { font-size: 13px; }
     .profile-copy span { font-size: 9px; }
-    .welcome-copy h1 { letter-spacing: -1.5px; }
-    .welcome-copy > p { font-size: 13px; }
     .stats-grid { gap: 7px; margin: 12px 0 28px; }
     .stat-card { min-height: 76px; padding: 10px; }
     .stat-value { font-size: 16px; }
