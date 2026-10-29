@@ -39,7 +39,7 @@ function mistakeKey(category, itemId) {
 
 function questionKey(question) {
     return question.kind === 'sentence'
-        ? `sentence:${question.category}`
+        ? `sentence:${question.category}:${question.itemId || question.id}`
         : question.id;
 }
 
@@ -62,11 +62,12 @@ export function createQuestionBank(episode, random = Math.random) {
         usableEntries.forEach(({ entry, index, translation, example }) => {
             const word = String(entry.palavra || '').trim();
             const prompt = word || example.english;
+            const itemId = `${category.key}:${index}`;
             questions.push({
                 id: `${episodeId}:${category.key}:${index}:word`,
                 kind: 'word',
                 category: category.key,
-                itemId: `${category.key}:${index}`,
+                itemId,
                 item: prompt,
                 prompt,
                 example: word ? example.english : '',
@@ -74,27 +75,25 @@ export function createQuestionBank(episode, random = Math.random) {
                 choices: makeChoices(translation, translations, random),
                 explanation: translation
             });
-        });
 
-        if (usableEntries.length) {
-            const selected = usableEntries[Math.floor(random() * usableEntries.length)];
+            const sentenceDistractors = [
+                entry.exemplo_diferente,
+                entry.exemplo_adicional
+            ].map((text) => parseExample(text).portuguese);
+            const sentenceAnswer = example.portuguese || translation;
             questions.push({
-                id: `${episodeId}:${category.key}:sentence`,
+                id: `${episodeId}:${category.key}:${index}:sentence`,
                 kind: 'sentence',
                 category: category.key,
-                itemId: `${category.key}:${selected.index}`,
-                item: selected.example.english,
-                prompt: selected.example.english,
+                itemId,
+                item: example.english,
+                prompt: example.english,
                 example: '',
-                answer: selected.example.portuguese || selected.translation,
-                choices: makeChoices(
-                    selected.example.portuguese || selected.translation,
-                    translations,
-                    random
-                ),
-                explanation: selected.example.portuguese || selected.translation
+                answer: sentenceAnswer,
+                choices: makeChoices(sentenceAnswer, sentenceDistractors, random),
+                explanation: sentenceAnswer
             });
-        }
+        });
     }
 
     return questions;

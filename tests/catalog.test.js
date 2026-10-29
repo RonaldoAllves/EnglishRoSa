@@ -23,7 +23,7 @@ test('catalog keeps episodes 1-5 complete and exposes only filled categories for
     }
 });
 
-test('every filled vocabulary item, including phrase entries in episodes 6-7, produces an exercise', async () => {
+test('every filled vocabulary item produces a vocabulary question and an episode sentence question', async () => {
     const catalog = JSON.parse(await readFile(catalogUrl, 'utf8'));
 
     for (const episode of catalog.episodios) {
@@ -35,11 +35,28 @@ test('every filled vocabulary item, including phrase entries in episodes 6-7, pr
         const sentenceQuestions = questions.filter((question) => question.kind === 'sentence');
 
         assert.equal(wordQuestions.length, expectedItems, episode.episodio);
+        assert.equal(sentenceQuestions.length, expectedItems, episode.episodio);
         assert.ok(wordQuestions.every((question) => question.prompt && question.answer), episode.episodio);
-        assert.equal(
-            sentenceQuestions.length,
-            CATEGORIES.filter((category) => episode[category.key]?.length).length,
-            episode.episodio
-        );
+        assert.ok(sentenceQuestions.every((question) =>
+            question.prompt && question.answer && question.choices.includes(question.answer)
+        ), episode.episodio);
     }
+});
+
+test('episode-one sentence choices come from examples of the same vocabulary item', async () => {
+    const catalog = JSON.parse(await readFile(catalogUrl, 'utf8'));
+    const episode = catalog.episodios.find((item) => item.episodio === 's01e01');
+    const verbIndex = episode.verbos.findIndex((item) => item.palavra === 'can');
+    const canEntry = episode.verbos[verbIndex];
+    const canQuestion = createQuestionBank(episode).find((question) =>
+        question.id === `s01e01:verbos:${verbIndex}:sentence`
+    );
+    const sameWordTranslations = [
+        canEntry.exemplo_episodio,
+        canEntry.exemplo_diferente,
+        canEntry.exemplo_adicional
+    ].map((example) => example.match(/\((.*)\)$/)?.[1]);
+
+    assert.equal(canQuestion.prompt, canEntry.exemplo_episodio.split(' (')[0]);
+    assert.deepEqual(new Set(canQuestion.choices), new Set(sameWordTranslations));
 });

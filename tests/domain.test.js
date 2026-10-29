@@ -13,7 +13,9 @@ function entry(word, translation) {
     return {
         palavra: word,
         traducao: translation,
-        exemplo_episodio: `${word} appears (A tradução de ${word})`
+        exemplo_episodio: `${word} appears (A tradução de ${word})`,
+        exemplo_diferente: `${word} works (Uma tradução alternativa de ${word})`,
+        exemplo_adicional: `${word} helps (Outra tradução de ${word})`
     };
 }
 
@@ -25,12 +27,14 @@ function sampleEpisode() {
     };
 }
 
-test('question bank includes vocabulary and a sentence for each available category', () => {
+test('question bank includes vocabulary and one sentence for every available item', () => {
     const episode = sampleEpisode();
     const questions = createQuestionBank(episode, () => 0);
 
     assert.equal(questions.filter((question) => question.kind === 'word').length, 4);
-    assert.equal(questions.filter((question) => question.kind === 'sentence').length, 2);
+    assert.equal(questions.filter((question) => question.kind === 'sentence').length, 4);
+    assert.ok(questions.filter((question) => question.kind === 'sentence')
+        .every((question) => question.choices.length === 3));
     assert.deepEqual(
         [...new Set(questions.map((question) => question.category))].sort(),
         ['adjetivos', 'expressoes']
@@ -78,12 +82,35 @@ test('resuming an attempt adds newly filled vocabulary without discarding answer
     episode.adjetivos.push(entry('patient', 'paciente'));
     const additions = attempt.reconcile(episode, () => 0);
 
-    assert.equal(additions, 1);
-    assert.equal(attempt.data.questions.length, previousQuestionCount + 1);
+    assert.equal(additions, 2);
+    assert.equal(attempt.data.questions.length, previousQuestionCount + 2);
     assert.equal(attempt.data.answers[0].questionId, answered.id);
     assert.equal(attempt.data.questions.filter((question) =>
         question.kind === 'sentence' && question.category === 'adjetivos'
-    ).length, 1);
+    ).length, 3);
+});
+
+test('reconciling an older attempt adds per-item sentence questions without duplicating saved ones', () => {
+    const episode = sampleEpisode();
+    const attempt = PracticeAttempt.create(episode, 'all', () => 0, 250);
+    const oldSentenceQuestions = new Map();
+    for (const question of attempt.data.questions.filter((item) => item.kind === 'sentence')) {
+        if (!oldSentenceQuestions.has(question.category)) {
+            oldSentenceQuestions.set(question.category, question);
+        }
+    }
+    attempt.data.questions = attempt.data.questions.filter((question) =>
+        question.kind !== 'sentence' || oldSentenceQuestions.get(question.category) === question
+    );
+    const previousCount = attempt.data.questions.length;
+
+    const additions = attempt.reconcile(episode, () => 0);
+
+    assert.equal(additions, 2);
+    assert.equal(attempt.data.questions.length, previousCount + 2);
+    assert.equal(attempt.data.questions.filter((question) =>
+        question.kind === 'sentence'
+    ).length, 4);
 });
 
 test('resuming an attempt prioritizes the selected category among unanswered questions', () => {
@@ -103,7 +130,7 @@ test('resuming an attempt prioritizes the selected category among unanswered que
     );
     assert.equal(attempt.currentQuestion.category, selectedCategory);
     assert.equal(attempt.data.filterCategory, selectedCategory);
-    assert.equal(attempt.data.questions.length, 6);
+    assert.equal(attempt.data.questions.length, 8);
 });
 
 test('switching a resumed attempt back to all randomizes the remaining categories', () => {
