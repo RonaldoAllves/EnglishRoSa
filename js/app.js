@@ -490,7 +490,6 @@ class EnglishRoSaApp {
                 <section class="profile-section" aria-labelledby="profile-title">
                     <div class="section-heading">
                         <div>
-                            <span class="eyebrow">Seu espaço de estudo</span>
                             <h2 id="profile-title">Quem vai estudar?</h2>
                         </div>
                     </div>
@@ -505,7 +504,6 @@ class EnglishRoSaApp {
                                 </span>
                             </button>`).join('')}
                     </div>
-                    <p class="privacy-note">Cada perfil mantém seu próprio progresso e histórico.</p>
                 </section>
             </section>`;
     }
@@ -577,7 +575,6 @@ class EnglishRoSaApp {
                 <section aria-labelledby="episodes-title">
                     <div class="section-heading episode-heading">
                         <div>
-                            <span class="eyebrow">Escolha onde continuar</span>
                             <h2 id="episodes-title">Episódios disponíveis</h2>
                         </div>
                     </div>
@@ -672,7 +669,6 @@ class EnglishRoSaApp {
                 <section class="section-block" aria-labelledby="categories-title">
                     <div class="section-heading">
                         <div>
-                            <span class="eyebrow">Categoria inicial</span>
                             <h2 id="categories-title">Escolha por onde começar</h2>
                         </div>
                     </div>

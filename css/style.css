@@ -49,8 +49,6 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 }
 
 .brand { display: inline-flex; align-items: center; gap: 11px; color: var(--ink); text-decoration: none; }
-.brand-mark { display: grid; width: 39px; height: 39px; align-content: center; border-radius: 13px; background: #ece7ff; color: var(--purple); font: 800 17px 'Manrope', sans-serif; text-align: center; }
-.brand-mark span { color: #e88772; }
 .brand-name { font: 700 16px 'Manrope', sans-serif; letter-spacing: -.5px; }
 .brand-name strong { color: var(--purple); }
 .topbar-actions { display: flex; align-items: center; justify-content: flex-end; gap: 12px; }
@@ -81,8 +79,6 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .profile-copy { display: grid; gap: 4px; }
 .profile-copy strong { font: 750 18px 'Manrope', sans-serif; }
 .profile-copy span, .privacy-note { color: var(--muted); font-size: 12px; }
-.privacy-note { margin: 15px 0 0; text-align: center; }
-
 .dashboard-hero { position: relative; display: flex; min-height: 218px; align-items: center; overflow: hidden; padding: 32px 40px; border-radius: 22px; background: #211e3b; color: #fff; }
 .hero-copy { position: relative; z-index: 1; }
 .hero-copy .eyebrow { color: #b6a8ff; }
@@ -232,7 +228,6 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
     .topbar, .screen { width: calc(100% - 28px); }
     .topbar { gap: 8px; }
     .brand { gap: 8px; }
-    .brand-mark { width: 35px; height: 35px; border-radius: 11px; }
     .brand-name { font-size: 14px; }
     .topbar-actions { gap: 6px; }
     .sync-status { display: none; }
