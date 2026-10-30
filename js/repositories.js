@@ -126,7 +126,8 @@ export class ProfileRepository {
             ? this.validateProfile({
                 ...remote,
                 version: remote.version == null ? 1 : Number(remote.version),
-                profileId: remote.profileId || profileId
+                profileId: remote.profileId || profileId,
+                episodes: remote.episodes ?? {}
             }, profileId, 'Firebase')
             : null;
         const profile = mergeProfiles(local, remoteProfile, profileId);
@@ -177,11 +178,28 @@ export class ProfileRepository {
 
     validateProfile(profile, expectedProfileId, source = 'backup') {
         this.assertProfileId(expectedProfileId);
-        if (!profile || profile.version !== 1 || profile.profileId !== expectedProfileId ||
-            !profile.episodes || typeof profile.episodes !== 'object' ||
+        if (!profile || typeof profile !== 'object' || Array.isArray(profile)) {
+            if (source === 'Firebase') {
+                throw new Error(`O registro do perfil ${expectedProfileId} no Firebase não é um objeto válido.`);
+            }
+            if (source === 'armazenamento local') {
+                throw new Error(`Os dados locais do perfil ${expectedProfileId} estão inválidos.`);
+            }
+            throw new Error('O backup não corresponde a um perfil válido para esta conta.');
+        }
+        if (profile.profileId !== expectedProfileId) {
+            if (source === 'Firebase') {
+                throw new Error(`O registro do perfil ${expectedProfileId} no Firebase contém o perfil "${profile.profileId || 'sem identificação'}".`);
+            }
+            if (source === 'armazenamento local') {
+                throw new Error(`Os dados locais do perfil ${expectedProfileId} não correspondem a esta conta.`);
+            }
+            throw new Error('O backup não corresponde a um perfil válido para esta conta.');
+        }
+        if (profile.version !== 1 || typeof profile.episodes !== 'object' ||
             Array.isArray(profile.episodes)) {
             if (source === 'Firebase') {
-                throw new Error(`Os dados do perfil ${expectedProfileId} no Firebase estão inválidos ou pertencem a outra conta.`);
+                throw new Error(`Os dados do perfil ${expectedProfileId} no Firebase possuem estrutura inválida.`);
             }
             if (source === 'armazenamento local') {
                 throw new Error(`Os dados locais do perfil ${expectedProfileId} estão inválidos.`);

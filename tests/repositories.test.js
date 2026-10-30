@@ -198,7 +198,34 @@ test('profile load accepts legacy Firebase profiles without version metadata', a
     assert.equal(writtenRemote.version, 1);
 });
 
-test('profile load reports an explicit Firebase profile mismatch without backup wording', async () => {
+test('profile load treats an omitted empty Firebase episodes object as an empty profile', async () => {
+    const storage = new MemoryStorage();
+    const remote = {
+        profileId: 'sarah',
+        version: 1,
+        updatedAt: 50
+    };
+    let writtenRemote;
+    const repository = new ProfileRepository({
+        storage,
+        database: {
+            ref: () => ({
+                once: async () => ({ val: () => remote }),
+                set: async (value) => {
+                    writtenRemote = value;
+                }
+            })
+        }
+    });
+
+    const result = await repository.load('sarah');
+
+    assert.deepEqual(result.profile.episodes, {});
+    assert.deepEqual(writtenRemote.episodes, {});
+    assert.equal(result.syncError, null);
+});
+
+test('profile load reports an explicit Firebase profile mismatch', async () => {
     const storage = new MemoryStorage();
     const remote = {
         version: 1,
@@ -217,7 +244,7 @@ test('profile load reports an explicit Firebase profile mismatch without backup 
 
     await assert.rejects(
         repository.load('sarah'),
-        /dados do perfil sarah no Firebase estão inválidos ou pertencem a outra conta/
+        /registro do perfil sarah no Firebase contém o perfil "ronaldo"/
     );
 });
 
