@@ -79,6 +79,9 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .profile-copy { display: grid; gap: 4px; }
 .profile-copy strong { font: 750 18px 'Manrope', sans-serif; }
 .profile-copy span, .privacy-note { color: var(--muted); font-size: 12px; }
+.profile-loading { display: flex; min-height: 58px; align-items: center; justify-content: center; gap: 12px; margin-top: 16px; border: 1px solid #dcd5fa; border-radius: 14px; background: var(--purple-pale); color: var(--purple-dark); font-size: 14px; font-weight: 700; }
+.loading-spinner { width: 22px; height: 22px; flex: 0 0 auto; border: 3px solid #cfc4f8; border-top-color: var(--purple); border-radius: 50%; animation: loading-spin .75s linear infinite; }
+@keyframes loading-spin { to { transform: rotate(360deg); } }
 .dashboard-hero { position: relative; display: flex; min-height: 218px; align-items: center; overflow: hidden; padding: 32px 40px; border-radius: 22px; background: #211e3b; color: #fff; }
 .hero-copy { position: relative; z-index: 1; }
 .hero-copy .eyebrow { color: #b6a8ff; }

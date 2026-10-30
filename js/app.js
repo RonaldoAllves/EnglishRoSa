@@ -46,6 +46,7 @@ class EnglishRoSaApp {
         this.currentEpisodeId = null;
         this.focusCategory = 'all';
         this.screen = 'profiles';
+        this.profileLoading = false;
         this.session = null;
         this.sessionMode = 'attempt';
         this.feedback = null;
@@ -196,8 +197,19 @@ class EnglishRoSaApp {
     async selectProfile(profileId) {
         const profile = PROFILES.find((item) => item.id === profileId);
         if (!profile) throw new Error('Perfil inválido.');
+        this.profileLoading = true;
         this.setSyncStatus('loading', 'Carregando progresso...');
-        const result = await this.profileRepository.load(profileId);
+        this.render();
+        await new Promise((resolve) => window.setTimeout(resolve, 0));
+        let result;
+        try {
+            result = await this.profileRepository.load(profileId);
+        } catch (error) {
+            this.profileLoading = false;
+            this.render();
+            throw error;
+        }
+        this.profileLoading = false;
         this.profileId = profileId;
         this.profile = result.profile;
         this.setSyncStatusFromError(result.syncError);
@@ -567,7 +579,7 @@ class EnglishRoSaApp {
 
     renderProfiles() {
         return `
-            <section class="profile-screen">
+            <section class="profile-screen" aria-busy="${this.profileLoading}">
                 <section class="profile-section" aria-labelledby="profile-title">
                     <div class="section-heading">
                         <div>
@@ -577,7 +589,8 @@ class EnglishRoSaApp {
                     <div class="profile-grid">
                         ${PROFILES.map((profile, index) => `
                             <button class="profile-card ${index ? 'lavender' : ''}" type="button"
-                                data-action="select-profile" data-profile="${profile.id}">
+                                data-action="select-profile" data-profile="${profile.id}"
+                                ${this.profileLoading ? 'disabled' : ''}>
                                 <img class="profile-avatar" src="${PROFILE_AVATARS[profile.id]}"
                                     alt="" aria-hidden="true">
                                 <span class="profile-copy">
@@ -586,6 +599,11 @@ class EnglishRoSaApp {
                                 </span>
                             </button>`).join('')}
                     </div>
+                    ${this.profileLoading ? `
+                        <div class="profile-loading" role="status" aria-live="polite">
+                            <span class="loading-spinner" aria-hidden="true"></span>
+                            <span>Carregando perfil...</span>
+                        </div>` : ''}
                 </section>
             </section>`;
     }
