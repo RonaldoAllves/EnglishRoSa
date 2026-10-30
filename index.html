@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pt-BR" data-build-version="__BUILD_VERSION__">
+<html lang="pt-BR" data-build-version="__BUILD_VERSION__" data-app-version="__APP_VERSION__">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -16,8 +16,9 @@
             </a>
             <div class="topbar-actions">
                 <p id="sync-status" class="sync-status" data-state="loading" role="status">Carregando...</p>
-                <button id="version-status" class="version-status" type="button" data-action="check-version" hidden>
-                    Versão local
+                <button id="version-status" class="version-status" type="button" data-action="check-version"
+                    aria-label="Versão do aplicativo">
+                    v__APP_VERSION__
                 </button>
                 <button id="profile-chip" class="profile-chip" type="button" data-action="show-profiles" hidden></button>
             </div>

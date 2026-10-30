@@ -61,6 +61,11 @@ class EnglishRoSaApp {
         this.buildVersion = buildVersion && !/^__[A-Z_]+__$/.test(buildVersion)
             ? buildVersion
             : 'development';
+        const appVersion = document.documentElement.dataset.appVersion;
+        this.appVersion = appVersion && !/^__[A-Z_]+__$/.test(appVersion)
+            ? appVersion
+            : '1.1';
+        this.latestBuild = null;
         this.latestVersion = null;
     }
 
@@ -182,7 +187,7 @@ class EnglishRoSaApp {
                 this.backupInput.click();
                 break;
             case 'check-version':
-                if (this.latestVersion && this.latestVersion !== this.buildVersion) {
+                if (this.latestBuild && this.latestBuild !== this.buildVersion) {
                     const refreshUrl = new URL(window.location.href);
                     refreshUrl.searchParams.set('refresh', Date.now().toString());
                     window.location.replace(refreshUrl.href);
@@ -1078,25 +1083,33 @@ class EnglishRoSaApp {
     }
 
     async checkVersion() {
-        this.versionButton.hidden = true;
         this.versionButton.dataset.state = 'loading';
+        this.versionButton.textContent = `v${this.appVersion}`;
         try {
             const response = await fetch(`./version.json?check=${Date.now()}`, { cache: 'no-store' });
             if (!response.ok) throw new Error(`Resposta ${response.status}`);
             const data = await response.json();
+            const latestBuild = data.build || data.version || data.commit || null;
+            this.latestBuild = latestBuild;
             this.latestVersion = data.version || null;
-            if (this.latestVersion && this.latestVersion !== this.buildVersion) {
+            if (latestBuild && latestBuild !== this.buildVersion) {
                 this.versionButton.dataset.state = 'update';
-                this.versionButton.textContent = 'Atualizar aplicativo';
-                this.versionButton.title = `Versão atual: ${this.buildVersion}. Nova versão: ${this.latestVersion}.`;
+                this.versionButton.textContent = this.latestVersion &&
+                    this.latestVersion !== this.appVersion
+                    ? `Atualizar v${this.latestVersion}`
+                    : `Atualizar v${this.appVersion}`;
+                this.versionButton.title = `Versão instalada: v${this.appVersion}. Há uma atualização disponível.`;
                 this.versionButton.hidden = false;
             } else {
                 this.versionButton.dataset.state = 'current';
-                this.versionButton.title = 'O aplicativo está atualizado.';
+                this.versionButton.textContent = `v${this.appVersion}`;
+                this.versionButton.title = `Versão v${this.appVersion}. O aplicativo está atualizado.`;
             }
         } catch (error) {
+            this.latestBuild = null;
             this.latestVersion = null;
             this.versionButton.dataset.state = 'unknown';
+            this.versionButton.textContent = `v${this.appVersion}`;
             this.versionButton.title = error.message;
         }
     }
