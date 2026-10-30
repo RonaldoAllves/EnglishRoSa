@@ -43,6 +43,64 @@ test('question bank includes vocabulary and one sentence for every available ite
     assert.equal(CATEGORIES.length, 6);
 });
 
+test('new-format exercise arrays produce separate stable sentence questions', () => {
+    const episode = {
+        episodio: 's01e08',
+        adjetivos: [{
+            palavra: 'calm',
+            traducao: 'calmo',
+            exercicios: [
+                {
+                    id: 'adj_001_ex1',
+                    frase: 'Stay calm',
+                    eh_exemplo_episodio: true,
+                    alternativas: [
+                        { id: 'a', texto: 'Fique calmo' },
+                        { id: 'b', texto: 'Fique bravo' }
+                    ],
+                    resposta_correta: 'a'
+                },
+                {
+                    id: 'adj_001_ex2',
+                    frase: 'She stayed calm',
+                    alternativas: [
+                        { id: 'a', texto: 'Ela permaneceu calma' },
+                        { id: 'b', texto: 'Ela ficou nervosa' }
+                    ],
+                    resposta_correta: 'a'
+                }
+            ]
+        }]
+    };
+    const attempt = PracticeAttempt.create(episode, 'all', () => 0, 650);
+    const exerciseQuestions = attempt.data.questions.filter((question) => question.exerciseId);
+
+    assert.equal(attempt.data.questions.filter((question) => question.kind === 'word').length, 1);
+    assert.equal(exerciseQuestions.length, 2);
+    assert.deepEqual(exerciseQuestions.map((question) => question.exerciseId).sort(), [
+        'adj_001_ex1',
+        'adj_001_ex2'
+    ]);
+    assert.equal(exerciseQuestions.find((question) => question.exerciseId === 'adj_001_ex1').answer, 'Fique calmo');
+    assert.ok(exerciseQuestions.every((question) =>
+        question.choices.length >= 2 && question.choices.includes(question.answer)
+    ));
+
+    const firstQuestion = attempt.currentQuestion;
+    attempt.answer(firstQuestion.answer, 651);
+    episode.adjetivos[0].exercicios.push({
+        id: 'adj_001_ex3',
+        frase: 'He remained calm',
+        traducao_correta: 'Ele permaneceu calmo',
+        alternativas: []
+    });
+
+    assert.equal(attempt.reconcile(episode, () => 0), 1);
+    assert.equal(attempt.reconcile(episode, () => 0), 0);
+    assert.equal(attempt.data.answers.length, 1);
+    assert.equal(attempt.data.questions.filter((question) => question.exerciseId).length, 3);
+});
+
 test('expression answers only offer alternatives from the expression category', () => {
     const questions = createQuestionBank(sampleEpisode(), () => 0);
     const expressionQuestion = questions.find((question) =>

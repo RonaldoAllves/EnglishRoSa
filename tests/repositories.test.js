@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createEmptyProfile } from '../js/domain.js';
-import { ProfileRepository } from '../js/repositories.js';
+import { EpisodeRepository, ProfileRepository } from '../js/repositories.js';
 
 class MemoryStorage {
     values = new Map();
@@ -14,6 +14,20 @@ class MemoryStorage {
         this.values.set(key, value);
     }
 }
+
+test('episode repository loads the exercise-based catalog', async () => {
+    let requestedUrl;
+    const repository = new EpisodeRepository({
+        fetcher: async (url) => {
+            requestedUrl = url;
+            return { ok: true, json: async () => ({ episodios: [{ episodio: 's01e01' }] }) };
+        }
+    });
+
+    await repository.load();
+
+    assert.equal(requestedUrl, './dados/episodios_2026-10-30.json');
+});
 
 test('profile saves locally even when Firebase synchronization fails', async () => {
     const storage = new MemoryStorage();

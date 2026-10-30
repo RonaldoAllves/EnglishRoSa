@@ -4,7 +4,7 @@ const PROFILE_IDS = new Set(['ronaldo', 'sarah']);
 
 export class EpisodeRepository {
     constructor({
-        url = './dados/episodios.json',
+        url = './dados/episodios_2026-10-30.json',
         fetcher = (...args) => globalThis.fetch(...args)
     } = {}) {
         this.url = url;

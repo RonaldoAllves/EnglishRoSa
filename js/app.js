@@ -4,6 +4,7 @@ import {
     PracticeAttempt,
     createQuestionBank,
     createReviewQuestions,
+    getExerciseTranslation,
     parseExample,
     getEpisodeSummary,
     getProfileSummary,
@@ -313,14 +314,26 @@ class EnglishRoSaApp {
         const entry = this.currentEpisode()[category]?.[Number(index)];
         if (!entry) throw new Error('Não foi possível localizar os exemplos deste exercício.');
 
-        const examples = [
-            ['Frase do episódio', entry.exemplo_episodio],
-            ['Outro exemplo', entry.exemplo_diferente],
-            ['Exemplo adicional', entry.exemplo_adicional]
-        ].map(([label, text]) => ({
-            label,
-            ...parseExample(text)
-        })).filter((example) => example.english);
+        const examples = Array.isArray(entry.exercicios)
+            ? entry.exercicios.map((exercise) => ({
+                label: exercise.eh_exemplo_episodio
+                    ? 'Frase do episódio'
+                    : exercise.origem_exemplo === 'adicional'
+                        ? 'Exemplo adicional'
+                        : exercise.origem_exemplo === 'diferente'
+                            ? 'Outro exemplo'
+                            : 'Frase de exemplo',
+                english: String(exercise.frase || '').trim(),
+                portuguese: getExerciseTranslation(exercise)
+            })).filter((example) => example.english)
+            : [
+                ['Frase do episódio', entry.exemplo_episodio],
+                ['Outro exemplo', entry.exemplo_diferente],
+                ['Exemplo adicional', entry.exemplo_adicional]
+            ].map(([label, text]) => ({
+                label,
+                ...parseExample(text)
+            })).filter((example) => example.english);
 
         this.learningDetails = {
             word: String(entry.palavra || question.item),
@@ -804,6 +817,10 @@ class EnglishRoSaApp {
         const summary = this.session.summary();
         const category = CATEGORIES.find((item) => item.key === question.category);
         const pointsLabel = this.sessionMode === 'review' ? 'Revisão' : `${summary.points} pts`;
+        const questionType = question.kind === 'sentence'
+            ? question.exampleLabel ||
+                (question.isEpisodeExample === false ? 'Frase de exemplo' : 'Frase do episódio')
+            : category?.label || 'Vocabulário';
         if (this.learningDetails) {
             return this.renderLearning(question, pointsLabel);
         }
@@ -864,7 +881,7 @@ class EnglishRoSaApp {
                     <span class="question-badge">${escapeHtml(modeLabel)}</span>
                     <p class="question-instruction">${instruction}</p>
                     <div class="question-card">
-                        <span class="question-type">${question.kind === 'sentence' ? 'Frase do episódio' : category?.label || 'Vocabulário'}</span>
+                        <span class="question-type">${escapeHtml(questionType)}</span>
                         <h1>${escapeHtml(question.prompt)}</h1>
                         ${question.example ? `<p class="question-example">${escapeHtml(question.example)}</p>` : ''}
                     </div>

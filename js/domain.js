@@ -33,14 +33,39 @@ function makeChoices(answer, pool, random) {
     return shuffle([answer, ...shuffle(alternatives, random).slice(0, 3)], random);
 }
 
+function makeExerciseChoices(answer, authoredAlternatives, fallbackPool, random) {
+    const alternatives = [...new Set(
+        authoredAlternatives.filter((value) => value && value !== answer)
+    )];
+    if (alternatives.length < 3) {
+        const fallbackAlternatives = shuffle(
+            [...new Set(fallbackPool.filter((value) => value && value !== answer &&
+                !alternatives.includes(value)))],
+            random
+        );
+        alternatives.push(...fallbackAlternatives.slice(0, 3 - alternatives.length));
+    }
+    return shuffle([answer, ...alternatives.slice(0, 3)], random);
+}
+
 function mistakeKey(category, itemId) {
     return `${category}:${itemId}`;
 }
 
 function questionKey(question) {
+    if (question.exerciseId) return question.id;
     return question.kind === 'sentence'
         ? `sentence:${question.category}:${question.itemId || question.id}`
         : question.id;
+}
+
+export function getExerciseTranslation(exercise) {
+    const correctId = String(exercise?.resposta_correta || '').trim();
+    const correctAlternative = exercise?.alternativas?.find((alternative) =>
+        String(alternative.id || '').trim() === correctId
+    );
+    return String(exercise?.traducao_correta || '').trim() ||
+        String(correctAlternative?.texto || '').trim();
 }
 
 export function createQuestionBank(episode, random = Math.random) {
@@ -54,14 +79,27 @@ export function createQuestionBank(episode, random = Math.random) {
                 entry,
                 index,
                 translation: String(entry.traducao || '').trim(),
-                example: parseExample(entry.exemplo_episodio)
+                example: parseExample(entry.exemplo_episodio),
+                exercises: Array.isArray(entry.exercicios) ? entry.exercicios : []
             }))
-            .filter(({ translation, example }) => translation && example.english);
+            .filter(({ translation, example, exercises }) =>
+                translation && (example.english || exercises.length)
+            );
         const translations = usableEntries.map(({ translation }) => translation);
+        const exerciseTranslations = usableEntries.flatMap(({ exercises }) =>
+            exercises.map(getExerciseTranslation).filter(Boolean)
+        );
+        const exerciseAlternatives = usableEntries.flatMap(({ exercises }) =>
+            exercises.flatMap((exercise) => (Array.isArray(exercise.alternativas)
+                ? exercise.alternativas
+                : []).map((alternative) => String(alternative.texto || '').trim()))
+                .filter(Boolean)
+        );
 
-        usableEntries.forEach(({ entry, index, translation, example }) => {
+        usableEntries.forEach(({ entry, index, translation, example, exercises }) => {
             const word = String(entry.palavra || '').trim();
-            const prompt = word || example.english;
+            const prompt = word || example.english ||
+                String(exercises[0]?.foco || exercises[0]?.frase || '').trim();
             const itemId = `${category.key}:${index}`;
             questions.push({
                 id: `${episodeId}:${category.key}:${index}:word`,
@@ -70,29 +108,78 @@ export function createQuestionBank(episode, random = Math.random) {
                 itemId,
                 item: prompt,
                 prompt,
-                example: word ? example.english : '',
+                example: word
+                    ? example.english || String(exercises.find((exercise) =>
+                        exercise.eh_exemplo_episodio
+                    )?.frase || exercises[0]?.frase || '')
+                    : '',
                 answer: translation,
                 choices: makeChoices(translation, translations, random),
                 explanation: translation
             });
 
-            const sentenceDistractors = [
-                entry.exemplo_diferente,
-                entry.exemplo_adicional
-            ].map((text) => parseExample(text).portuguese);
-            const sentenceAnswer = example.portuguese || translation;
-            questions.push({
-                id: `${episodeId}:${category.key}:${index}:sentence`,
-                kind: 'sentence',
-                category: category.key,
-                itemId,
-                item: example.english,
-                prompt: example.english,
-                example: '',
-                answer: sentenceAnswer,
-                choices: makeChoices(sentenceAnswer, sentenceDistractors, random),
-                explanation: sentenceAnswer
-            });
+            if (exercises.length) {
+                exercises.forEach((exercise, exerciseIndex) => {
+                    const sentence = String(exercise.frase || '').trim();
+                    const sentenceAnswer = getExerciseTranslation(exercise);
+                    if (!sentence || !sentenceAnswer) {
+                        throw new Error(
+                            `Exercício ${exercise.id || exerciseIndex + 1} sem frase ou tradução correta em ${episodeId}/${category.key}/${word}.`
+                        );
+                    }
+
+                    const authoredAlternatives = (Array.isArray(exercise.alternativas)
+                        ? exercise.alternativas
+                        : []).map((alternative) => String(alternative.texto || '').trim());
+                    const relatedTranslations = exercises
+                        .map(getExerciseTranslation)
+                        .filter((value) => value && value !== sentenceAnswer);
+                    questions.push({
+                        id: `${episodeId}:${category.key}:${index}:exercise:${exercise.id || exerciseIndex}`,
+                        exerciseId: String(exercise.id || exerciseIndex),
+                        kind: 'sentence',
+                        category: category.key,
+                        itemId,
+                        item: sentence,
+                        prompt: sentence,
+                        example: '',
+                        isEpisodeExample: Boolean(exercise.eh_exemplo_episodio),
+                        exampleLabel: exercise.eh_exemplo_episodio
+                            ? 'Frase do episódio'
+                            : exercise.origem_exemplo === 'adicional'
+                                ? 'Exemplo adicional'
+                                : exercise.origem_exemplo === 'diferente'
+                                    ? 'Outro exemplo'
+                                    : 'Frase de exemplo',
+                        answer: sentenceAnswer,
+                        choices: makeExerciseChoices(sentenceAnswer, authoredAlternatives, [
+                            ...relatedTranslations,
+                            ...exerciseAlternatives,
+                            ...exerciseTranslations,
+                            ...translations
+                        ], random),
+                        explanation: sentenceAnswer
+                    });
+                });
+            } else {
+                const sentenceDistractors = [
+                    entry.exemplo_diferente,
+                    entry.exemplo_adicional
+                ].map((text) => parseExample(text).portuguese);
+                const sentenceAnswer = example.portuguese || translation;
+                questions.push({
+                    id: `${episodeId}:${category.key}:${index}:sentence`,
+                    kind: 'sentence',
+                    category: category.key,
+                    itemId,
+                    item: example.english,
+                    prompt: example.english,
+                    example: '',
+                    answer: sentenceAnswer,
+                    choices: makeChoices(sentenceAnswer, sentenceDistractors, random),
+                    explanation: sentenceAnswer
+                });
+            }
         });
     }
 

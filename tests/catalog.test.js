@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 import { CATEGORIES, createQuestionBank } from '../js/domain.js';
 
-const catalogUrl = new URL('../dados/episodios.json', import.meta.url);
+const catalogUrl = new URL('../dados/episodios_2026-10-30.json', import.meta.url);
 
 test('catalog keeps episodes 1-5 complete and exposes only filled categories for 6-7', async () => {
     const catalog = JSON.parse(await readFile(catalogUrl, 'utf8'));
@@ -23,40 +23,65 @@ test('catalog keeps episodes 1-5 complete and exposes only filled categories for
     }
 });
 
-test('every filled vocabulary item produces a vocabulary question and an episode sentence question', async () => {
+test('every vocabulary item and catalog exercise produces an attempt question', async () => {
     const catalog = JSON.parse(await readFile(catalogUrl, 'utf8'));
 
     for (const episode of catalog.episodios) {
         const expectedItems = CATEGORIES.reduce((total, category) =>
             total + (episode[category.key]?.length || 0), 0
         );
+        const expectedExercises = CATEGORIES.reduce((total, category) =>
+            total + (episode[category.key] || []).reduce((count, item) =>
+                count + (item.exercicios?.length || 0), 0
+            ), 0
+        );
         const questions = createQuestionBank(episode);
         const wordQuestions = questions.filter((question) => question.kind === 'word');
-        const sentenceQuestions = questions.filter((question) => question.kind === 'sentence');
+        const exerciseQuestions = questions.filter((question) => question.exerciseId);
 
         assert.equal(wordQuestions.length, expectedItems, episode.episodio);
-        assert.equal(sentenceQuestions.length, expectedItems, episode.episodio);
+        assert.equal(exerciseQuestions.length, expectedExercises, episode.episodio);
         assert.ok(wordQuestions.every((question) => question.prompt && question.answer), episode.episodio);
-        assert.ok(sentenceQuestions.every((question) =>
+        assert.ok(exerciseQuestions.every((question) =>
             question.prompt && question.answer && question.choices.includes(question.answer)
+        ), episode.episodio);
+        assert.ok(exerciseQuestions.every((question) =>
+            question.choices.length > 1 && question.choices.every(Boolean)
         ), episode.episodio);
     }
 });
 
-test('episode-one sentence choices come from examples of the same vocabulary item', async () => {
+test('exercise questions keep catalog alternatives and fill empty alternatives from the category', async () => {
     const catalog = JSON.parse(await readFile(catalogUrl, 'utf8'));
     const episode = catalog.episodios.find((item) => item.episodio === 's01e01');
-    const verbIndex = episode.verbos.findIndex((item) => item.palavra === 'can');
-    const canEntry = episode.verbos[verbIndex];
-    const canQuestion = createQuestionBank(episode).find((question) =>
-        question.id === `s01e01:verbos:${verbIndex}:sentence`
+    const wordIndex = episode.adjetivos.findIndex((item) => item.palavra === 'good');
+    const entry = episode.adjetivos[wordIndex];
+    const question = createQuestionBank(episode).find((item) =>
+        item.exerciseId === entry.exercicios[0].id &&
+        item.itemId === `adjetivos:${wordIndex}`
     );
-    const sameWordTranslations = [
-        canEntry.exemplo_episodio,
-        canEntry.exemplo_diferente,
-        canEntry.exemplo_adicional
-    ].map((example) => example.match(/\((.*)\)$/)?.[1]);
+    const correctChoice = entry.exercicios[0].alternativas.find((item) =>
+        item.id === entry.exercicios[0].resposta_correta
+    ).texto;
 
-    assert.equal(canQuestion.prompt, canEntry.exemplo_episodio.split(' (')[0]);
-    assert.deepEqual(new Set(canQuestion.choices), new Set(sameWordTranslations));
+    assert.equal(question.prompt, entry.exercicios[0].frase);
+    assert.equal(question.answer, correctChoice);
+    assert.ok(entry.exercicios[0].alternativas.every((item) =>
+        !item.texto || question.choices.includes(item.texto)
+    ));
+
+    const episodeWithoutOptions = catalog.episodios.find((item) => item.episodio === 's01e02');
+    const emptyOptionItem = episodeWithoutOptions.adjetivos.find((item) =>
+        item.exercicios?.some((exercise) =>
+            exercise.alternativas?.every((alternative) => !alternative.texto)
+        )
+    );
+    const emptyOptionIndex = episodeWithoutOptions.adjetivos.indexOf(emptyOptionItem);
+    const fallbackQuestion = createQuestionBank(episodeWithoutOptions).find((item) =>
+        item.exerciseId === emptyOptionItem.exercicios[0].id &&
+        item.itemId === `adjetivos:${emptyOptionIndex}`
+    );
+
+    assert.ok(fallbackQuestion.choices.includes(emptyOptionItem.exercicios[0].traducao_correta));
+    assert.ok(fallbackQuestion.choices.length > 1);
 });
