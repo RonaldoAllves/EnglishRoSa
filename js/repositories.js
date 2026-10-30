@@ -97,7 +97,7 @@ export class ProfileRepository {
         } catch (error) {
             throw new Error(`Os dados locais do perfil estão inválidos: ${error.message}`);
         }
-        return this.validateProfile(profile, profileId);
+        return this.validateProfile(profile, profileId, 'armazenamento local');
     }
 
     writeLocal(profile) {
@@ -123,7 +123,11 @@ export class ProfileRepository {
         }
 
         const remoteProfile = remote
-            ? this.validateProfile(remote, profileId)
+            ? this.validateProfile({
+                ...remote,
+                version: remote.version == null ? 1 : Number(remote.version),
+                profileId: remote.profileId || profileId
+            }, profileId, 'Firebase')
             : null;
         const profile = mergeProfiles(local, remoteProfile, profileId);
         this.writeLocal(profile);
@@ -171,11 +175,17 @@ export class ProfileRepository {
         return this.save(profile);
     }
 
-    validateProfile(profile, expectedProfileId) {
+    validateProfile(profile, expectedProfileId, source = 'backup') {
         this.assertProfileId(expectedProfileId);
         if (!profile || profile.version !== 1 || profile.profileId !== expectedProfileId ||
             !profile.episodes || typeof profile.episodes !== 'object' ||
             Array.isArray(profile.episodes)) {
+            if (source === 'Firebase') {
+                throw new Error(`Os dados do perfil ${expectedProfileId} no Firebase estão inválidos ou pertencem a outra conta.`);
+            }
+            if (source === 'armazenamento local') {
+                throw new Error(`Os dados locais do perfil ${expectedProfileId} estão inválidos.`);
+            }
             throw new Error('O backup não corresponde a um perfil válido para esta conta.');
         }
 

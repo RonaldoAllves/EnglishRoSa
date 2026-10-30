@@ -163,6 +163,64 @@ test('profile load normalizes Firebase numeric-key objects used for saved arrays
     ));
 });
 
+test('profile load accepts legacy Firebase profiles without version metadata', async () => {
+    const storage = new MemoryStorage();
+    const remote = {
+        episodes: {
+            s01e01: {
+                updatedAt: 30,
+                attempts: [],
+                activeAttempt: null,
+                mistakes: {}
+            }
+        }
+    };
+    let writtenRemote;
+    const repository = new ProfileRepository({
+        storage,
+        database: {
+            ref: () => ({
+                once: async () => ({ val: () => remote }),
+                set: async (value) => {
+                    writtenRemote = value;
+                }
+            })
+        }
+    });
+
+    const result = await repository.load('sarah');
+
+    assert.equal(result.syncError, null);
+    assert.equal(result.profile.profileId, 'sarah');
+    assert.equal(result.profile.version, 1);
+    assert.deepEqual(result.profile.episodes.s01e01.attempts, []);
+    assert.equal(writtenRemote.profileId, 'sarah');
+    assert.equal(writtenRemote.version, 1);
+});
+
+test('profile load reports an explicit Firebase profile mismatch without backup wording', async () => {
+    const storage = new MemoryStorage();
+    const remote = {
+        version: 1,
+        profileId: 'ronaldo',
+        episodes: {}
+    };
+    const repository = new ProfileRepository({
+        storage,
+        database: {
+            ref: () => ({
+                once: async () => ({ val: () => remote }),
+                set: async () => {}
+            })
+        }
+    });
+
+    await assert.rejects(
+        repository.load('sarah'),
+        /dados do perfil sarah no Firebase estão inválidos ou pertencem a outra conta/
+    );
+});
+
 test('profile load reports malformed stored attempt arrays clearly', async () => {
     const storage = new MemoryStorage();
     const remote = createEmptyProfile('sarah');
