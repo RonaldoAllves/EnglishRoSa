@@ -74,7 +74,7 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .profile-grid { display: grid; grid-template-columns: 1fr; gap: 15px; }
 .profile-card { display: flex; min-height: 128px; align-items: center; gap: 20px; padding: 24px; border: 1px solid var(--border); border-radius: 18px; background: var(--surface); box-shadow: var(--shadow); cursor: pointer; text-align: left; transition: transform .18s, border-color .18s, box-shadow .18s; }
 .profile-card:hover { transform: translateY(-2px); border-color: #d7cdfd; box-shadow: 0 18px 34px rgb(70 52 140 / 10%); }
-.profile-avatar { display: grid; width: 56px; height: 56px; flex: 0 0 auto; place-items: center; overflow: hidden; border-radius: 17px; background: #fff0ed; color: #c76e5c; font: 800 23px 'Manrope', sans-serif; object-fit: cover; }
+.profile-avatar { display: block; width: 72px; height: 72px; flex: 0 0 auto; overflow: hidden; border-radius: 20px; background: #fff0ed; object-fit: cover; }
 .profile-card.lavender .profile-avatar { background: var(--purple-pale); color: var(--purple); }
 .profile-copy { display: grid; gap: 4px; }
 .profile-copy strong { font: 750 18px 'Manrope', sans-serif; }
