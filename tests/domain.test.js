@@ -6,7 +6,8 @@ import {
     createQuestionBank,
     createReviewQuestions,
     getEpisodeSummary,
-    getReviewItems
+    getReviewItems,
+    isCompletedAttempt
 } from '../js/domain.js';
 
 function entry(word, translation) {
@@ -173,6 +174,69 @@ test('focused category completion stops at its boundary without completing the e
 
     assert.equal(attempt.isComplete, false);
     assert.notEqual(attempt.currentQuestion.category, category);
+});
+
+test('learning skips progress without creating scored answers and survive serialization', () => {
+    const attempt = PracticeAttempt.create(sampleEpisode(), 'all', () => 0, 550);
+    const skippedQuestion = attempt.currentQuestion;
+
+    attempt.skipCurrentQuestion(551);
+
+    assert.equal(attempt.processedCount, 1);
+    assert.equal(attempt.currentQuestion.id === skippedQuestion.id, false);
+    assert.equal(attempt.data.answers.length, 0);
+    assert.deepEqual(attempt.data.skippedQuestionIds, [skippedQuestion.id]);
+    assert.equal(attempt.progress, 13);
+    assert.equal(attempt.summary().total, attempt.data.questions.length - 1);
+    assert.equal(attempt.summary().answered, 0);
+    assert.equal(attempt.summary().skipped, 1);
+    assert.equal(attempt.summary().breakdown[skippedQuestion.category].total, 3);
+
+    const resumed = new PracticeAttempt(attempt.toJSON());
+    assert.equal(resumed.processedCount, 1);
+    assert.equal(resumed.currentQuestion.id, attempt.currentQuestion.id);
+    assert.deepEqual(resumed.data.skippedQuestionIds, [skippedQuestion.id]);
+    assert.equal(getEpisodeSummary({
+        episodes: {
+            s01e01: { activeAttempt: resumed.toJSON() }
+        }
+    }, 's01e01').activeProgress, 13);
+});
+
+test('a focused category can end at its boundary after its last question is learned', () => {
+    const category = 'adjetivos';
+    const attempt = PracticeAttempt.create(sampleEpisode(), category, () => 0, 575);
+
+    while (attempt.currentQuestion.category === category) {
+        attempt.skipCurrentQuestion();
+    }
+
+    assert.equal(attempt.isAtFocusedCategoryBoundary, true);
+    assert.equal(attempt.isComplete, false);
+    assert.equal(attempt.isCategoryComplete(category), true);
+});
+
+test('an attempt completed with learned skips is completed but scores only answered questions', () => {
+    const attempt = PracticeAttempt.create(sampleEpisode(), 'all', () => 0, 590);
+    while (!attempt.isComplete) {
+        if (attempt.processedCount === 0) {
+            const question = attempt.currentQuestion;
+            attempt.answer(question.answer, 591);
+        } else {
+            attempt.skipCurrentQuestion(592 + attempt.processedCount);
+        }
+    }
+    const completed = {
+        ...attempt.toJSON(),
+        ...attempt.summary(),
+        completedAt: 600
+    };
+
+    assert.equal(isCompletedAttempt(completed), true);
+    assert.equal(completed.answered, 1);
+    assert.equal(completed.total, 1);
+    assert.equal(completed.skipped, 7);
+    assert.equal(completed.points, 10);
 });
 
 test('a category is complete only when it has no unanswered questions', () => {

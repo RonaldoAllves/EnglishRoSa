@@ -62,5 +62,7 @@ Regras da llm
 - Depois de cada resposta, deve mostrar o feedback e avançar automaticamente após um breve intervalo. A pausa para escolher outra categoria e a tela de resultado ao final da tentativa devem continuar sendo respeitadas.
 - Cada item de vocabulário deve gerar um exercício de tradução da palavra e outro de tradução da frase de exemplo do episódio, ambos contabilizados na categoria correspondente.
 - Nas questões de frase, usar como alternativas as traduções dos outros exemplos cadastrados para o mesmo item, evitando opções sem relação com a palavra estudada. Reaproveitar os exemplos existentes no catálogo.
+- O botão "Aprender" deve mostrar a tradução da palavra e todos os exemplos cadastrados com suas traduções; avançar manualmente pula o exercício sem contabilizá-lo como acerto ou erro.
+- Exercícios respondidos avançam automaticamente; exercícios estudados pelo botão "Aprender" avançam somente quando a pessoa selecionar "Próximo exercício".
 - As alterações em questões devem manter corretos o progresso por categoria, a pontuação, o histórico, a revisão de erros e a retomada de tentativas antigas.
 - Ao alterar regras ou comportamentos das tentativas, atualizar os testes automatizados para cobrir o fluxo novo e garantir que os comportamentos existentes continuem funcionando.

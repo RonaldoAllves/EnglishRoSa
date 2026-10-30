@@ -175,6 +175,17 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .answer-option.correct .answer-letter { background: #d4f1e4; color: #27855f; }
 .answer-option.incorrect .answer-letter { background: #fbe0e1; color: #ba5058; }
 .answer-option > span:last-child { font-size: 12px; line-height: 1.45; }
+.practice-learn-action { display: flex; justify-content: center; margin-top: 12px; }
+.learning-content { display: grid; gap: 18px; }
+.learning-word { padding: 18px; border: 1px solid #e8e2ff; border-radius: 14px; background: #fbfaff; }
+.learning-word h1 { margin: 0; font: 800 clamp(29px, 5vw, 42px)/1.2 'Manrope', sans-serif; letter-spacing: -1.2px; overflow-wrap: anywhere; }
+.learning-word p { margin: 8px 0 0; color: var(--purple-dark); font-size: 18px; font-weight: 700; }
+.learning-examples { display: grid; gap: 10px; }
+.learning-examples h2 { margin: 0; font: 750 17px 'Manrope', sans-serif; }
+.learning-example { padding: 14px 15px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.learning-example > span { color: var(--muted); font-size: 11px; font-weight: 700; }
+.learning-example p { margin: 8px 0 5px; font-size: 15px; line-height: 1.5; }
+.learning-example strong { color: var(--green); font-size: 14px; line-height: 1.5; }
 .answer-feedback { margin-top: 11px; padding: 12px 13px; border-radius: 10px; font-size: 11px; line-height: 1.5; }
 .answer-feedback.is-correct { background: #edfaf4; color: #247452; }
 .answer-feedback.is-incorrect { background: #fff4f4; color: #ad4b52; }

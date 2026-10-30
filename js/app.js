@@ -4,6 +4,7 @@ import {
     PracticeAttempt,
     createQuestionBank,
     createReviewQuestions,
+    parseExample,
     getEpisodeSummary,
     getProfileSummary,
     getReviewItems,
@@ -44,6 +45,7 @@ class EnglishRoSaApp {
         this.session = null;
         this.sessionMode = 'attempt';
         this.feedback = null;
+        this.learningDetails = null;
         this.resultAttempt = null;
         this.isReviewResult = false;
         this.syncError = null;
@@ -99,10 +101,16 @@ class EnglishRoSaApp {
             case 'show-profiles':
                 this.profile = null;
                 this.profileId = null;
+                this.session = null;
+                this.feedback = null;
+                this.learningDetails = null;
                 this.screen = 'profiles';
                 this.render();
                 break;
             case 'select-episode':
+                this.session = null;
+                this.feedback = null;
+                this.learningDetails = null;
                 this.currentEpisodeId = button.dataset.episode;
                 const activeAttempt = this.profile?.episodes?.[this.currentEpisodeId]?.activeAttempt;
                 const savedCategory = activeAttempt?.filterCategory;
@@ -133,6 +141,12 @@ class EnglishRoSaApp {
             case 'answer':
                 await this.answerCurrentQuestion(Number(button.dataset.choiceIndex));
                 break;
+            case 'learn':
+                this.showLearning();
+                break;
+            case 'skip-learned':
+                await this.skipLearnedQuestion();
+                break;
             case 'next':
                 await this.advanceSession();
                 break;
@@ -147,6 +161,7 @@ class EnglishRoSaApp {
                 this.screen = 'review';
                 this.session = null;
                 this.feedback = null;
+                this.learningDetails = null;
                 this.render();
                 break;
             case 'start-review':
@@ -185,6 +200,9 @@ class EnglishRoSaApp {
         this.setSyncStatusFromError(result.syncError);
         this.screen = 'dashboard';
         this.currentEpisodeId = null;
+        this.session = null;
+        this.feedback = null;
+        this.learningDetails = null;
         this.render();
     }
 
@@ -233,12 +251,13 @@ class EnglishRoSaApp {
             await this.persistProfile();
         }
         this.feedback = null;
+        this.learningDetails = null;
         this.screen = 'quiz';
         this.render();
     }
 
     async answerCurrentQuestion(choiceIndex) {
-        if (!this.session || this.feedback) return;
+        if (!this.session || this.feedback || this.learningDetails) return;
         const question = this.session.currentQuestion;
         const choice = question?.choices[choiceIndex];
         if (choice === undefined) throw new Error('A alternativa selecionada não está disponível.');
@@ -272,23 +291,62 @@ class EnglishRoSaApp {
         }
     }
 
+    showLearning() {
+        if (!this.session || this.feedback) return;
+        const question = this.session.currentQuestion;
+        const [category, index] = question?.itemId?.split(':') || [];
+        const entry = this.currentEpisode()[category]?.[Number(index)];
+        if (!entry) throw new Error('Não foi possível localizar os exemplos deste exercício.');
+
+        const examples = [
+            ['Frase do episódio', entry.exemplo_episodio],
+            ['Outro exemplo', entry.exemplo_diferente],
+            ['Exemplo adicional', entry.exemplo_adicional]
+        ].map(([label, text]) => ({
+            label,
+            ...parseExample(text)
+        })).filter((example) => example.english);
+
+        this.learningDetails = {
+            word: String(entry.palavra || question.item),
+            translation: String(entry.traducao || ''),
+            examples
+        };
+        this.render();
+    }
+
+    async skipLearnedQuestion() {
+        if (!this.session || !this.learningDetails) return;
+        this.session.skipCurrentQuestion();
+        this.learningDetails = null;
+        this.feedback = null;
+
+        let attemptState = null;
+        if (this.sessionMode === 'attempt') {
+            attemptState = this.episodeState(this.currentEpisodeId);
+            attemptState.activeAttempt = this.session.toJSON();
+            attemptState.updatedAt = Date.now();
+        }
+
+        if (this.session.isComplete) {
+            await this.completeSession();
+            return;
+        }
+        if (this.sessionMode === 'attempt' && this.session.isAtFocusedCategoryBoundary) {
+            this.screen = 'episode';
+        } else {
+            this.render();
+        }
+        if (this.screen === 'episode') this.render();
+        if (attemptState) await this.persistProfile();
+    }
+
     async advanceSession() {
         if (!this.session || !this.feedback) return;
         window.clearTimeout(this.autoAdvanceTimer);
         this.autoAdvanceTimer = null;
         if (this.session.isComplete) {
-            if (this.sessionMode === 'review') {
-                this.resultAttempt = {
-                    ...this.session.toJSON(),
-                    ...this.session.summary(),
-                    completedAt: Date.now()
-                };
-                this.isReviewResult = true;
-                this.screen = 'result';
-                this.render();
-            } else {
-                await this.completeAttempt();
-            }
+            await this.completeSession();
             return;
         }
         if (this.sessionMode === 'attempt' && this.session.isAtFocusedCategoryBoundary) {
@@ -299,6 +357,21 @@ class EnglishRoSaApp {
         }
         this.feedback = null;
         this.render();
+    }
+
+    async completeSession() {
+        if (this.sessionMode === 'review') {
+            this.resultAttempt = {
+                ...this.session.toJSON(),
+                ...this.session.summary(),
+                completedAt: Date.now()
+            };
+            this.isReviewResult = true;
+            this.screen = 'result';
+            this.render();
+        } else {
+            await this.completeAttempt();
+        }
     }
 
     async completeAttempt() {
@@ -323,6 +396,7 @@ class EnglishRoSaApp {
         this.isReviewResult = false;
         this.session = null;
         this.feedback = null;
+        this.learningDetails = null;
         this.screen = 'result';
         this.render();
         await this.persistProfile();
@@ -337,6 +411,7 @@ class EnglishRoSaApp {
         this.session = PracticeAttempt.review(questions);
         this.sessionMode = 'review';
         this.feedback = null;
+        this.learningDetails = null;
         if (!questions.length) {
             this.screen = 'review';
             this.render();
@@ -367,6 +442,8 @@ class EnglishRoSaApp {
         this.setSyncStatusFromError(result.syncError);
         this.screen = 'episode';
         this.session = null;
+        this.feedback = null;
+        this.learningDetails = null;
         this.render();
     }
 
@@ -430,6 +507,7 @@ class EnglishRoSaApp {
             case 'quiz':
                 this.feedback = null;
                 this.session = null;
+                this.learningDetails = null;
                 this.screen = 'episode';
                 break;
             case 'history':
@@ -694,7 +772,6 @@ class EnglishRoSaApp {
         if (!this.session) {
             return '<section class="error-panel">Não há uma sessão de exercícios ativa.</section>';
         }
-        const answers = this.session.data.answers;
         const shownAnswer = this.feedback;
         const question = shownAnswer
             ? this.session.data.questions.find((item) => item.id === shownAnswer.questionId)
@@ -704,6 +781,10 @@ class EnglishRoSaApp {
         }
         const summary = this.session.summary();
         const category = CATEGORIES.find((item) => item.key === question.category);
+        const pointsLabel = this.sessionMode === 'review' ? 'Revisão' : `${summary.points} pts`;
+        if (this.learningDetails) {
+            return this.renderLearning(question, pointsLabel);
+        }
         const correctChoiceIndex = question.choices.indexOf(question.answer);
         const answeredChoiceIndex = shownAnswer
             ? question.choices.indexOf(shownAnswer.choice)
@@ -740,7 +821,6 @@ class EnglishRoSaApp {
         const modeLabel = this.sessionMode === 'review'
             ? 'Revisão · não contabiliza na tentativa'
             : `Tentativa do episódio · ${category?.label || ''}`;
-        const pointsLabel = this.sessionMode === 'review' ? 'Revisão' : `${summary.points} pts`;
 
         return `
             <section class="practice-screen">
@@ -748,7 +828,7 @@ class EnglishRoSaApp {
                     <button class="icon-button" type="button" data-action="back" aria-label="Voltar e salvar progresso">←</button>
                     <div class="practice-progress">
                         <div class="practice-progress-copy">
-                            <span>Exercício ${shownAnswer ? answers.length : answers.length + 1} de ${this.session.data.questions.length}</span>
+                            <span>Exercício ${shownAnswer ? this.session.processedCount : this.session.processedCount + 1} de ${this.session.data.questions.length}</span>
                             <span>${this.session.progress}%</span>
                         </div>
                         <div class="progress-track" role="progressbar"
@@ -767,10 +847,63 @@ class EnglishRoSaApp {
                         ${question.example ? `<p class="question-example">${escapeHtml(question.example)}</p>` : ''}
                     </div>
                     <div class="answer-options">${choices}</div>
+                    ${shownAnswer ? '' : `
+                        <div class="practice-learn-action">
+                            <button class="button button-secondary" type="button" data-action="learn">
+                                Aprender
+                            </button>
+                        </div>`}
                     ${feedback}
                     <div class="practice-footer">
                         <span>${summary.correct} acertos</span>
                         <span>${summary.incorrect} erros</span>
+                    </div>
+                </div>
+            </section>`;
+    }
+
+    renderLearning(question, pointsLabel) {
+        const category = CATEGORIES.find((item) => item.key === question.category);
+        const examples = this.learningDetails.examples.map((example) => `
+            <article class="learning-example">
+                <span>${escapeHtml(example.label)}</span>
+                <p>${escapeHtml(example.english)}</p>
+                ${example.portuguese
+                    ? `<strong>${escapeHtml(example.portuguese)}</strong>`
+                    : '<strong>Tradução não cadastrada.</strong>'}
+            </article>`).join('');
+        const questionNumber = this.session.processedCount + 1;
+
+        return `
+            <section class="practice-screen">
+                <div class="practice-topbar">
+                    <button class="icon-button" type="button" data-action="back" aria-label="Voltar e salvar progresso">←</button>
+                    <div class="practice-progress">
+                        <div class="practice-progress-copy">
+                            <span>Exercício ${questionNumber} de ${this.session.data.questions.length}</span>
+                            <span>${this.session.progress}%</span>
+                        </div>
+                        <div class="progress-track" role="progressbar"
+                            aria-valuenow="${this.session.progress}" aria-valuemin="0" aria-valuemax="100">
+                            <span style="width:${this.session.progress}%"></span>
+                        </div>
+                    </div>
+                    <span class="practice-points">${pointsLabel}</span>
+                </div>
+                <div class="practice-content learning-content">
+                    <span class="question-badge">Aprender · ${escapeHtml(category?.label || '')}</span>
+                    <div class="learning-word">
+                        <h1>${escapeHtml(this.learningDetails.word)}</h1>
+                        <p>${escapeHtml(this.learningDetails.translation)}</p>
+                    </div>
+                    <section class="learning-examples" aria-labelledby="learning-examples-title">
+                        <h2 id="learning-examples-title">Frases de exemplo</h2>
+                        ${examples}
+                    </section>
+                    <div class="practice-next">
+                        <button class="button button-primary" type="button" data-action="skip-learned">
+                            Próximo exercício
+                        </button>
                     </div>
                 </div>
             </section>`;

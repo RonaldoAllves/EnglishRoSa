@@ -107,7 +107,10 @@ export class PracticeAttempt {
         this.data = {
             ...data,
             questions: data.questions.map((question) => ({ ...question, choices: [...question.choices] })),
-            answers: data.answers.map((answer) => ({ ...answer }))
+            answers: data.answers.map((answer) => ({ ...answer })),
+            skippedQuestionIds: Array.isArray(data.skippedQuestionIds)
+                ? [...data.skippedQuestionIds]
+                : []
         };
     }
 
@@ -152,27 +155,33 @@ export class PracticeAttempt {
     }
 
     get currentQuestion() {
-        return this.data.questions[this.data.answers.length] || null;
+        return this.data.questions[this.processedCount] || null;
+    }
+
+    get processedCount() {
+        return this.data.answers.length + this.data.skippedQuestionIds.length;
     }
 
     get isComplete() {
         return this.data.questions.length > 0 &&
-            this.data.answers.length === this.data.questions.length;
+            this.processedCount === this.data.questions.length;
     }
 
     get progress() {
         return this.data.questions.length
-            ? Math.round((this.data.answers.length / this.data.questions.length) * 100)
+            ? Math.round((this.processedCount / this.data.questions.length) * 100)
             : 0;
     }
 
     get isAtFocusedCategoryBoundary() {
-        const lastAnswer = this.data.answers[this.data.answers.length - 1];
         const nextQuestion = this.currentQuestion;
+        const remainingQuestions = this.data.questions.slice(this.processedCount);
+        const processedQuestions = this.data.questions.slice(0, this.processedCount);
         return this.data.filterCategory !== 'all' &&
-            lastAnswer?.category === this.data.filterCategory &&
             nextQuestion !== null &&
-            nextQuestion.category !== this.data.filterCategory;
+            nextQuestion.category !== this.data.filterCategory &&
+            processedQuestions.some((question) => question.category === this.data.filterCategory) &&
+            !remainingQuestions.some((question) => question.category === this.data.filterCategory);
     }
 
     isCategoryComplete(category) {
@@ -180,8 +189,16 @@ export class PracticeAttempt {
             throw new Error('Categoria inválida.');
         }
         return !this.data.questions
-            .slice(this.data.answers.length)
+            .slice(this.processedCount)
             .some((question) => question.category === category);
+    }
+
+    skipCurrentQuestion(skippedAt = Date.now()) {
+        const question = this.currentQuestion;
+        if (!question) throw new Error('Esta sessão já foi concluída.');
+        this.data.skippedQuestionIds.push(question.id);
+        this.data.updatedAt = skippedAt;
+        return question;
     }
 
     answer(choice, answeredAt = Date.now()) {
@@ -221,9 +238,9 @@ export class PracticeAttempt {
             throw new Error('Categoria inicial inválida.');
         }
 
-        const answeredCount = this.data.answers.length;
-        const answeredQuestions = this.data.questions.slice(0, answeredCount);
-        const remainingQuestions = this.data.questions.slice(answeredCount);
+        const processedCount = this.processedCount;
+        const processedQuestions = this.data.questions.slice(0, processedCount);
+        const remainingQuestions = this.data.questions.slice(processedCount);
         const orderedRemaining = category === 'all'
             ? this.data.filterCategory === 'all'
                 ? remainingQuestions
@@ -232,7 +249,7 @@ export class PracticeAttempt {
                 ...remainingQuestions.filter((question) => question.category === category),
                 ...remainingQuestions.filter((question) => question.category !== category)
             ];
-        const reordered = [...answeredQuestions, ...orderedRemaining];
+        const reordered = [...processedQuestions, ...orderedRemaining];
         const changed = this.data.filterCategory !== category ||
             reordered.some((question, index) => question.id !== this.data.questions[index]?.id);
 
@@ -246,7 +263,9 @@ export class PracticeAttempt {
 
     summary() {
         const breakdown = {};
+        const skipped = new Set(this.data.skippedQuestionIds);
         for (const question of this.data.questions) {
+            if (skipped.has(question.id)) continue;
             breakdown[question.category] ||= { total: 0, answered: 0, correct: 0, incorrect: 0 };
             breakdown[question.category].total += 1;
         }
@@ -267,8 +286,9 @@ export class PracticeAttempt {
         }
 
         return {
-            total: this.data.questions.length,
+            total: this.data.questions.length - skipped.size,
             answered: this.data.answers.length,
+            skipped: skipped.size,
             correct,
             incorrect,
             accuracy: this.data.answers.length
@@ -284,7 +304,8 @@ export class PracticeAttempt {
         return {
             ...this.data,
             questions: this.data.questions.map((question) => ({ ...question, choices: [...question.choices] })),
-            answers: this.data.answers.map((answer) => ({ ...answer }))
+            answers: this.data.answers.map((answer) => ({ ...answer })),
+            skippedQuestionIds: [...this.data.skippedQuestionIds]
         };
     }
 }
@@ -304,10 +325,13 @@ export function createEmptyProfile(profileId) {
 
 export function isCompletedAttempt(attempt) {
     if (!attempt || !attempt.completedAt || !Array.isArray(attempt.questions) ||
-        !Array.isArray(attempt.answers) || !attempt.questions.length ||
-        attempt.answers.length !== attempt.questions.length) {
+        !Array.isArray(attempt.answers) || !attempt.questions.length) {
         return false;
     }
+    const skippedCount = Array.isArray(attempt.skippedQuestionIds)
+        ? attempt.skippedQuestionIds.length
+        : 0;
+    if (attempt.answers.length + skippedCount !== attempt.questions.length) return false;
     return attempt.scope === 'episode' ||
         (attempt.scope == null && (attempt.filterCategory || 'all') === 'all');
 }
@@ -322,7 +346,8 @@ export function getEpisodeSummary(profile, episodeId) {
     )[0] || null;
     const active = state?.activeAttempt || null;
     const activeProgress = active?.questions?.length
-        ? Math.round((active.answers.length / active.questions.length) * 100)
+        ? Math.round(((active.answers.length + (active.skippedQuestionIds?.length || 0)) /
+            active.questions.length) * 100)
         : 0;
 
     return {
