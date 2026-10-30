@@ -107,3 +107,86 @@ test('profile load merges local progress and Firebase history without duplicates
         'done'
     );
 });
+
+test('profile load normalizes Firebase numeric-key objects used for saved arrays', async () => {
+    const storage = new MemoryStorage();
+    const remote = createEmptyProfile('ronaldo');
+    remote.episodes.s01e01 = {
+        updatedAt: 30,
+        attempts: {
+            0: {
+                id: 'completed',
+                scope: 'episode',
+                completedAt: 20,
+                questions: {
+                    0: { id: 'q1', choices: { 0: 'yes', 1: 'no' } }
+                },
+                answers: {
+                    0: { questionId: 'q1', correct: true }
+                }
+            }
+        },
+        activeAttempt: {
+            id: 'active',
+            updatedAt: 30,
+            questions: {
+                0: { id: 'q2', choices: { 0: 'one', 1: 'two' } }
+            },
+            answers: null
+        },
+        mistakes: {}
+    };
+    let writtenRemote;
+    const database = {
+        ref: () => ({
+            once: async () => ({ val: () => remote }),
+            set: async (value) => {
+                writtenRemote = value;
+            }
+        })
+    };
+    const repository = new ProfileRepository({ storage, database });
+
+    const result = await repository.load('ronaldo');
+
+    assert.equal(result.syncError, null);
+    assert.ok(Array.isArray(result.profile.episodes.s01e01.attempts));
+    assert.ok(Array.isArray(result.profile.episodes.s01e01.attempts[0].questions));
+    assert.deepEqual(result.profile.episodes.s01e01.attempts[0].questions[0].choices, [
+        'yes',
+        'no'
+    ]);
+    assert.deepEqual(result.profile.episodes.s01e01.activeAttempt.answers, []);
+    assert.ok(Array.isArray(writtenRemote.episodes.s01e01.attempts));
+    assert.ok(Array.isArray(
+        writtenRemote.episodes.s01e01.activeAttempt.questions
+    ));
+});
+
+test('profile load reports malformed stored attempt arrays clearly', async () => {
+    const storage = new MemoryStorage();
+    const remote = createEmptyProfile('sarah');
+    remote.episodes.s01e01 = {
+        attempts: [],
+        activeAttempt: {
+            id: 'invalid',
+            questions: 'not-an-array',
+            answers: []
+        },
+        mistakes: {}
+    };
+    const repository = new ProfileRepository({
+        storage,
+        database: {
+            ref: () => ({
+                once: async () => ({ val: () => remote }),
+                set: async () => {}
+            })
+        }
+    });
+
+    await assert.rejects(
+        repository.load('sarah'),
+        /questões da tentativa do episódio s01e01 possui formato inválido/
+    );
+});

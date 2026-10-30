@@ -2,6 +2,54 @@ import { createEmptyProfile, mergeProfiles } from './domain.js?v=__BUILD_VERSION
 
 const PROFILE_IDS = new Set(['ronaldo', 'sarah']);
 
+function normalizeStoredArray(value, label) {
+    if (value == null) return [];
+    if (Array.isArray(value)) return value;
+    if (typeof value !== 'object') {
+        throw new Error(`${label} possui formato inválido.`);
+    }
+
+    const keys = Object.keys(value);
+    if (keys.some((key) => !/^(0|[1-9]\d*)$/.test(key))) {
+        throw new Error(`${label} possui formato inválido.`);
+    }
+    return keys.sort((left, right) => Number(left) - Number(right)).map((key) => value[key]);
+}
+
+function normalizeAttempt(attempt, episodeId) {
+    if (!attempt || typeof attempt !== 'object' || Array.isArray(attempt)) {
+        throw new Error(`Uma tentativa do episódio ${episodeId} está inválida.`);
+    }
+    if (attempt.questions == null) {
+        throw new Error(`Uma tentativa do episódio ${episodeId} está sem questões.`);
+    }
+
+    const questions = normalizeStoredArray(
+        attempt.questions,
+        `As questões da tentativa do episódio ${episodeId}`
+    ).map((question) => {
+        if (!question || typeof question !== 'object' || Array.isArray(question)) {
+            throw new Error(`Uma questão da tentativa do episódio ${episodeId} está inválida.`);
+        }
+        return {
+            ...question,
+            choices: normalizeStoredArray(
+                question.choices,
+                `As alternativas da tentativa do episódio ${episodeId}`
+            )
+        };
+    });
+    const answers = normalizeStoredArray(
+        attempt.answers,
+        `As respostas da tentativa do episódio ${episodeId}`
+    );
+    const skippedQuestionIds = normalizeStoredArray(
+        attempt.skippedQuestionIds,
+        `Os exercícios estudados da tentativa do episódio ${episodeId}`
+    );
+    return { ...attempt, questions, answers, skippedQuestionIds };
+}
+
 export class EpisodeRepository {
     constructor({
         url = './dados/episodios_2026-10-30.json',
@@ -74,7 +122,10 @@ export class ProfileRepository {
             syncError = error.message || 'Não foi possível carregar os dados do Firebase.';
         }
 
-        const profile = mergeProfiles(local, remote, profileId);
+        const remoteProfile = remote
+            ? this.validateProfile(remote, profileId)
+            : null;
+        const profile = mergeProfiles(local, remoteProfile, profileId);
         this.writeLocal(profile);
         if (!syncError) {
             try {
@@ -130,15 +181,24 @@ export class ProfileRepository {
 
         for (const [episodeId, state] of Object.entries(profile.episodes)) {
             if (!/^s\d{2}e\d{2}$/i.test(episodeId) || !state ||
-                !Array.isArray(state.attempts) || !state.mistakes ||
-                typeof state.mistakes !== 'object') {
+                typeof state !== 'object' || Array.isArray(state) ||
+                (state.mistakes != null &&
+                    (typeof state.mistakes !== 'object' || Array.isArray(state.mistakes)))) {
                 throw new Error(`Os dados do episódio ${episodeId} estão inválidos.`);
             }
-            for (const attempt of [...state.attempts, state.activeAttempt].filter(Boolean)) {
-                if (!Array.isArray(attempt.questions) || !Array.isArray(attempt.answers)) {
-                    throw new Error(`Uma tentativa do episódio ${episodeId} está inválida.`);
-                }
-            }
+            const attempts = normalizeStoredArray(
+                state.attempts,
+                `As tentativas do episódio ${episodeId}`
+            ).filter(Boolean).map((attempt) => normalizeAttempt(attempt, episodeId));
+            const activeAttempt = state.activeAttempt
+                ? normalizeAttempt(state.activeAttempt, episodeId)
+                : null;
+            profile.episodes[episodeId] = {
+                ...state,
+                attempts,
+                activeAttempt,
+                mistakes: state.mistakes || {}
+            };
         }
 
         return {
