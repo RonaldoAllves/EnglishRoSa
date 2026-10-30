@@ -25,6 +25,10 @@ const formatDate = (timestamp) => timestamp
     : 'Data indisponível';
 
 const episodeNumber = (episodeId) => Number(episodeId.match(/e(\d+)$/i)?.[1] || 0);
+const PROFILE_AVATARS = {
+    ronaldo: './images/personagem1.jpg',
+    sarah: './images/personagem2.jpg'
+};
 
 class EnglishRoSaApp {
     constructor() {
@@ -124,16 +128,15 @@ class EnglishRoSaApp {
             case 'continue-active':
                 await this.continueLatestAttempt();
                 break;
-            case 'continue-attempt':
-                await this.beginAttempt(true);
-                break;
             case 'select-category':
                 if (button.dataset.category !== 'all' &&
                     !CATEGORIES.some((category) => category.key === button.dataset.category)) {
                     throw new Error('Categoria inicial inválida.');
                 }
                 this.focusCategory = button.dataset.category;
-                this.render();
+                await this.beginAttempt(Boolean(
+                    this.episodeState(this.currentEpisodeId).activeAttempt
+                ));
                 break;
             case 'new-attempt':
                 await this.beginAttempt(false);
@@ -575,7 +578,8 @@ class EnglishRoSaApp {
                         ${PROFILES.map((profile, index) => `
                             <button class="profile-card ${index ? 'lavender' : ''}" type="button"
                                 data-action="select-profile" data-profile="${profile.id}">
-                                <span class="profile-avatar" aria-hidden="true">${profile.name[0]}</span>
+                                <img class="profile-avatar" src="${PROFILE_AVATARS[profile.id]}"
+                                    alt="" aria-hidden="true">
                                 <span class="profile-copy">
                                     <strong>${profile.name}</strong>
                                     <span>Acessar meu progresso</span>
@@ -678,20 +682,21 @@ class EnglishRoSaApp {
             category.key,
             questions.filter((question) => question.category === category.key).length
         ]));
-        const activeAttemptSummary = summary.active
-            ? new PracticeAttempt(summary.active).summary()
+        const activeAttempt = summary.active
+            ? new PracticeAttempt(summary.active)
             : null;
+        const activeAttemptSummary = activeAttempt?.summary() || null;
         const breakdown = activeAttemptSummary?.breakdown || summary.bestAttempt?.breakdown || {};
         const allSummary = activeAttemptSummary || summary.bestAttempt;
-        const allPercentage = allSummary?.total
-            ? Math.round(((activeAttemptSummary
-                ? allSummary.answered
-                : allSummary.correct) / allSummary.total) * 100)
-            : 0;
+        const allPercentage = activeAttempt
+            ? activeAttempt.progress
+            : allSummary?.total
+                ? Math.round((allSummary.correct / allSummary.total) * 100)
+                : 0;
         const allProgressLabel = activeAttemptSummary
-            ? `${allSummary.answered}/${allSummary.total} concluídos · ${allSummary.correct} acertos nesta tentativa`
+            ? `${allPercentage}% concluído · ${activeAttempt.processedCount}/${activeAttempt.data.questions.length} exercícios · ${allSummary.correct} acertos`
             : summary.bestAttempt
-                ? `${allSummary.correct}/${allSummary.total} acertos na melhor tentativa`
+                ? `${allPercentage}% · ${allSummary.correct}/${allSummary.total} acertos na melhor tentativa`
                 : 'Ainda sem resultado';
         const allCategoryCard = `
             <button class="category-card ${this.focusCategory === 'all' ? 'is-selected' : ''}"
@@ -699,7 +704,7 @@ class EnglishRoSaApp {
                 aria-pressed="${this.focusCategory === 'all'}">
                 <h3>Todas</h3>
                 <p>${questions.length} exercícios · ordem aleatória</p>
-                <div class="progress-track" aria-label="${allPercentage}% da tentativa respondidos">
+                <div class="progress-track" aria-label="${allPercentage}% da tentativa concluída">
                     <span style="width:${allPercentage}%"></span>
                 </div>
                 <span class="category-progress-label">${allProgressLabel}</span>
@@ -730,9 +735,8 @@ class EnglishRoSaApp {
         const attempts = summary.attempts;
         const incomplete = availableCategories.length < CATEGORIES.length;
         const actions = summary.active
-            ? `<button class="button button-primary" type="button" data-action="continue-attempt">Continuar tentativa · ${summary.activeProgress}%</button>
-               <button class="button button-secondary" type="button" data-action="new-attempt">Começar nova tentativa</button>`
-            : `<button class="button button-primary" type="button" data-action="new-attempt">Iniciar tentativa</button>`;
+            ? '<button class="button button-secondary" type="button" data-action="new-attempt">Começar nova tentativa</button>'
+            : '';
 
         return `
             <section>
