@@ -7,7 +7,8 @@ import {
     createReviewQuestions,
     getEpisodeSummary,
     getReviewItems,
-    isCompletedAttempt
+    isCompletedAttempt,
+    mergeProfiles
 } from '../js/domain.js';
 
 function entry(word, translation) {
@@ -359,6 +360,102 @@ test('a category is complete only when it has no unanswered questions', () => {
     assert.equal(attempt.isCategoryComplete(category), true);
     assert.equal(attempt.isComplete, false);
     assert.throws(() => attempt.isCategoryComplete('invalid'), /Categoria inválida/);
+});
+
+test('episode reset tombstones prevent stale device progress from being restored', () => {
+    const oldAttempt = {
+        id: 'old-attempt',
+        updatedAt: 100,
+        completedAt: 100,
+        questions: [{ id: 'q1' }],
+        answers: [{ questionId: 'q1', correct: true }]
+    };
+    const local = {
+        version: 1,
+        profileId: 'ronaldo',
+        updatedAt: 100,
+        episodes: {
+            s01e01: {
+                updatedAt: 100,
+                attempts: [oldAttempt],
+                activeAttempt: { id: 'old-active', updatedAt: 100, questions: [], answers: [] },
+                mistakes: {
+                    'verbos:verbos:0': {
+                        itemId: 'verbos:0',
+                        errors: 2,
+                        updatedAt: 100
+                    }
+                }
+            }
+        }
+    };
+    const remote = {
+        version: 1,
+        profileId: 'ronaldo',
+        updatedAt: 200,
+        episodes: {
+            s01e01: {
+                updatedAt: 200,
+                resetAt: 200,
+                attempts: [],
+                activeAttempt: null,
+                mistakes: {}
+            }
+        }
+    };
+
+    const merged = mergeProfiles(local, remote, 'ronaldo');
+    const episode = merged.episodes.s01e01;
+
+    assert.equal(episode.resetAt, 200);
+    assert.deepEqual(episode.attempts, []);
+    assert.equal(episode.activeAttempt, null);
+    assert.deepEqual(episode.mistakes, {});
+    assert.equal(getEpisodeSummary(merged, 's01e01').progress, 0);
+});
+
+test('progress created after an episode reset remains mergeable across devices', () => {
+    const resetProfile = {
+        version: 1,
+        profileId: 'sarah',
+        updatedAt: 200,
+        episodes: {
+            s01e01: {
+                updatedAt: 200,
+                resetAt: 200,
+                attempts: [],
+                activeAttempt: null,
+                mistakes: {}
+            }
+        }
+    };
+    const newerAttempt = {
+        id: 'new-attempt',
+        updatedAt: 250,
+        completedAt: 250,
+        questions: [{ id: 'q1' }],
+        answers: [{ questionId: 'q1', correct: true }]
+    };
+    const otherDevice = {
+        version: 1,
+        profileId: 'sarah',
+        updatedAt: 250,
+        episodes: {
+            s01e01: {
+                updatedAt: 250,
+                attempts: [newerAttempt],
+                activeAttempt: null,
+                mistakes: {}
+            }
+        }
+    };
+
+    const merged = mergeProfiles(resetProfile, otherDevice, 'sarah');
+
+    assert.deepEqual(merged.episodes.s01e01.attempts.map((attempt) => attempt.id), [
+        'new-attempt'
+    ]);
+    assert.equal(merged.episodes.s01e01.resetAt, 200);
 });
 
 test('review questions are available only for recorded mistakes and episode progress honors completion', () => {

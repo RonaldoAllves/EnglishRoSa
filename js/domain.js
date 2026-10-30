@@ -520,21 +520,28 @@ export function mergeProfiles(local, remote, profileId) {
     for (const episodeId of episodeIds) {
         const localEpisode = left.episodes?.[episodeId] || {};
         const remoteEpisode = right.episodes?.[episodeId] || {};
+        const resetAt = Math.max(localEpisode.resetAt || 0, remoteEpisode.resetAt || 0);
         const attempts = new Map();
         for (const attempt of [...(localEpisode.attempts || []), ...(remoteEpisode.attempts || [])]) {
+            const attemptUpdatedAt = attempt.updatedAt || attempt.completedAt || attempt.startedAt || 0;
+            if (resetAt && attemptUpdatedAt <= resetAt) continue;
             const current = attempts.get(attempt.id);
-            if (!current || (attempt.updatedAt || 0) > (current.updatedAt || 0)) {
+            if (!current || attemptUpdatedAt >
+                (current.updatedAt || current.completedAt || current.startedAt || 0)) {
                 attempts.set(attempt.id, attempt);
             }
         }
 
-        const activeAttempts = [localEpisode.activeAttempt, remoteEpisode.activeAttempt].filter(Boolean);
+        const activeAttempts = [localEpisode.activeAttempt, remoteEpisode.activeAttempt]
+            .filter((attempt) => attempt && (!resetAt ||
+                (attempt.updatedAt || attempt.startedAt || 0) > resetAt));
         const activeAttempt = activeAttempts.sort((a, b) =>
             (b.updatedAt || 0) - (a.updatedAt || 0)
         )[0] || null;
         const mistakes = {};
         for (const source of [localEpisode.mistakes || {}, remoteEpisode.mistakes || {}]) {
             for (const [key, mistake] of Object.entries(source)) {
+                if (resetAt && (mistake.updatedAt || 0) <= resetAt) continue;
                 const current = mistakes[key];
                 if (!current || (mistake.errors || 0) > (current.errors || 0) ||
                     ((mistake.errors || 0) === (current.errors || 0) &&
@@ -546,6 +553,7 @@ export function mergeProfiles(local, remote, profileId) {
 
         episodes[episodeId] = {
             updatedAt: Math.max(localEpisode.updatedAt || 0, remoteEpisode.updatedAt || 0),
+            resetAt,
             attempts: [...attempts.values()],
             activeAttempt,
             mistakes

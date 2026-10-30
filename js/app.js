@@ -469,8 +469,15 @@ class EnglishRoSaApp {
         if (!window.confirm('Apagar o progresso, as tentativas e as palavras com erro deste episódio?')) {
             return;
         }
-        delete this.profile.episodes[this.currentEpisodeId];
-        this.profile.updatedAt = Date.now();
+        const resetAt = Date.now();
+        this.profile.episodes[this.currentEpisodeId] = {
+            updatedAt: resetAt,
+            resetAt,
+            attempts: [],
+            activeAttempt: null,
+            mistakes: {}
+        };
+        this.profile.updatedAt = resetAt;
         const result = await this.profileRepository.save(this.profile);
         this.setSyncStatusFromError(result.syncError);
         this.screen = 'episode';
