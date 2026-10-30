@@ -437,9 +437,6 @@ class EnglishRoSaApp {
 
     beginReview() {
         const state = this.episodeState(this.currentEpisodeId);
-        if (!state.attempts.some((attempt) => attempt.completedAt)) {
-            throw new Error('Conclua uma tentativa do episódio antes de iniciar uma revisão.');
-        }
         const questions = createReviewQuestions(this.currentEpisode(), state.mistakes);
         this.session = PracticeAttempt.review(questions);
         this.sessionMode = 'review';
@@ -717,6 +714,7 @@ class EnglishRoSaApp {
     renderEpisode() {
         const episode = this.currentEpisode();
         const summary = getEpisodeSummary(this.profile, episode.episodio);
+        const reviewItems = getReviewItems(this.profile, episode.episodio);
         const questions = createQuestionBank(episode, () => 0);
         const availableCategories = CATEGORIES.filter((category) =>
             questions.some((question) => question.category === category.key)
@@ -804,7 +802,7 @@ class EnglishRoSaApp {
                     <button class="button button-quiet" type="button" data-action="show-history" ${attempts.length ? '' : 'disabled'}>
                         Histórico de tentativas
                     </button>
-                    <button class="button button-quiet" type="button" data-action="show-review" ${attempts.length ? '' : 'disabled'}>
+                    <button class="button button-quiet" type="button" data-action="show-review" ${reviewItems.length ? '' : 'disabled'}>
                         Revisar palavras com erros
                     </button>
                     <button class="button button-quiet button-danger" type="button" data-action="reset-episode"
@@ -1011,14 +1009,14 @@ class EnglishRoSaApp {
                     </div>
                     <button class="back-button" type="button" data-action="back">← Episódio</button>
                 </header>
-                ${summary.attempts.length ? `
+                ${items.length ? `
                     <div class="action-row">
-                        <button class="button button-primary" type="button" data-action="start-review" ${items.length ? '' : 'disabled'}>
+                        <button class="button button-primary" type="button" data-action="start-review">
                             Iniciar revisão
                         </button>
                     </div>` : ''}
                 <div class="review-list">
-                    ${rows || '<div class="empty-state"><p>Nenhum erro registrado neste episódio. Complete uma tentativa e os itens que precisarem de atenção aparecerão aqui.</p></div>'}
+                    ${rows || '<div class="empty-state"><p>Nenhum erro registrado neste episódio.</p></div>'}
                 </div>
             </section>`;
     }

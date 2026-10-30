@@ -31,7 +31,7 @@ Detalhes de algumas telas:
 - A tentativa não é por categoria, ela é por episódio (isso é muito importante).
 - Ao terminar uma tentativa deve ficar salva e deve permitir realizar uma nova tentativa do zero.
 - Deve mostrar a lista de tentativas, para que o usuário veja o seu progresso.
-- Deve permitir realizar a revisão somente após concluir pelo menos uma tentativa.
+- Deve permitir realizar a revisão assim que houver ao menos um erro registrado, mesmo antes de concluir a tentativa.
 - As revisões não contabilizam para a tentativa.
 - Evite ficar usando emoge em tudo, quero uma tela moderna, mas limpa.
 - todas as telas devem ter um botão ou algo que permita voltar para a tela anterior/menu.
