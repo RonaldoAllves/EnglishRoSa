@@ -101,6 +101,26 @@ test('new-format exercise arrays produce separate stable sentence questions', ()
     assert.equal(attempt.data.questions.filter((question) => question.exerciseId).length, 3);
 });
 
+test('attempt orders randomized vocabulary before sentences within each category', () => {
+    const attempt = PracticeAttempt.create(sampleEpisode(), 'all', () => 0, 675);
+    const categories = [...new Set(attempt.data.questions.map((question) => question.category))];
+
+    assert.deepEqual(categories.sort(), ['adjetivos', 'expressoes']);
+    for (const category of categories) {
+        const categoryQuestions = attempt.data.questions.filter((question) =>
+            question.category === category
+        );
+        const firstSentenceIndex = categoryQuestions.findIndex((question) =>
+            question.kind !== 'word'
+        );
+        const lastVocabularyIndex = categoryQuestions.findLastIndex((question) =>
+            question.kind === 'word'
+        );
+
+        assert.ok(firstSentenceIndex > lastVocabularyIndex);
+    }
+});
+
 test('expression answers only offer alternatives from the expression category', () => {
     const questions = createQuestionBank(sampleEpisode(), () => 0);
     const expressionQuestion = questions.find((question) =>
@@ -190,6 +210,34 @@ test('resuming an attempt prioritizes the selected category among unanswered que
     assert.equal(attempt.currentQuestion.category, selectedCategory);
     assert.equal(attempt.data.filterCategory, selectedCategory);
     assert.equal(attempt.data.questions.length, 8);
+});
+
+test('selecting all normalizes legacy question order without moving processed questions', () => {
+    const attempt = PracticeAttempt.create(sampleEpisode(), 'all', () => 0, 350);
+    const processed = attempt.currentQuestion;
+    attempt.answer(processed.answer, 351);
+    attempt.data.questions = [
+        ...attempt.data.questions.slice(0, 1),
+        ...attempt.data.questions.slice(1).reverse()
+    ];
+
+    assert.equal(attempt.prioritizeRemaining('all', () => 0), true);
+
+    assert.equal(attempt.data.questions[0].id, processed.id);
+    for (const category of ['adjetivos', 'expressoes']) {
+        const remainingInCategory = attempt.data.questions
+            .slice(attempt.processedCount)
+            .filter((question) => question.category === category);
+        const firstSentenceIndex = remainingInCategory.findIndex((question) =>
+            question.kind !== 'word'
+        );
+        const lastVocabularyIndex = remainingInCategory.findLastIndex((question) =>
+            question.kind === 'word'
+        );
+        if (firstSentenceIndex !== -1 && lastVocabularyIndex !== -1) {
+            assert.ok(firstSentenceIndex > lastVocabularyIndex);
+        }
+    }
 });
 
 test('switching a resumed attempt back to all randomizes the remaining categories', () => {

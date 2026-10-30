@@ -55,6 +55,7 @@ Regras da llm
 
 - A seleção de uma categoria define apenas por qual categoria a tentativa começa; não deve excluir os exercícios das outras categorias.
 - A opção "Todas" deve incluir os exercícios ainda não respondidos de todas as categorias e misturá-los aleatoriamente.
+- Dentro de cada categoria, as questões de vocabulário devem aparecer em ordem aleatória antes das questões de frases, que também ficam em ordem aleatória; isso preserva a pausa ao concluir a categoria.
 - Uma tentativa pertence ao episódio inteiro, nunca a uma categoria. Ela só deve ser concluída depois que todos os exercícios do episódio forem respondidos.
 - Ao concluir os exercícios da categoria escolhida, deve voltar para a tela do episódio para que a pessoa escolha como continuar. Não deve avançar automaticamente para outra categoria.
 - Se a pessoa selecionar uma categoria já concluída na tentativa em andamento, deve avisar que ela já foi concluída e não deve iniciar exercícios de outra categoria no lugar dela.

@@ -59,6 +59,47 @@ function questionKey(question) {
         : question.id;
 }
 
+function orderQuestionsByCategory(questions, focusCategory, random) {
+    const categories = [...new Set(questions.map((question) => question.category))];
+    const orderedCategories = focusCategory === 'all'
+        ? shuffle(categories, random)
+        : [
+            focusCategory,
+            ...shuffle(categories.filter((category) => category !== focusCategory), random)
+        ];
+
+    return orderedCategories.flatMap((category) => {
+        const categoryQuestions = questions.filter((question) => question.category === category);
+        const vocabularyQuestions = categoryQuestions.filter((question) => question.kind === 'word');
+        const sentenceQuestions = categoryQuestions.filter((question) => question.kind !== 'word');
+        return [
+            ...shuffle(vocabularyQuestions, random),
+            ...shuffle(sentenceQuestions, random)
+        ];
+    });
+}
+
+function isGroupedByCategoryAndKind(questions) {
+    const completedCategories = new Set();
+    let currentCategory = null;
+    let sentencePhase = false;
+
+    for (const question of questions) {
+        if (question.category !== currentCategory) {
+            if (completedCategories.has(question.category)) return false;
+            if (currentCategory !== null) completedCategories.add(currentCategory);
+            currentCategory = question.category;
+            sentencePhase = false;
+        }
+        if (question.kind === 'word') {
+            if (sentencePhase) return false;
+        } else {
+            sentencePhase = true;
+        }
+    }
+    return true;
+}
+
 export function getExerciseTranslation(exercise) {
     const correctId = String(exercise?.resposta_correta || '').trim();
     const correctAlternative = exercise?.alternativas?.find((alternative) =>
@@ -206,15 +247,7 @@ export class PracticeAttempt {
         if (!bank.length) {
             throw new Error('Este episódio ainda não tem exercícios disponíveis.');
         }
-        const focused = focusCategory === 'all'
-            ? bank
-            : bank.filter((question) => question.category === focusCategory);
-        const remaining = focusCategory === 'all'
-            ? []
-            : bank.filter((question) => question.category !== focusCategory);
-        const questions = focusCategory === 'all'
-            ? shuffle(focused, random)
-            : [...shuffle(focused, random), ...shuffle(remaining, random)];
+        const questions = orderQuestionsByCategory(bank, focusCategory, random);
 
         return new PracticeAttempt({
             id: `attempt-${now}-${Math.floor(random() * 1_000_000)}`,
@@ -328,14 +361,11 @@ export class PracticeAttempt {
         const processedCount = this.processedCount;
         const processedQuestions = this.data.questions.slice(0, processedCount);
         const remainingQuestions = this.data.questions.slice(processedCount);
-        const orderedRemaining = category === 'all'
-            ? this.data.filterCategory === 'all'
-                ? remainingQuestions
-                : shuffle(remainingQuestions, random)
-            : [
-                ...remainingQuestions.filter((question) => question.category === category),
-                ...remainingQuestions.filter((question) => question.category !== category)
-            ];
+        const orderedRemaining = category === 'all' &&
+            this.data.filterCategory === 'all' &&
+            isGroupedByCategoryAndKind(remainingQuestions)
+            ? remainingQuestions
+            : orderQuestionsByCategory(remainingQuestions, category, random);
         const reordered = [...processedQuestions, ...orderedRemaining];
         const changed = this.data.filterCategory !== category ||
             reordered.some((question, index) => question.id !== this.data.questions[index]?.id);
