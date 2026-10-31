@@ -1,7 +1,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { createEmptyProfile } from '../js/domain.js';
-import { EpisodeRepository, ProfileRepository } from '../js/repositories.js';
+import {
+    AtlasMediaRepository,
+    EpisodeRepository,
+    ProfileRepository
+} from '../js/repositories.js';
 
 class MemoryStorage {
     values = new Map();
@@ -27,6 +31,22 @@ test('episode repository loads the exercise-based catalog', async () => {
     await repository.load();
 
     assert.equal(requestedUrl, './dados/episodios_2026-10-30.json');
+});
+
+test('atlas media repository loads the optional media map and tolerates a missing map', async () => {
+    const repository = new AtlasMediaRepository({
+        fetcher: async () => ({
+            ok: true,
+            status: 200,
+            json: async () => ({ media: { good: { image: 'img/good.webp' } } })
+        })
+    });
+    const missingRepository = new AtlasMediaRepository({
+        fetcher: async () => ({ ok: false, status: 404 })
+    });
+
+    assert.deepEqual(await repository.load(), { good: { image: 'img/good.webp' } });
+    assert.deepEqual(await missingRepository.load(), {});
 });
 
 test('profile saves locally even when Firebase synchronization fails', async () => {

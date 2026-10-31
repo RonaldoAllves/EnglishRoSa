@@ -72,6 +72,30 @@ export class EpisodeRepository {
     }
 }
 
+export class AtlasMediaRepository {
+    constructor({
+        url = './assets/atlas/media-index.json',
+        fetcher = (...args) => globalThis.fetch(...args)
+    } = {}) {
+        this.url = url;
+        this.fetcher = fetcher;
+    }
+
+    async load() {
+        const response = await this.fetcher(this.url);
+        if (response.status === 404) return {};
+        if (!response.ok) {
+            throw new Error(`Não foi possível carregar as mídias do atlas (${response.status}).`);
+        }
+        const data = await response.json();
+        if (!data || !data.media || typeof data.media !== 'object' ||
+            Array.isArray(data.media)) {
+            throw new Error('O índice de mídias do atlas está inválido.');
+        }
+        return data.media;
+    }
+}
+
 export class ProfileRepository {
     constructor({
         storage = globalThis.localStorage,

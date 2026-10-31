@@ -1,0 +1,1044 @@
+{
+  "name": "Word Atlas Open",
+  "license": "CC BY 4.0",
+  "media": {
+    "good": {
+      "image": "img/good.webp",
+      "audio": {
+        "uk": "audio/uk/good.mp3",
+        "us": "audio/us/good.mp3",
+        "ex": "audio/ex/good.mp3",
+        "ex2": "audio/ex2/good.mp3"
+      }
+    },
+    "new": {
+      "image": "img/new.webp",
+      "audio": {
+        "uk": "audio/uk/new.mp3",
+        "us": "audio/us/new.mp3",
+        "ex": "audio/ex/new.mp3",
+        "ex2": "audio/ex2/new.mp3"
+      }
+    },
+    "little": {
+      "image": "img/little.webp",
+      "audio": {
+        "uk": "audio/uk/little.mp3",
+        "us": "audio/us/little.mp3",
+        "ex": "audio/ex/little.mp3",
+        "ex2": "audio/ex2/little.mp3"
+      }
+    },
+    "high": {
+      "image": "img/high.webp",
+      "audio": {
+        "uk": "audio/uk/high.mp3",
+        "us": "audio/us/high.mp3",
+        "ex": "audio/ex/high.mp3",
+        "ex2": "audio/ex2/high.mp3"
+      }
+    },
+    "interesting": {
+      "image": "img/interesting.webp",
+      "audio": {
+        "uk": "audio/uk/interesting.mp3",
+        "us": "audio/us/interesting.mp3",
+        "ex": "audio/ex/interesting.mp3",
+        "ex2": "audio/ex2/interesting.mp3"
+      }
+    },
+    "poor": {
+      "image": "img/poor.webp",
+      "audio": {
+        "uk": "audio/uk/poor.mp3",
+        "us": "audio/us/poor.mp3",
+        "ex": "audio/ex/poor.mp3",
+        "ex2": "audio/ex2/poor.mp3"
+      }
+    },
+    "nice": {
+      "image": "img/nice.webp",
+      "audio": {
+        "uk": "audio/uk/nice.mp3",
+        "us": "audio/us/nice.mp3",
+        "ex": "audio/ex/nice.mp3",
+        "ex2": "audio/ex2/nice.mp3"
+      }
+    },
+    "sure": {
+      "image": "img/sure.webp",
+      "audio": {
+        "uk": "audio/uk/sure.mp3",
+        "us": "audio/us/sure.mp3",
+        "ex": "audio/ex/sure.mp3",
+        "ex2": "audio/ex2/sure.mp3"
+      }
+    },
+    "same": {
+      "image": "img/same.webp",
+      "audio": {
+        "uk": "audio/uk/same.mp3",
+        "us": "audio/us/same.mp3",
+        "ex": "audio/ex/same.mp3",
+        "ex2": "audio/ex2/same.mp3"
+      }
+    },
+    "mad": {
+      "image": "img/mad.webp",
+      "audio": {
+        "uk": "audio/uk/mad.mp3",
+        "us": "audio/us/mad.mp3",
+        "ex": "audio/ex/mad.mp3"
+      }
+    },
+    "beautiful": {
+      "image": "img/beautiful.webp",
+      "audio": {
+        "uk": "audio/uk/beautiful.mp3",
+        "us": "audio/us/beautiful.mp3",
+        "ex": "audio/ex/beautiful.mp3",
+        "ex2": "audio/ex2/beautiful.mp3"
+      }
+    },
+    "great": {
+      "image": "img/great.webp",
+      "audio": {
+        "uk": "audio/uk/great.mp3",
+        "us": "audio/us/great.mp3",
+        "ex": "audio/ex/great.mp3",
+        "ex2": "audio/ex2/great.mp3"
+      }
+    },
+    "sorry": {
+      "image": "img/sorry.webp",
+      "audio": {
+        "uk": "audio/uk/sorry.mp3",
+        "us": "audio/us/sorry.mp3",
+        "ex": "audio/ex/sorry.mp3",
+        "ex2": "audio/ex2/sorry.mp3"
+      }
+    },
+    "thai": {
+      "image": "img/thai.webp",
+      "audio": {
+        "uk": "audio/uk/thai.mp3",
+        "us": "audio/us/thai.mp3",
+        "ex": "audio/ex/thai.mp3"
+      }
+    },
+    "right": {
+      "image": "img/right.webp",
+      "audio": {
+        "uk": "audio/uk/right.mp3",
+        "us": "audio/us/right.mp3",
+        "ex": "audio/ex/right.mp3",
+        "ex2": "audio/ex2/right.mp3"
+      }
+    },
+    "familiar": {
+      "image": "img/familiar.webp",
+      "audio": {
+        "uk": "audio/uk/familiar.mp3",
+        "us": "audio/us/familiar.mp3",
+        "ex": "audio/ex/familiar.mp3"
+      }
+    },
+    "extra": {
+      "image": "img/extra.webp",
+      "audio": {
+        "uk": "audio/uk/extra.mp3",
+        "us": "audio/us/extra.mp3",
+        "ex": "audio/ex/extra.mp3"
+      }
+    },
+    "still": {
+      "image": "img/still.webp",
+      "audio": {
+        "uk": "audio/uk/still.mp3",
+        "us": "audio/us/still.mp3",
+        "ex": "audio/ex/still.mp3"
+      }
+    },
+    "never": {
+      "image": "img/never.webp",
+      "audio": {
+        "uk": "audio/uk/never.mp3",
+        "us": "audio/us/never.mp3",
+        "ex": "audio/ex/never.mp3",
+        "ex2": "audio/ex2/never.mp3"
+      }
+    },
+    "probably": {
+      "image": "img/probably.webp",
+      "audio": {
+        "uk": "audio/uk/probably.mp3",
+        "us": "audio/us/probably.mp3",
+        "ex": "audio/ex/probably.mp3"
+      }
+    },
+    "just": {
+      "image": "img/just.webp",
+      "audio": {
+        "uk": "audio/uk/just.mp3",
+        "us": "audio/us/just.mp3",
+        "ex": "audio/ex/just.mp3",
+        "ex2": "audio/ex2/just.mp3"
+      }
+    },
+    "actually": {
+      "image": "img/actually.webp",
+      "audio": {
+        "uk": "audio/uk/actually.mp3",
+        "us": "audio/us/actually.mp3",
+        "ex": "audio/ex/actually.mp3"
+      }
+    },
+    "really": {
+      "image": "img/really.webp",
+      "audio": {
+        "uk": "audio/uk/really.mp3",
+        "us": "audio/us/really.mp3",
+        "ex": "audio/ex/really.mp3",
+        "ex2": "audio/ex2/really.mp3"
+      }
+    },
+    "maybe": {
+      "image": "img/maybe.webp",
+      "audio": {
+        "uk": "audio/uk/maybe.mp3",
+        "us": "audio/us/maybe.mp3",
+        "ex": "audio/ex/maybe.mp3",
+        "ex2": "audio/ex2/maybe.mp3"
+      }
+    },
+    "already": {
+      "image": "img/already.webp",
+      "audio": {
+        "uk": "audio/uk/already.mp3",
+        "us": "audio/us/already.mp3",
+        "ex": "audio/ex/already.mp3"
+      }
+    },
+    "with": {
+      "image": "img/with.webp",
+      "audio": {
+        "uk": "audio/uk/with.mp3",
+        "us": "audio/us/with.mp3",
+        "ex": "audio/ex/with.mp3",
+        "ex2": "audio/ex2/with.mp3"
+      }
+    },
+    "across": {
+      "image": "img/across.webp",
+      "audio": {
+        "uk": "audio/uk/across.mp3",
+        "us": "audio/us/across.mp3",
+        "ex": "audio/ex/across.mp3"
+      }
+    },
+    "in": {
+      "image": "img/in.webp",
+      "audio": {
+        "uk": "audio/uk/in.mp3",
+        "us": "audio/us/in.mp3",
+        "ex": "audio/ex/in.mp3",
+        "ex2": "audio/ex2/in.mp3"
+      }
+    },
+    "on": {
+      "image": "img/on.webp",
+      "audio": {
+        "uk": "audio/uk/on.mp3",
+        "us": "audio/us/on.mp3",
+        "ex": "audio/ex/on.mp3",
+        "ex2": "audio/ex2/on.mp3"
+      }
+    },
+    "about": {
+      "image": "img/about.webp",
+      "audio": {
+        "uk": "audio/uk/about.mp3",
+        "us": "audio/us/about.mp3",
+        "ex": "audio/ex/about.mp3",
+        "ex2": "audio/ex2/about.mp3"
+      }
+    },
+    "into": {
+      "image": "img/into.webp",
+      "audio": {
+        "uk": "audio/uk/into.mp3",
+        "us": "audio/us/into.mp3",
+        "ex": "audio/ex/into.mp3",
+        "ex2": "audio/ex2/into.mp3"
+      }
+    },
+    "from": {
+      "image": "img/from.webp",
+      "audio": {
+        "uk": "audio/uk/from.mp3",
+        "us": "audio/us/from.mp3",
+        "ex": "audio/ex/from.mp3",
+        "ex2": "audio/ex2/from.mp3"
+      }
+    },
+    "idea": {
+      "image": "img/idea.webp",
+      "audio": {
+        "uk": "audio/uk/idea.mp3",
+        "us": "audio/us/idea.mp3",
+        "ex": "audio/ex/idea.mp3",
+        "ex2": "audio/ex2/idea.mp3"
+      }
+    },
+    "point": {
+      "image": "img/point.webp",
+      "audio": {
+        "uk": "audio/uk/point.mp3",
+        "us": "audio/us/point.mp3",
+        "ex": "audio/ex/point.mp3"
+      }
+    },
+    "time": {
+      "image": "img/time.webp",
+      "audio": {
+        "uk": "audio/uk/time.mp3",
+        "us": "audio/us/time.mp3",
+        "ex": "audio/ex/time.mp3",
+        "ex2": "audio/ex2/time.mp3"
+      }
+    },
+    "place": {
+      "image": "img/place.webp",
+      "audio": {
+        "uk": "audio/uk/place.mp3",
+        "us": "audio/us/place.mp3",
+        "ex": "audio/ex/place.mp3",
+        "ex2": "audio/ex2/place.mp3"
+      }
+    },
+    "sister": {
+      "image": "img/sister.webp",
+      "audio": {
+        "uk": "audio/uk/sister.mp3",
+        "us": "audio/us/sister.mp3",
+        "ex": "audio/ex/sister.mp3",
+        "ex2": "audio/ex2/sister.mp3"
+      }
+    },
+    "money": {
+      "image": "img/money.webp",
+      "audio": {
+        "uk": "audio/uk/money.mp3",
+        "us": "audio/us/money.mp3",
+        "ex": "audio/ex/money.mp3",
+        "ex2": "audio/ex2/money.mp3"
+      }
+    },
+    "hall": {
+      "image": "img/hall.webp",
+      "audio": {
+        "uk": "audio/uk/hall.mp3",
+        "us": "audio/us/hall.mp3",
+        "ex": "audio/ex/hall.mp3",
+        "ex2": "audio/ex2/hall.mp3"
+      }
+    },
+    "apartment": {
+      "image": "img/apartment.webp",
+      "audio": {
+        "uk": "audio/uk/apartment.mp3",
+        "us": "audio/us/apartment.mp3",
+        "ex": "audio/ex/apartment.mp3",
+        "ex2": "audio/ex2/apartment.mp3"
+      }
+    },
+    "company": {
+      "image": "img/company.webp",
+      "audio": {
+        "uk": "audio/uk/company.mp3",
+        "us": "audio/us/company.mp3",
+        "ex": "audio/ex/company.mp3",
+        "ex2": "audio/ex2/company.mp3"
+      }
+    },
+    "spell": {
+      "image": "img/spell.webp",
+      "audio": {
+        "uk": "audio/uk/spell.mp3",
+        "us": "audio/us/spell.mp3",
+        "ex": "audio/ex/spell.mp3",
+        "ex2": "audio/ex2/spell.mp3"
+      }
+    },
+    "character": {
+      "image": "img/character.webp",
+      "audio": {
+        "uk": "audio/uk/character.mp3",
+        "us": "audio/us/character.mp3",
+        "ex": "audio/ex/character.mp3"
+      }
+    },
+    "excuse": {
+      "image": "img/excuse.webp",
+      "audio": {
+        "uk": "audio/uk/excuse.mp3",
+        "us": "audio/us/excuse.mp3",
+        "ex": "audio/ex/excuse.mp3"
+      }
+    },
+    "morning": {
+      "image": "img/morning.webp",
+      "audio": {
+        "uk": "audio/uk/morning.mp3",
+        "us": "audio/us/morning.mp3",
+        "ex": "audio/ex/morning.mp3",
+        "ex2": "audio/ex2/morning.mp3"
+      }
+    },
+    "shower": {
+      "image": "img/shower.webp",
+      "audio": {
+        "uk": "audio/uk/shower.mp3",
+        "us": "audio/us/shower.mp3",
+        "ex": "audio/ex/shower.mp3",
+        "ex2": "audio/ex2/shower.mp3"
+      }
+    },
+    "world": {
+      "image": "img/world.webp",
+      "audio": {
+        "uk": "audio/uk/world.mp3",
+        "us": "audio/us/world.mp3",
+        "ex": "audio/ex/world.mp3",
+        "ex2": "audio/ex2/world.mp3"
+      }
+    },
+    "think": {
+      "image": "img/think.webp",
+      "audio": {
+        "uk": "audio/uk/think.mp3",
+        "us": "audio/us/think.mp3",
+        "ex": "audio/ex/think.mp3",
+        "ex2": "audio/ex2/think.mp3"
+      }
+    },
+    "know": {
+      "image": "img/know.webp",
+      "audio": {
+        "uk": "audio/uk/know.mp3",
+        "us": "audio/us/know.mp3",
+        "ex": "audio/ex/know.mp3",
+        "ex2": "audio/ex2/know.mp3"
+      }
+    },
+    "want": {
+      "image": "img/want.webp",
+      "audio": {
+        "uk": "audio/uk/want.mp3",
+        "us": "audio/us/want.mp3",
+        "ex": "audio/ex/want.mp3",
+        "ex2": "audio/ex2/want.mp3"
+      }
+    },
+    "live": {
+      "image": "img/live.webp",
+      "audio": {
+        "uk": "audio/uk/live.mp3",
+        "us": "audio/us/live.mp3",
+        "ex": "audio/ex/live.mp3",
+        "ex2": "audio/ex2/live.mp3"
+      }
+    },
+    "can": {
+      "image": "img/can.webp",
+      "audio": {
+        "uk": "audio/uk/can.mp3",
+        "us": "audio/us/can.mp3",
+        "ex": "audio/ex/can.mp3",
+        "ex2": "audio/ex2/can.mp3"
+      }
+    },
+    "leave": {
+      "image": "img/leave.webp",
+      "audio": {
+        "uk": "audio/uk/leave.mp3",
+        "us": "audio/us/leave.mp3",
+        "ex": "audio/ex/leave.mp3",
+        "ex2": "audio/ex2/leave.mp3"
+      }
+    },
+    "help": {
+      "image": "img/help.webp",
+      "audio": {
+        "uk": "audio/uk/help.mp3",
+        "us": "audio/us/help.mp3",
+        "ex": "audio/ex/help.mp3",
+        "ex2": "audio/ex2/help.mp3"
+      }
+    },
+    "try": {
+      "image": "img/try.webp",
+      "audio": {
+        "uk": "audio/uk/try.mp3",
+        "us": "audio/us/try.mp3",
+        "ex": "audio/ex/try.mp3",
+        "ex2": "audio/ex2/try.mp3"
+      }
+    },
+    "care": {
+      "image": "img/care.webp",
+      "audio": {
+        "uk": "audio/uk/care.mp3",
+        "us": "audio/us/care.mp3",
+        "ex": "audio/ex/care.mp3"
+      }
+    },
+    "feel": {
+      "image": "img/feel.webp",
+      "audio": {
+        "uk": "audio/uk/feel.mp3",
+        "us": "audio/us/feel.mp3",
+        "ex": "audio/ex/feel.mp3",
+        "ex2": "audio/ex2/feel.mp3"
+      }
+    },
+    "get": {
+      "image": "img/get.webp",
+      "audio": {
+        "uk": "audio/uk/get.mp3",
+        "us": "audio/us/get.mp3",
+        "ex": "audio/ex/get.mp3",
+        "ex2": "audio/ex2/get.mp3"
+      }
+    },
+    "use": {
+      "image": "img/use.webp",
+      "audio": {
+        "uk": "audio/uk/use.mp3",
+        "us": "audio/us/use.mp3",
+        "ex": "audio/ex/use.mp3",
+        "ex2": "audio/ex2/use.mp3"
+      }
+    },
+    "hit": {
+      "image": "img/hit.webp",
+      "audio": {
+        "uk": "audio/uk/hit.mp3",
+        "us": "audio/us/hit.mp3",
+        "ex": "audio/ex/hit.mp3"
+      }
+    },
+    "should": {
+      "image": "img/should.webp",
+      "audio": {
+        "uk": "audio/uk/should.mp3",
+        "us": "audio/us/should.mp3",
+        "ex": "audio/ex/should.mp3"
+      }
+    },
+    "avoid": {
+      "image": "img/avoid.webp",
+      "audio": {
+        "uk": "audio/uk/avoid.mp3",
+        "us": "audio/us/avoid.mp3",
+        "ex": "audio/ex/avoid.mp3"
+      }
+    },
+    "remember": {
+      "image": "img/remember.webp",
+      "audio": {
+        "uk": "audio/uk/remember.mp3",
+        "us": "audio/us/remember.mp3",
+        "ex": "audio/ex/remember.mp3",
+        "ex2": "audio/ex2/remember.mp3"
+      }
+    },
+    "lost": {
+      "image": "img/lost.webp",
+      "audio": {
+        "uk": "audio/uk/lost.mp3",
+        "us": "audio/us/lost.mp3",
+        "ex": "audio/ex/lost.mp3",
+        "ex2": "audio/ex2/lost.mp3"
+      }
+    },
+    "minimum": {
+      "image": "img/minimum.webp",
+      "audio": {
+        "uk": "audio/uk/minimum.mp3",
+        "us": "audio/us/minimum.mp3",
+        "ex": "audio/ex/minimum.mp3"
+      }
+    },
+    "attractive": {
+      "image": "img/attractive.webp",
+      "audio": {
+        "uk": "audio/uk/attractive.mp3",
+        "us": "audio/us/attractive.mp3",
+        "ex": "audio/ex/attractive.mp3"
+      }
+    },
+    "many": {
+      "image": "img/many.webp",
+      "audio": {
+        "uk": "audio/uk/many.mp3",
+        "us": "audio/us/many.mp3",
+        "ex": "audio/ex/many.mp3",
+        "ex2": "audio/ex2/many.mp3"
+      }
+    },
+    "eye": {
+      "image": "img/eye.webp",
+      "audio": {
+        "uk": "audio/uk/eye.mp3",
+        "us": "audio/us/eye.mp3",
+        "ex": "audio/ex/eye.mp3",
+        "ex2": "audio/ex2/eye.mp3"
+      }
+    },
+    "case": {
+      "image": "img/case.webp",
+      "audio": {
+        "uk": "audio/uk/case.mp3",
+        "us": "audio/us/case.mp3",
+        "ex": "audio/ex/case.mp3"
+      }
+    },
+    "fork": {
+      "image": "img/fork.webp",
+      "audio": {
+        "uk": "audio/uk/fork.mp3",
+        "us": "audio/us/fork.mp3",
+        "ex": "audio/ex/fork.mp3"
+      }
+    },
+    "napkin": {
+      "image": "img/napkin.webp",
+      "audio": {
+        "uk": "audio/uk/napkin.mp3",
+        "us": "audio/us/napkin.mp3",
+        "ex": "audio/ex/napkin.mp3"
+      }
+    },
+    "furniture": {
+      "image": "img/furniture.webp",
+      "audio": {
+        "uk": "audio/uk/furniture.mp3",
+        "us": "audio/us/furniture.mp3",
+        "ex": "audio/ex/furniture.mp3"
+      }
+    },
+    "problem": {
+      "image": "img/problem.webp",
+      "audio": {
+        "uk": "audio/uk/problem.mp3",
+        "us": "audio/us/problem.mp3",
+        "ex": "audio/ex/problem.mp3",
+        "ex2": "audio/ex2/problem.mp3"
+      }
+    },
+    "feet": {
+      "image": "img/feet.webp",
+      "audio": {
+        "uk": "audio/uk/feet.mp3",
+        "us": "audio/us/feet.mp3",
+        "ex": "audio/ex/feet.mp3",
+        "ex2": "audio/ex2/feet.mp3"
+      }
+    },
+    "assumption": {
+      "image": "img/assumption.webp",
+      "audio": {
+        "uk": "audio/uk/assumption.mp3",
+        "us": "audio/us/assumption.mp3",
+        "ex": "audio/ex/assumption.mp3"
+      }
+    },
+    "keep": {
+      "image": "img/keep.webp",
+      "audio": {
+        "uk": "audio/uk/keep.mp3",
+        "us": "audio/us/keep.mp3",
+        "ex": "audio/ex/keep.mp3",
+        "ex2": "audio/ex2/keep.mp3"
+      }
+    },
+    "bring": {
+      "image": "img/bring.webp",
+      "audio": {
+        "uk": "audio/uk/bring.mp3",
+        "us": "audio/us/bring.mp3",
+        "ex": "audio/ex/bring.mp3",
+        "ex2": "audio/ex2/bring.mp3"
+      }
+    },
+    "stay": {
+      "image": "img/stay.webp",
+      "audio": {
+        "uk": "audio/uk/stay.mp3",
+        "us": "audio/us/stay.mp3",
+        "ex": "audio/ex/stay.mp3",
+        "ex2": "audio/ex2/stay.mp3"
+      }
+    },
+    "meet": {
+      "image": "img/meet.webp",
+      "audio": {
+        "uk": "audio/uk/meet.mp3",
+        "us": "audio/us/meet.mp3",
+        "ex": "audio/ex/meet.mp3",
+        "ex2": "audio/ex2/meet.mp3"
+      }
+    },
+    "few": {
+      "image": "img/few.webp",
+      "audio": {
+        "uk": "audio/uk/few.mp3",
+        "us": "audio/us/few.mp3",
+        "ex": "audio/ex/few.mp3",
+        "ex2": "audio/ex2/few.mp3"
+      }
+    },
+    "virtual": {
+      "image": "img/virtual.webp",
+      "audio": {
+        "uk": "audio/uk/virtual.mp3",
+        "us": "audio/us/virtual.mp3",
+        "ex": "audio/ex/virtual.mp3"
+      }
+    },
+    "magic": {
+      "image": "img/magic.webp",
+      "audio": {
+        "uk": "audio/uk/magic.mp3",
+        "us": "audio/us/magic.mp3",
+        "ex": "audio/ex/magic.mp3"
+      }
+    },
+    "usual": {
+      "image": "img/usual.webp",
+      "audio": {
+        "uk": "audio/uk/usual.mp3",
+        "us": "audio/us/usual.mp3",
+        "ex": "audio/ex/usual.mp3"
+      }
+    },
+    "usually": {
+      "image": "img/usually.webp",
+      "audio": {
+        "uk": "audio/uk/usually.mp3",
+        "us": "audio/us/usually.mp3",
+        "ex": "audio/ex/usually.mp3",
+        "ex2": "audio/ex2/usually.mp3"
+      }
+    },
+    "lord": {
+      "image": "img/lord.webp",
+      "audio": {
+        "uk": "audio/uk/lord.mp3",
+        "us": "audio/us/lord.mp3",
+        "ex": "audio/ex/lord.mp3"
+      }
+    },
+    "sword": {
+      "image": "img/sword.webp",
+      "audio": {
+        "uk": "audio/uk/sword.mp3",
+        "us": "audio/us/sword.mp3",
+        "ex": "audio/ex/sword.mp3"
+      }
+    },
+    "tail": {
+      "image": "img/tail.webp",
+      "audio": {
+        "uk": "audio/uk/tail.mp3",
+        "us": "audio/us/tail.mp3",
+        "ex": "audio/ex/tail.mp3"
+      }
+    },
+    "trap": {
+      "image": "img/trap.webp",
+      "audio": {
+        "uk": "audio/uk/trap.mp3",
+        "us": "audio/us/trap.mp3",
+        "ex": "audio/ex/trap.mp3"
+      }
+    },
+    "pool": {
+      "image": "img/pool.webp",
+      "audio": {
+        "uk": "audio/uk/pool.mp3",
+        "us": "audio/us/pool.mp3",
+        "ex": "audio/ex/pool.mp3",
+        "ex2": "audio/ex2/pool.mp3"
+      }
+    },
+    "mail": {
+      "image": "img/mail.webp",
+      "audio": {
+        "uk": "audio/uk/mail.mp3",
+        "us": "audio/us/mail.mp3",
+        "ex": "audio/ex/mail.mp3",
+        "ex2": "audio/ex2/mail.mp3"
+      }
+    },
+    "date": {
+      "image": "img/date.webp",
+      "audio": {
+        "uk": "audio/uk/date.mp3",
+        "us": "audio/us/date.mp3",
+        "ex": "audio/ex/date.mp3",
+        "ex2": "audio/ex2/date.mp3"
+      }
+    },
+    "raise": {
+      "image": "img/raise.webp",
+      "audio": {
+        "uk": "audio/uk/raise.mp3",
+        "us": "audio/us/raise.mp3",
+        "ex": "audio/ex/raise.mp3"
+      }
+    },
+    "blow": {
+      "image": "img/blow.webp",
+      "audio": {
+        "uk": "audio/uk/blow.mp3",
+        "us": "audio/us/blow.mp3",
+        "ex": "audio/ex/blow.mp3"
+      }
+    },
+    "stand": {
+      "image": "img/stand.webp",
+      "audio": {
+        "uk": "audio/uk/stand.mp3",
+        "us": "audio/us/stand.mp3",
+        "ex": "audio/ex/stand.mp3",
+        "ex2": "audio/ex2/stand.mp3"
+      }
+    },
+    "forget": {
+      "image": "img/forget.webp",
+      "audio": {
+        "uk": "audio/uk/forget.mp3",
+        "us": "audio/us/forget.mp3",
+        "ex": "audio/ex/forget.mp3",
+        "ex2": "audio/ex2/forget.mp3"
+      }
+    },
+    "read": {
+      "image": "img/read.webp",
+      "audio": {
+        "uk": "audio/uk/read.mp3",
+        "us": "audio/us/read.mp3",
+        "ex": "audio/ex/read.mp3",
+        "ex2": "audio/ex2/read.mp3"
+      }
+    },
+    "built": {
+      "image": "img/built.webp",
+      "audio": {
+        "uk": "audio/uk/built.mp3",
+        "us": "audio/us/built.mp3",
+        "ex": "audio/ex/built.mp3",
+        "ex2": "audio/ex2/built.mp3"
+      }
+    },
+    "special": {
+      "image": "img/special.webp",
+      "audio": {
+        "uk": "audio/uk/special.mp3",
+        "us": "audio/us/special.mp3",
+        "ex": "audio/ex/special.mp3",
+        "ex2": "audio/ex2/special.mp3"
+      }
+    },
+    "plausible": {
+      "image": "img/plausible.webp",
+      "audio": {
+        "uk": "audio/uk/plausible.mp3",
+        "us": "audio/us/plausible.mp3",
+        "ex": "audio/ex/plausible.mp3"
+      }
+    },
+    "amazing": {
+      "image": "img/amazing.webp",
+      "audio": {
+        "uk": "audio/uk/amazing.mp3",
+        "us": "audio/us/amazing.mp3",
+        "ex": "audio/ex/amazing.mp3"
+      }
+    },
+    "disturbing": {
+      "image": "img/disturbing.webp",
+      "audio": {
+        "uk": "audio/uk/disturbing.mp3",
+        "us": "audio/us/disturbing.mp3",
+        "ex": "audio/ex/disturbing.mp3"
+      }
+    },
+    "finally": {
+      "image": "img/finally.webp",
+      "audio": {
+        "uk": "audio/uk/finally.mp3",
+        "us": "audio/us/finally.mp3",
+        "ex": "audio/ex/finally.mp3"
+      }
+    },
+    "quickly": {
+      "image": "img/quickly.webp",
+      "audio": {
+        "uk": "audio/uk/quickly.mp3",
+        "us": "audio/us/quickly.mp3",
+        "ex": "audio/ex/quickly.mp3",
+        "ex2": "audio/ex2/quickly.mp3"
+      }
+    },
+    "against": {
+      "image": "img/against.webp",
+      "audio": {
+        "uk": "audio/uk/against.mp3",
+        "us": "audio/us/against.mp3",
+        "ex": "audio/ex/against.mp3"
+      }
+    },
+    "pressure": {
+      "image": "img/pressure.webp",
+      "audio": {
+        "uk": "audio/uk/pressure.mp3",
+        "us": "audio/us/pressure.mp3",
+        "ex": "audio/ex/pressure.mp3"
+      }
+    },
+    "breakthrough": {
+      "image": "img/breakthrough.webp",
+      "audio": {
+        "uk": "audio/uk/breakthrough.mp3",
+        "us": "audio/us/breakthrough.mp3",
+        "ex": "audio/ex/breakthrough.mp3"
+      }
+    },
+    "party": {
+      "image": "img/party.webp",
+      "audio": {
+        "uk": "audio/uk/party.mp3",
+        "us": "audio/us/party.mp3",
+        "ex": "audio/ex/party.mp3",
+        "ex2": "audio/ex2/party.mp3"
+      }
+    },
+    "cover": {
+      "image": "img/cover.webp",
+      "audio": {
+        "uk": "audio/uk/cover.mp3",
+        "us": "audio/us/cover.mp3",
+        "ex": "audio/ex/cover.mp3"
+      }
+    },
+    "congratulations": {
+      "image": "img/congratulations.webp",
+      "audio": {
+        "uk": "audio/uk/congratulations.mp3",
+        "us": "audio/us/congratulations.mp3",
+        "ex": "audio/ex/congratulations.mp3"
+      }
+    },
+    "buffet": {
+      "image": "img/buffet.webp",
+      "audio": {
+        "uk": "audio/uk/buffet.mp3",
+        "us": "audio/us/buffet.mp3",
+        "ex": "audio/ex/buffet.mp3"
+      }
+    },
+    "boss": {
+      "image": "img/boss.webp",
+      "audio": {
+        "uk": "audio/uk/boss.mp3",
+        "us": "audio/us/boss.mp3",
+        "ex": "audio/ex/boss.mp3",
+        "ex2": "audio/ex2/boss.mp3"
+      }
+    },
+    "shake": {
+      "image": "img/shake.webp",
+      "audio": {
+        "uk": "audio/uk/shake.mp3",
+        "us": "audio/us/shake.mp3",
+        "ex": "audio/ex/shake.mp3"
+      }
+    },
+    "introduce": {
+      "image": "img/introduce.webp",
+      "audio": {
+        "uk": "audio/uk/introduce.mp3",
+        "us": "audio/us/introduce.mp3",
+        "ex": "audio/ex/introduce.mp3"
+      }
+    },
+    "ready": {
+      "image": "img/ready.webp",
+      "audio": {
+        "uk": "audio/uk/ready.mp3",
+        "us": "audio/us/ready.mp3",
+        "ex": "audio/ex/ready.mp3",
+        "ex2": "audio/ex2/ready.mp3"
+      }
+    },
+    "vulnerable": {
+      "image": "img/vulnerable.webp",
+      "audio": {
+        "uk": "audio/uk/vulnerable.mp3",
+        "us": "audio/us/vulnerable.mp3",
+        "ex": "audio/ex/vulnerable.mp3"
+      }
+    },
+    "unlikely": {
+      "image": "img/unlikely.webp",
+      "audio": {
+        "uk": "audio/uk/unlikely.mp3",
+        "us": "audio/us/unlikely.mp3",
+        "ex": "audio/ex/unlikely.mp3"
+      }
+    },
+    "classic": {
+      "image": "img/classic.webp",
+      "audio": {
+        "uk": "audio/uk/classic.mp3",
+        "us": "audio/us/classic.mp3",
+        "ex": "audio/ex/classic.mp3"
+      }
+    },
+    "battle": {
+      "image": "img/battle.webp",
+      "audio": {
+        "uk": "audio/uk/battle.mp3",
+        "us": "audio/us/battle.mp3",
+        "ex": "audio/ex/battle.mp3"
+      }
+    },
+    "charge": {
+      "image": "img/charge.webp",
+      "audio": {
+        "uk": "audio/uk/charge.mp3",
+        "us": "audio/us/charge.mp3",
+        "ex": "audio/ex/charge.mp3"
+      }
+    },
+    "yell": {
+      "image": "img/yell.webp",
+      "audio": {
+        "uk": "audio/uk/yell.mp3",
+        "us": "audio/us/yell.mp3",
+        "ex": "audio/ex/yell.mp3"
+      }
+    },
+    "recommend": {
+      "image": "img/recommend.webp",
+      "audio": {
+        "uk": "audio/uk/recommend.mp3",
+        "us": "audio/us/recommend.mp3",
+        "ex": "audio/ex/recommend.mp3"
+      }
+    }
+  }
+}

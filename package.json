@@ -1,7 +1,8 @@
 {
   "type": "module",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "prepare:atlas-media": "node scripts/prepare-atlas-media.js"
   },
   "dependencies": {
     "firebase": "^13.1.0"

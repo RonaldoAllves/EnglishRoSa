@@ -11,7 +11,11 @@ import {
     getReviewItems,
     profileMistakeKey
 } from './domain.js?v=__BUILD_VERSION__';
-import { EpisodeRepository, ProfileRepository } from './repositories.js?v=__BUILD_VERSION__';
+import {
+    AtlasMediaRepository,
+    EpisodeRepository,
+    ProfileRepository
+} from './repositories.js?v=__BUILD_VERSION__';
 
 const escapeHtml = (value) => String(value ?? '').replace(/[&<>"']/g, (character) => ({
     '&': '&amp;',
@@ -40,8 +44,10 @@ class EnglishRoSaApp {
         this.notice = document.querySelector('#notice');
         this.backupInput = document.querySelector('#backup-file');
         this.episodeRepository = new EpisodeRepository();
+        this.atlasMediaRepository = new AtlasMediaRepository();
         this.profileRepository = new ProfileRepository();
         this.catalog = null;
+        this.atlasMedia = {};
         this.profile = null;
         this.profileId = null;
         this.currentEpisodeId = null;
@@ -73,6 +79,11 @@ class EnglishRoSaApp {
         this.bindEvents();
         try {
             this.catalog = await this.episodeRepository.load();
+            try {
+                this.atlasMedia = await this.atlasMediaRepository.load();
+            } catch (error) {
+                console.warn('As mídias opcionais do atlas não foram carregadas.', error);
+            }
             this.render();
             await this.checkVersion();
         } catch (error) {
@@ -97,6 +108,17 @@ class EnglishRoSaApp {
                 this.importBackup().catch((error) => this.showError(error));
             }
         });
+
+        document.body.addEventListener('error', (event) => {
+            const element = event.target.closest?.('[data-optional-media]');
+            if (!element) return;
+            element.hidden = true;
+            const container = element.closest('.question-media');
+            if (container && [...container.querySelectorAll('[data-optional-media]')]
+                .every((media) => media.hidden)) {
+                container.hidden = true;
+            }
+        }, true);
     }
 
     async handleAction(button) {
@@ -831,8 +853,9 @@ class EnglishRoSaApp {
             ? question.exampleLabel ||
                 (question.isEpisodeExample === false ? 'Frase de exemplo' : 'Frase do episódio')
             : category?.label || 'Vocabulário';
+        const media = this.renderQuestionMedia(question);
         if (this.learningDetails) {
-            return this.renderLearning(question, pointsLabel);
+            return this.renderLearning(question, pointsLabel, media);
         }
         const correctChoiceIndex = question.choices.indexOf(question.answer);
         const answeredChoiceIndex = shownAnswer
@@ -895,6 +918,7 @@ class EnglishRoSaApp {
                         <h1>${escapeHtml(question.prompt)}</h1>
                         ${question.example ? `<p class="question-example">${escapeHtml(question.example)}</p>` : ''}
                     </div>
+                    ${media}
                     <div class="answer-options">${choices}</div>
                     ${shownAnswer ? '' : `
                         <div class="practice-learn-action">
@@ -911,7 +935,7 @@ class EnglishRoSaApp {
             </section>`;
     }
 
-    renderLearning(question, pointsLabel) {
+    renderLearning(question, pointsLabel, media) {
         const category = CATEGORIES.find((item) => item.key === question.category);
         const examples = this.learningDetails.examples.map((example) => `
             <article class="learning-example">
@@ -945,6 +969,7 @@ class EnglishRoSaApp {
                         <h1>${escapeHtml(this.learningDetails.word)}</h1>
                         <p>${escapeHtml(this.learningDetails.translation)}</p>
                     </div>
+                    ${media}
                     <section class="learning-examples" aria-labelledby="learning-examples-title">
                         <h2 id="learning-examples-title">Frases de exemplo</h2>
                         ${examples}
@@ -955,6 +980,44 @@ class EnglishRoSaApp {
                         </button>
                     </div>
                 </div>
+            </section>`;
+    }
+
+    renderQuestionMedia(question) {
+        const [category, index] = String(question.itemId || '').split(':');
+        const entry = this.currentEpisode()?.[category]?.[Number(index)];
+        const mediaKey = String(
+            entry?.palavra ||
+            entry?.exercicios?.find((exercise) => exercise.id === question.exerciseId)?.foco ||
+            ''
+        ).trim().toLowerCase();
+        const media = this.atlasMedia[mediaKey];
+        if (!media) return '';
+
+        const audio = Object.entries({
+            uk: 'UK',
+            us: 'US',
+            ex: 'Exemplo 1',
+            ex2: 'Exemplo 2'
+        }).filter(([type]) => media.audio?.[type]).map(([type, label]) => `
+            <div class="atlas-audio-track" data-optional-media>
+                <span>${label}</span>
+                <audio controls preload="none" src="./assets/atlas/${escapeHtml(media.audio[type])}"></audio>
+            </div>`).join('');
+        const image = media.image ? `
+            <img class="atlas-illustration" data-optional-media loading="lazy" decoding="async"
+                src="./assets/atlas/${escapeHtml(media.image)}"
+                alt="Ilustração de ${escapeHtml(entry.palavra || question.item)}">` : '';
+        if (!image && !audio) return '';
+
+        return `
+            <section class="question-media" aria-label="Imagem e áudio de ${escapeHtml(entry.palavra || question.item)}">
+                ${image}
+                ${audio ? `<div class="atlas-audio-list">${audio}</div>` : ''}
+                <a class="atlas-attribution" href="https://creativecommons.org/licenses/by/4.0/"
+                    target="_blank" rel="noopener noreferrer">
+                    Word Atlas Open · CC BY 4.0
+                </a>
             </section>`;
     }
 

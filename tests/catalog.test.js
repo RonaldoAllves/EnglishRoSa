@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import test from 'node:test';
 import { CATEGORIES, createQuestionBank } from '../js/domain.js';
 
 const catalogUrl = new URL('../dados/episodios_2026-10-30.json', import.meta.url);
+const workspaceRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 test('catalog keeps episodes 1-5 complete and exposes only filled categories for 6-7', async () => {
     const catalog = JSON.parse(await readFile(catalogUrl, 'utf8'));
@@ -84,4 +88,22 @@ test('exercise questions keep catalog alternatives and fill empty alternatives f
 
     assert.ok(fallbackQuestion.choices.includes(emptyOptionItem.exercicios[0].traducao_correta));
     assert.ok(fallbackQuestion.choices.length > 1);
+});
+
+test('selected atlas assets exist for mapped words and include optional audio paths', async () => {
+    const manifest = JSON.parse(await readFile(
+        new URL('../assets/atlas/media-index.json', import.meta.url),
+        'utf8'
+    ));
+
+    assert.equal(manifest.license, 'CC BY 4.0');
+    assert.ok(Object.keys(manifest.media).length > 0);
+    for (const media of Object.values(manifest.media)) {
+        if (media.image) {
+            assert.ok(existsSync(path.join(workspaceRoot, 'assets', 'atlas', media.image)));
+        }
+        for (const audioPath of Object.values(media.audio || {})) {
+            assert.ok(existsSync(path.join(workspaceRoot, 'assets', 'atlas', audioPath)));
+        }
+    }
 });

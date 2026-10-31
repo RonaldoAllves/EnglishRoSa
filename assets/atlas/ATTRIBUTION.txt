@@ -1,0 +1,7 @@
+Word Atlas Open
+License: Creative Commons Attribution 4.0 International (CC BY 4.0)
+License details: https://creativecommons.org/licenses/by/4.0/
+
+This application includes only the atlas image and audio files referenced by
+its episode vocabulary catalog. The original atlas index and media files are
+the source for the selected assets. No edits to those media files were made.

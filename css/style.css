@@ -168,6 +168,14 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
 .question-type { color: #9387bd; font-size: 9px; font-weight: 700; letter-spacing: 1.3px; text-transform: uppercase; }
 .question-card h1 { margin: 10px 0 0; font: 800 clamp(29px, 5vw, 42px)/1.2 'Manrope', sans-serif; letter-spacing: -1.2px; overflow-wrap: anywhere; }
 .question-example { margin: 11px 0 0; color: var(--muted); font-size: 12px; font-style: italic; line-height: 1.6; }
+.question-media { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 12px; margin: 0 0 18px; padding: 14px; border: 1px solid var(--border); border-radius: 14px; background: var(--surface); }
+.atlas-illustration { display: block; width: min(100%, 320px); max-height: 280px; justify-self: center; border-radius: 10px; object-fit: contain; }
+.atlas-audio-list { display: grid; gap: 10px; min-width: 0; }
+.atlas-audio-track { display: grid; gap: 5px; min-width: 0; }
+.atlas-audio-track > span { color: var(--muted); font-size: 11px; font-weight: 700; }
+.atlas-audio-track audio { display: block; width: 100%; min-width: 0; height: 40px; }
+.atlas-attribution { grid-column: 1 / -1; justify-self: end; color: var(--muted); font-size: 9px; text-decoration: none; }
+.atlas-attribution:hover { color: var(--purple); text-decoration: underline; }
 .answer-options { display: grid; gap: 8px; }
 .answer-option { display: flex; min-height: 54px; align-items: center; gap: 12px; padding: 10px 13px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); cursor: pointer; text-align: left; transition: border-color .15s, background .15s; }
 .answer-option:hover:not(:disabled) { border-color: #b8a9f4; background: #fcfbff; }
@@ -269,6 +277,9 @@ button:focus-visible, a:focus-visible, select:focus-visible { outline: 3px solid
     .icon-button { width: 36px; height: 36px; }
     .practice-points { font-size: 9px; }
     .practice-content { margin-top: 37px; }
+    .question-media { grid-template-columns: 1fr; }
+    .atlas-illustration { width: min(100%, 270px); max-height: 240px; }
+    .atlas-attribution { grid-column: 1; }
     .result-panel { padding: 19px 15px; }
     .result-heading h1 { font-size: 23px; }
     .breakdown-row { grid-template-columns: .9fr 1.5fr 32px; gap: 5px; font-size: 9px; }
